@@ -1,0 +1,79 @@
+#!/bin/bash
+# d2d
+#
+#	Purpose:
+#		Generates API Reference for rikulo
+#
+#Copyright (C) 2012 Potix Corporation. All Rights Reserved.
+#
+nodosfilewarning=true
+SDK=/usr/dart/dart-sdk
+if [ ! -d $SDK ] ; then
+  echo $SDK not found
+  echo "Please link /usr/dart to Dart Editor's folder."
+  exit
+fi
+homedir=$0
+homedir=${homedir%/*}
+if [ "$homedir" = "." ] ; then
+  homedir=".."
+elif [ "$homedir" = "${homedir%/*}" ] ; then
+  homedir="."
+else
+  homedir=${homedir%/*}
+fi
+if [ "$TERM" = "cygwin" ] || [ "$OSTYPE" = "cygwin" ] ; then
+  homedir=$(cygpath -u $homedir)
+  dartcmd=dart.exe
+else
+  dartcmd=dart
+fi
+outdir=$homedir/out
+
+if [ -d $outdir ] ; then
+	rm -rf $outdir/docs
+fi
+
+dartdoc=$SDK/pkg/dartdoc/bin/dartdoc.dart
+if [ "$TERM" = "cygwin" ] || [ "$OSTYPE" = "cygwin" ] ; then
+  dartdoc=$(cygpath -wa $dartdoc)
+fi
+
+PATH=$PATH:$SDK/bin
+echo Compiling $homedir/lib
+mkdir -p $outdir/docs
+$dartcmd $dartdoc --out $outdir/docs $homedir/lib/*.dart
+if [ ! -f $outdir/docs/index.html ] ; then
+	echo $outdir/docs/index.html not found. Failed?
+	exit 1
+fi
+
+cd $outdir/docs
+echo Process HTML files at $(pwd)
+libdir=../../tool/lib
+
+function doHTML {
+	sedfl=$1
+	if [ ! -f $sedfl ] ; then
+		echo $sedfl not found
+		exit
+	fi
+	for f in *; do
+		if [ -d $f ] ; then
+			(
+			echo Process $f
+			cd $f
+			doHTML ../$sedfl
+			)
+		elif [ ${f%.html} != $f ] ; then
+			sed -f $sedfl $f > dd.tmp
+			mv -f dd.tmp $f
+		fi
+	done
+}
+
+if [ -f index.html ] ; then
+	doHTML $libdir/index.html.sed
+else
+	echo index.html not found in $(pwd)
+fi
