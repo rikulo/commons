@@ -10,12 +10,11 @@ class DOMQuery {
   /** The DOM element in query. */
   final node;
 
-  factory DOMQuery(var v) {
-    v = v is View ? v.node: v is String ? document.query(v): v;
+  factory DOMQuery.from(Element v) {
     return v is Window ? new _WndQuery(v):
       v != null ? new DOMQuery._init(v): new _NullQuery();
   }
-  
+  DOMQuery(String s): this.from(s != null ? document.query(s): null);
   DOMQuery._init(this.node);
   
   /** Returns the inner width of the given element, including padding

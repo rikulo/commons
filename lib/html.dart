@@ -7,7 +7,6 @@ library rikulo_html;
 import "dart:html";
 import "dart:math";
 
-import "view.dart";
 import "util.dart";
 
 part "src/html/Browser.dart";
