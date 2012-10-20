@@ -11,4 +11,4 @@ import "util.dart";
 
 part "src/html/Browser.dart";
 part "src/html/CSS.dart";
-part "src/html/DOMQuery.dart";
+part "src/html/DOMAgent.dart";
