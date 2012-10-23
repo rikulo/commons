@@ -1,6 +1,6 @@
 name: rikulo_commons
 version: 0.6.0
-description: > 
+description: >
   Common reusable Dart classes and utilities.
 authors:
 - Tom Yeh <tomyeh@rikulo.org>
@@ -8,5 +8,6 @@ authors:
 - Simon Pai <simonpai@rikulo.org>
 homepage: http://rikulo.org
 dependencies:
+  js:
   unittest:
     sdk: unittest
