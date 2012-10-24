@@ -28,7 +28,7 @@ To install stuff that is still in development, add this to your `pubspec.yam`:
 
     dependencies:
       rikulo_commmons:
-        git: git@github.com:rikulo/rikulo-commons.git
+        git: git://github.com/rikulo/rikulo-commons.git
 
 For more information, please refer to [Pub: Dependencies](http://pub.dartlang.org/doc/pubspec.html#dependencies).
 
