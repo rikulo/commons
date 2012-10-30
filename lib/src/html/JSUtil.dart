@@ -146,7 +146,7 @@ class JSUtil {
       var kidval = "";
       for (Node n in node.nodes)
         kidval = xmlNodeToDartMap(n, kidmap);
-      _putMap(map, tagname, kidmap.isEmpty() ? kidval : kidmap);
+      _putMap(map, tagname, kidmap.isEmpty ? kidval : kidmap);
       return map;
     } else if (node is Text)
       return (node as Text).wholeText;
