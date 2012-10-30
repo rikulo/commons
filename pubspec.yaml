@@ -8,6 +8,4 @@ authors:
 - Simon Pai <simonpai@rikulo.org>
 homepage: http://rikulo.org
 dependencies:
-  js:
-  unittest:
-    sdk: unittest
+  js: '0.0.7'
