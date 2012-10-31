@@ -5,7 +5,6 @@ library rikulo_util;
 import "dart:coreimpl";
 import "dart:html";
 import "dart:math";
-import "dart:mirrors";
 
 import "html.dart";
 
@@ -18,4 +17,3 @@ part "src/util/Matrix.dart";
 part "src/util/Color.dart";
 part "src/util/Size.dart";
 part "src/util/Utilities.dart";
-part "src/util/ClassUtil.dart";
