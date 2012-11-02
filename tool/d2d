@@ -42,7 +42,7 @@ fi
 PATH=$PATH:$SDK/bin
 echo Compiling $homedir/lib
 mkdir -p $outdir/docs
-$dartcmd $dartdoc --out $outdir/docs $homedir/lib/*.dart
+$dartcmd $dartdoc --exclude-lib js --out $outdir/docs $homedir/lib/*.dart
 if [ ! -f $outdir/docs/index.html ] ; then
 	echo $outdir/docs/index.html not found. Failed?
 	exit 1
