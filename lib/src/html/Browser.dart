@@ -1,6 +1,7 @@
 //Copyright (C) 2012 Potix Corporation. All Rights Reserved.
 //History: Mon, Mar 12, 2012  9:26:04 AM
 // Author: tomyeh
+part of rikulo_html;
 
 typedef bool _BrowserMatch(RegExp regex);
 
@@ -158,12 +159,12 @@ class Browser {
    */
   Size get innerSize {
     if (_innerSize == null) {
-      final cs = new DOMAgent(document.body).computedStyle;
+      final cs = new DomAgent(document.body).computedStyle;
       _innerSize = new Size(
-        size.width - CSS.intOf(cs.marginLeft) - CSS.intOf(cs.marginRight)
-        - CSS.intOf(cs.borderLeft) - CSS.intOf(cs.borderRight),
-        size.height - CSS.intOf(cs.marginTop) - CSS.intOf(cs.marginBottom)
-        - CSS.intOf(cs.borderTop) - CSS.intOf(cs.borderBottom));
+        size.width - Css.intOf(cs.marginLeft) - Css.intOf(cs.marginRight)
+        - Css.intOf(cs.borderLeft) - Css.intOf(cs.borderRight),
+        size.height - Css.intOf(cs.marginTop) - Css.intOf(cs.marginBottom)
+        - Css.intOf(cs.borderTop) - Css.intOf(cs.borderBottom));
 
     }
     return _innerSize;
@@ -175,11 +176,11 @@ class Browser {
    */
   Offset get innerOffset {
     if (_innerOfs == null) {
-      final cs = new DOMAgent(document.body).computedStyle;
+      final cs = new DomAgent(document.body).computedStyle;
       final pos = cs.position;
       _innerOfs = pos == "static" || pos == "" ?
-        new Offset(CSS.intOf(cs.marginLeft) + CSS.intOf(cs.borderLeft),
-          CSS.intOf(cs.marginTop) + CSS.intOf(cs.borderTop)):
+        new Offset(Css.intOf(cs.marginLeft) + Css.intOf(cs.borderLeft),
+          Css.intOf(cs.marginTop) + Css.intOf(cs.borderTop)):
         new Offset(0, 0);
     }
     return _innerOfs;

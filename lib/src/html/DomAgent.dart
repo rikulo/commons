@@ -1,19 +1,20 @@
 //Copyright (C) 2012 Potix Corporation. All Rights Reserved.
 //History: Thu, Apr 05, 2012 11:25:25 AM
 // Author: tomyeh
+part of rikulo_html;
 
 /**
  * A DOM query agent used to provide the additional utilities
  * for handling DOM.
  */
-class DOMAgent {
+class DomAgent {
   /** The DOM element in query. */
   final node;
 
-  factory DOMAgent(Element e)
-  => e != null ? new DOMAgent._as(e): new _NullAgent();
-  DOMAgent.query(String s): this(document.query(s));
-  DOMAgent._as(this.node);
+  factory DomAgent(Element e)
+  => e != null ? new DomAgent._as(e): new _NullAgent();
+  DomAgent.query(String s): this(document.query(s));
+  DomAgent._as(this.node);
   
   /** Returns the inner width of the given element, including padding
    * but not including border, margin and scroll bar.
@@ -112,7 +113,7 @@ class DOMAgent {
     //2. subtract cumulative scrollLeft/scrollTop
     el = node;
     do {
-      final txofs = CSS.offset3dOf(el.style.transform);
+      final txofs = Css.offset3dOf(el.style.transform);
         //for performance reason it doesn't handle computed style
       left -= el.scrollLeft - txofs.left;
       top -= el.scrollTop - txofs.top;
@@ -133,7 +134,7 @@ class DOMAgent {
   
   /** Returns the final used values of all the CSS properties
    */
-  CSSStyleDeclaration get computedStyle 
+  CssStyleDeclaration get computedStyle 
   => window.$dom_getComputedStyle(node, "");
 
   /** Returns if a DOM element is a descendant of this element or
@@ -157,10 +158,10 @@ class DOMAgent {
    * the optional [style]. If [node] is null, the size is based only
    * only [style].
    *
-   *    new DOMAgent(node_text_will_be_assigned).measureText(s);
-   *    new DOMAgent(null).measureText(s, style);
+   *    new DomAgent(node_text_will_be_assigned).measureText(s);
+   *    new DomAgent(null).measureText(s, style);
    */
-  Size measureText(String text, [CSSStyleDeclaration style]) {
+  Size measureText(String text, [CssStyleDeclaration style]) {
     if (_txtdiv == null) {
       _txtdiv = new DivElement();
       _txtdiv.style.cssText =
@@ -168,12 +169,12 @@ class DOMAgent {
       document.body.nodes.add(_txtdiv);
     }
 
-    final CSSStyleDeclaration dst = _txtdiv.style;
+    final CssStyleDeclaration dst = _txtdiv.style;
     _txtdiv.innerHTML = text;
     if (node != null)
-      CSS.cpTextStyles(dst, window.$dom_getComputedStyle(node, ""));
+      Css.copy(dst, window.$dom_getComputedStyle(node, ""), Css.textNames);
     if (style != null)
-      CSS.cpTextStyles(dst, style);
+      Css.copy(dst, style, Css.textNames);
 
     final Size sz = new Size(_txtdiv.offsetWidth, _txtdiv.offsetHeight);
     _txtdiv.innerHTML = "";
@@ -199,7 +200,7 @@ class DOMAgent {
  * A window query agent used to provide the additional utilities
  * for handling window.
  */
-class WindowAgent extends DOMAgent {
+class WindowAgent extends DomAgent {
   factory WindowAgent(Window w)
   => w != null ? new WindowAgent._as(w): new _NullAgent();
   WindowAgent._as(var v): super._as(v);
@@ -216,7 +217,7 @@ class WindowAgent extends DOMAgent {
   Offset get offset => new Offset(0, 0);
   Offset get pageOffset => offset;
   bool isDescendantOf(Element parent) => false;
-  CSSStyleDeclaration get computedStyle => new CSSStyleDeclaration();
+  CssStyleDeclaration get computedStyle => new CssStyleDeclaration();
   void set visible(bool visible) {}
 }
 class _NullAgent extends WindowAgent {

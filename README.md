@@ -5,9 +5,9 @@
 
 * [Home](http://rikulo.org)
 * [Documentation](http://docs.rikulo.org)
-* [API Reference](http://api.rikulo.org/rikulo-commons/latest)
+* [API Reference](http://api.rikulo.org/commons/latest)
 * [Discussion](http://stackoverflow.com/questions/tagged/rikulo)
-* [Issues](https://github.com/rikulo/rikulo-commons/issues)
+* [Issues](https://github.com/rikulo/commons/issues)
 
 Rikulo Commons is distributed under an Apache 2.0 License.
 
@@ -28,7 +28,7 @@ To install stuff that is still in development, add this to your `pubspec.yam`:
 
     dependencies:
       rikulo_commmons:
-        git: git://github.com/rikulo/rikulo-commons.git
+        git: git://github.com/rikulo/commons.git
 
 For more information, please refer to [Pub: Dependencies](http://pub.dartlang.org/doc/pubspec.html#dependencies).
 
