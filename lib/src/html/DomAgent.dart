@@ -11,8 +11,7 @@ class DomAgent {
   /** The DOM element in query. */
   final node;
 
-  factory DomAgent(Element e)
-  => e != null ? new DomAgent._as(e): new _NullAgent();
+  DomAgent(Element this.node);
   DomAgent.query(String s): this(document.query(s));
   DomAgent._as(this.node);
   
@@ -134,7 +133,7 @@ class DomAgent {
   
   /** Returns the final used values of all the CSS properties
    */
-  CssStyleDeclaration get computedStyle 
+  CSSStyleDeclaration get computedStyle 
   => window.$dom_getComputedStyle(node, "");
 
   /** Returns if a DOM element is a descendant of this element or
@@ -158,10 +157,10 @@ class DomAgent {
    * the optional [style]. If [node] is null, the size is based only
    * only [style].
    *
-   *    new DomAgent(node_text_will_be_assigned).measureText(s);
-   *    new DomAgent(null).measureText(s, style);
+   *     new DomAgent(node_text_will_be_assigned).measureText(s);
+   *     new DomAgent(null).measureText(s, style);
    */
-  Size measureText(String text, [CssStyleDeclaration style]) {
+  Size measureText(String text, [CSSStyleDeclaration style]) {
     if (_txtdiv == null) {
       _txtdiv = new DivElement();
       _txtdiv.style.cssText =
@@ -169,7 +168,7 @@ class DomAgent {
       document.body.nodes.add(_txtdiv);
     }
 
-    final CssStyleDeclaration dst = _txtdiv.style;
+    final CSSStyleDeclaration dst = _txtdiv.style;
     _txtdiv.innerHTML = text;
     if (node != null)
       Css.copy(dst, window.$dom_getComputedStyle(node, ""), Css.textNames);
@@ -201,9 +200,7 @@ class DomAgent {
  * for handling window.
  */
 class WindowAgent extends DomAgent {
-  factory WindowAgent(Window w)
-  => w != null ? new WindowAgent._as(w): new _NullAgent();
-  WindowAgent._as(var v): super._as(v);
+  WindowAgent(Window w): super._as(w);
 
   int get innerWidth => node.innerWidth;
   int get innerHeight => node.innerHeight;
@@ -217,15 +214,6 @@ class WindowAgent extends DomAgent {
   Offset get offset => new Offset(0, 0);
   Offset get pageOffset => offset;
   bool isDescendantOf(Element parent) => false;
-  CssStyleDeclaration get computedStyle => new CssStyleDeclaration();
+  CSSStyleDeclaration get computedStyle => new CSSStyleDeclaration();
   void set visible(bool visible) {}
-}
-class _NullAgent extends WindowAgent {
-  _NullAgent(): super._as(null);
-  int get innerWidth => 0;
-  int get innerHeight => 0;
-  int get width => 0;
-  int get height => 0;
-  int get contentWidth => 0;
-  int get contentHeight => 0;
 }

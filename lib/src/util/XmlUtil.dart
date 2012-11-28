@@ -6,7 +6,7 @@ part of rikulo_util;
 /**
  * XML Utilities.
  */
-class XMLUtil {
+class XmlUtil {
   static const Map<String, String>
     _decs = const {'lt': '<', 'gt': '>', 'amp': '&', 'quot': '"'},
     _encs = const {'<': 'lt', '>': 'gt', '&': 'amp', '"': 'quot'};
@@ -84,10 +84,9 @@ class XMLUtil {
         if (l >= 0) {
           String dec = txt[j + 1] == '#' ?
             new String.fromCharCodes(
-              [/*TODO: wait until Dart support Hexadecimal parsing
-                txt[j + 2].toLowerCase() == 'x' ?
-                parseInt(txt.substring(j + 3, l), 16):*/
-                int.parse(txt.substring(j + 2, l))]):
+              [int.parse(
+                txt[j + 2].toLowerCase() == 'x' ? "0x${txt.substring(j + 3, l)}":
+                  txt.substring(j + 2, l))]):
             _decs[txt.substring(j + 1, l)];
           if (dec != null) {
             out.add(txt.substring(k, j)).add(dec);

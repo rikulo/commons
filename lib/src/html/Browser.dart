@@ -10,14 +10,14 @@ typedef bool _BrowserMatch(RegExp regex);
  */
 class Browser {
   // all RegExp shall be lower case here
-  static const RegExp _rwebkit = const RegExp(r"(webkit)[ /]([\w.]+)"),
-    _rsafari = const RegExp(r"(safari)[ /]([\w.]+)"),
-    _rchrome = const RegExp(r"(chrome)[ /]([\w.]+)"),
-    _rmsie = const RegExp(r"(msie) ([\w.]+)"),
-    _rmozilla = const RegExp(r"(mozilla)(?:.*? rv:([\w.]+))?"),
-    _ropera = const RegExp(r"(opera)(?:.*version)?[ /]([\w.]+)"),
-    _rios = const RegExp(r"os[ /]([\w_]+) like mac os"),
-    _randroid = const RegExp(r"android[ /]([\w.]+)");
+  static final RegExp _rwebkit = new RegExp(r"(webkit)[ /]([\w.]+)"),
+    _rsafari = new RegExp(r"(safari)[ /]([\w.]+)"),
+    _rchrome = new RegExp(r"(chrome)[ /]([\w.]+)"),
+    _rmsie = new RegExp(r"(msie) ([\w.]+)"),
+    _rmozilla = new RegExp(r"(mozilla)(?:.*? rv:([\w.]+))?"),
+    _ropera = new RegExp(r"(opera)(?:.*version)?[ /]([\w.]+)"),
+    _rios = new RegExp(r"os[ /]([\w_]+) like mac os"),
+    _randroid = new RegExp(r"android[ /]([\w.]+)");
 
   /** The browser's name. */
   String name;
@@ -48,7 +48,7 @@ class Browser {
    * it can be resized by the user.
    */
   bool mobile = false;
-  /** Whether it supports the touch events.
+  /** Whether it supports the touch gestures.
    */
   bool touch = false;
 
@@ -150,42 +150,6 @@ class Browser {
     }
   }
 
-  /** Returns the inner size of the browser, excluding
-   * the margin and border.
-   *
-   * Notice that, for better performance, the inner size is cached.
-   * If you changed `document.body`'s margin or border, you shall invoke
-   * [updateSize] to reset the cache.
-   */
-  Size get innerSize {
-    if (_innerSize == null) {
-      final cs = new DomAgent(document.body).computedStyle;
-      _innerSize = new Size(
-        size.width - Css.intOf(cs.marginLeft) - Css.intOf(cs.marginRight)
-        - Css.intOf(cs.borderLeft) - Css.intOf(cs.borderRight),
-        size.height - Css.intOf(cs.marginTop) - Css.intOf(cs.marginBottom)
-        - Css.intOf(cs.borderTop) - Css.intOf(cs.borderBottom));
-
-    }
-    return _innerSize;
-  }
-  Size _innerSize;
-  /** Returns the inner offset.
-   * If `document.body`'s position is absolute, relative or fixed, it is (0, 0).
-   * Otherwise, it is the sum of margin and border width.
-   */
-  Offset get innerOffset {
-    if (_innerOfs == null) {
-      final cs = new DomAgent(document.body).computedStyle;
-      final pos = cs.position;
-      _innerOfs = pos == "static" || pos == "" ?
-        new Offset(Css.intOf(cs.marginLeft) + Css.intOf(cs.borderLeft),
-          Css.intOf(cs.marginTop) + Css.intOf(cs.borderTop)):
-        new Offset(0, 0);
-    }
-    return _innerOfs;
-  }
-  Offset _innerOfs;
   /** Updates the browser's size. It is called when the browser's size
    * is changed (including device's orientation is changed).
    *
@@ -194,12 +158,7 @@ class Browser {
    */
   void updateSize() {
     final q = new WindowAgent(window);
-    final newsz = new Size(q.innerWidth, q.innerHeight);
-    if (newsz != size) {
-      size = newsz;
-      _innerSize = null;
-      _innerOfs = null;
-    }
+    size = new Size(q.innerWidth, q.innerHeight);
   }
 }
 
