@@ -169,29 +169,30 @@ class DomAgent {
     }
 
     final CSSStyleDeclaration dst = _txtdiv.style;
-    _txtdiv.innerHTML = text;
+    _txtdiv.innerHtml = text;
     if (node != null)
       Css.copy(dst, window.$dom_getComputedStyle(node, ""), Css.textNames);
     if (style != null)
       Css.copy(dst, style, Css.textNames);
 
     final Size sz = new Size(_txtdiv.offsetWidth, _txtdiv.offsetHeight);
-    _txtdiv.innerHTML = "";
+    _txtdiv.innerHtml = "";
     return sz;
   }
   static Element _txtdiv;
 
-  /// show the element.
+  /** show the element.
+   *
+   * Notice that this method actually *resets* `Element`'s `style.display`
+   * to empty. In other words, if the CSS rules associated with the given node
+   * are specified with `display:none`, the element is still not visible.
+   */
   void show() {
-    visible = true;
+    node.style.display = "";
   }
   /// hide the element.
   void hide() {
-    visible = false;
-  }
-  /// set the visiblility of element
-  void set visible(bool visible) {
-    node.style.display = visible ? "": "none";
+    node.style.display = "none";
   }
 }
 
