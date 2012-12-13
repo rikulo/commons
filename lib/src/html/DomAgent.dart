@@ -14,7 +14,7 @@ class DomAgent {
   DomAgent(Element this.node);
   DomAgent.query(String s): this(document.query(s));
   DomAgent._as(this.node);
-  
+
   /** Returns the inner width of the given element, including padding
    * but not including border, margin and scroll bar.
    *
@@ -123,17 +123,17 @@ class DomAgent {
     top += window.pageYOffset;
     return new Offset(left, top);
   }
-  
+
   /** Return the rectangular range of the node relative to the document.
    */
   Rectangle get rectangle {
     final Offset off = pageOffset;
     return new Rectangle(off.left, off.top, off.left + width, off.top + height);
   }
-  
+
   /** Returns the final used values of all the CSS properties
    */
-  CssStyleDeclaration get computedStyle 
+  CssStyleDeclaration get computedStyle
   => window.$dom_getComputedStyle(node, "");
 
   /** Returns if a DOM element is a descendant of this element or
@@ -146,11 +146,11 @@ class DomAgent {
     }
     return false;
   }
-  
+
   /** Return true if the element is input.
    */
   bool get isInput => node.tagName == 'INPUT' || node.tagName == 'TEXTAREA';
-  
+
   /** Measure the size of the given text.
    *
    * If [node] is not null, the size will be based on it CSS style and

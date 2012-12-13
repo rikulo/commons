@@ -29,11 +29,11 @@ class Offset {
   => new Offset(left * scalar, top * scalar);
   Offset operator /(num scalar)
   => new Offset(left / scalar, top / scalar);
-  
+
   /** The Euclidean norm of the offset as a vector.
    */
   num norm() => left == null || top == null ? null : sqrt(left * left + top * top);
-  
+
   /** Return an Offset with the same direction but unit length. i.e. the unit
    * vector of this Offset.
    */
@@ -42,9 +42,9 @@ class Offset {
     return n != null && n > 0 ? this / n : null;
   }
 
-  //@override  
+  //@override
   int get hashCode => (left + top).toInt();
-  //@override  
+  //@override
   String toString() => "($left, $top)";
 }
 /**
@@ -69,30 +69,30 @@ class Offset3d extends Offset {
   => new Offset3d(left * scalar, top * scalar, zIndex * scalar);
   Offset3d operator /(num scalar)
   => new Offset3d(left / scalar, top / scalar, zIndex / scalar);
-  
-  //@override  
-  num norm() => left == null || top == null || zIndex == null ? null : 
+
+  //@override
+  num norm() => left == null || top == null || zIndex == null ? null :
     sqrt(left * left + top * top + zIndex * zIndex);
-  
-  //@override  
+
+  //@override
   int get hashCode => (x + y + z).toInt();
-  //@override  
+  //@override
   String toString() => "($x, $y, $z)";
 }
 
 /** An utility that supplies velocity based on given snapshot of position-time
- * pairs. This utility is designed to avoid calculating velocity from an 
- * excessively small denominator. 
+ * pairs. This utility is designed to avoid calculating velocity from an
+ * excessively small denominator.
  */
 class VelocityProvider {
   Offset _pos, _vel;
   int _time;
-  
+
   /** Initialize the provider with current time and position. */
   VelocityProvider(Offset position, int time) : _pos = position, _time = time {
     _vel = new Offset(0, 0);
   }
-  
+
   /** Provide latest position and time. */
   void snapshot(Offset position, int time) {
     final int diffTime = time - _time;
@@ -102,7 +102,7 @@ class VelocityProvider {
       _pos = position;
     }
   }
-  
+
   /** Retrieve velocity. */
-  Offset get velocity => _vel; 
+  Offset get velocity => _vel;
 }

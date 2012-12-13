@@ -32,7 +32,7 @@ class StringUtil {
       else cc += _CC_a - 10;
       codes.insertRange(0, 1, cc);
     }
-    
+
     if ((val = digits - codes.length) > 0)
       codes.insertRange(0, val, _CC_0);
     return codes.isEmpty ? "0": new String.fromCharCodes(codes);
@@ -74,12 +74,12 @@ class StringUtil {
     return sb.toString();
   }
 
-  /** Returns a String that filter out from a "source" String any characters specified in "exclude" String. 
+  /** Returns a String that filter out from a "source" String any characters specified in "exclude" String.
    * e.g.
    * filterOut("aabbccdd", "bd") will return "aacc"; "b" and "c" character are filter out.
    * + [source] - the source String.
    * + [exclude] - the characters to be excluded.
-   */ 
+   */
   static String filterOut(String source, String exclude) {
     StringBuffer sb = new StringBuffer();
     for (int j = 0, len = source.length; j < len; ++j) {
@@ -89,13 +89,13 @@ class StringUtil {
     }
     return sb.toString();
   }
-  
-  /** Returns a String that filter out from a "source" String any characters not specified in "include" String. 
+
+  /** Returns a String that filter out from a "source" String any characters not specified in "include" String.
    * e.g.
    * filterIn("aabbccdd", "bd") will return "bbdd"; "b" and "c" character are filter in.
    * + [source] - the source String.
    * + [include] - the characters to be included.
-   */ 
+   */
   static String filterIn(String source, String include) {
     StringBuffer sb = new StringBuffer();
     for (int j = 0, len = source.length; j < len; ++j) {

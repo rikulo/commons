@@ -147,7 +147,7 @@ class JsUtil {
     if (node is Element) {
       Element elem = node;
       String tagname = elem.tagName;
-      AttributeMap attrs = elem.attributes;
+      Map attrs = elem.attributes;
       Map kidmap = attrs != null ? new Map.from(attrs) : new Map();
       var kidval = "";
       for (Node n in node.nodes)

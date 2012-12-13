@@ -8,4 +8,4 @@ authors:
 - Simon Pai <simonpai@rikulo.org>
 homepage: http://rikulo.org
 dependencies:
-  js: '0.0.7'
+  js: any

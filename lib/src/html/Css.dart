@@ -38,7 +38,7 @@ class Css {
 
   /** Converts a [Transformation] object to CSS value for property transform.
    */
-  static String transform(Transformation t) => 
+  static String transform(Transformation t) =>
       "matrix(${t[0][0]}, ${t[1][0]}, ${t[0][1]}, ${t[1][1]}, ${t[0][2]}, ${t[1][2]})";
   /** Converts a CSS value presenting `translate3d` for the property called `transform`.
    */
@@ -83,9 +83,9 @@ class Css {
     return defaultValue;
   }
   static final RegExp _reNum = new RegExp(r"([-]?[0-9]+)");
-  
+
   /** Return the sum of the integers of the given [values] converted by [intOf]
-   * function. 
+   * function.
    */
   static int sumOf(List<String> values, {bool reportError}) {
     int sum = 0;

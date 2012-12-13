@@ -108,7 +108,7 @@ class Browser {
       touch = mobile = ios = true;
       iosVersion = _versionOf(m2.group(1), '_');
     }
-    
+
     if (bm(_rwebkit)) {
       webkit = true;
       webkitVersion = version;
