@@ -30,6 +30,8 @@ class HttpRequestWrapper implements HttpRequest {
   HttpHeaders get headers => origin.headers;
   @override
   List<Cookie> get cookies => origin.cookies;
+  @override
+  X509Certificate get certificate => origin.certificate;
   //@override
   HttpSession session([init(HttpSession session)]) => origin.session(init);
   @override

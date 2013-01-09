@@ -97,7 +97,7 @@ class Matrix {
         sb.add(_get(r, c));
       }
     }
-    return sb.add("]]").toString();
+    return (sb..add("]]")).toString();
   }
   
   // helper //

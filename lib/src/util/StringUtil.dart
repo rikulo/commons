@@ -117,12 +117,12 @@ class StringUtil {
     for (int i = 0, len = name.length; i < len; ++i) {
       if (name == '-') {
         if (sb == null) sb = new StringBuffer();
-        sb.add(name.substring(k, i))
-          .add(name[++i].toUpperCase());
+        sb..add(name.substring(k, i))
+          ..add(name[++i].toUpperCase());
         k = i + 1;
       }
     }
-    return sb != null ? sb.add(name.substring(k)).toString(): name;
+    return sb != null ? (sb..add(name.substring(k))).toString(): name;
   }
   /** Uncamelizes the give string.
    * For example, `backgroundColor' => `background-color`.
@@ -134,11 +134,11 @@ class StringUtil {
       final cc = name.charCodeAt(i);
       if (cc >= _CC_A && cc <= _CC_Z) {
         if (sb == null) sb = new StringBuffer();
-        sb.add(name.substring(k, i)).add('-').add(name[i].toLowerCase());
+        sb..add(name.substring(k, i))..add('-')..add(name[i].toLowerCase());
         k = i + 1;
       }
     }
-    return sb != null ? sb.add(name.substring(k)).toString(): name;
+    return sb != null ? (sb..add(name.substring(k))).toString(): name;
   }
 }
 
