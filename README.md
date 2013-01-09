@@ -32,6 +32,36 @@ To install stuff that is still in development, add this to your `pubspec.yam`:
 
 For more information, please refer to [Pub: Dependencies](http://pub.dartlang.org/doc/pubspec.html#dependencies).
 
+##Run on Client and/or Server
+
+<table border="1" width="100%">
+  <tr>
+    <td>Library</td>
+    <td>Run on Server</td>
+    <td>Run on Client</td>
+  </tr>
+  <tr>
+    <td><code>io.dart</code></td>
+    <td>Yes</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td><code>js.dart</code></td>
+    <td>No</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <td><code>mirrors.dart</code></td>
+    <td>Yes</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <td><code>util.dart</code></td>
+    <td>Yes</td>
+    <td>Yes</td>
+  </tr>
+</table>
+
 ##Notes to Contributors
 
 ###Fork Rikulo Commons
