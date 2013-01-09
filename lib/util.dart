@@ -2,7 +2,8 @@
 //Feb. 04, 2012
 library rikulo_util;
 
-import "dart:html";
+//don't include dart:html since this library is designed to work
+//at both client and server
 import "dart:math";
 
 part "src/util/StringUtil.dart";
