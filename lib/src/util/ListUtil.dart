@@ -29,20 +29,6 @@ class ListUtil {
     return false;
   }
 
-  /** Checks if the given range is allowed in the given list.
-   */
-  static void rangeCheck(Sequence a, int start, int length) {
-    if (length < 0) {
-      throw new ArgumentError("negative length $length");
-    }
-    if (start < 0 || start >= a.length) {
-      throw new RangeError(start);
-    }
-    if (start + length > a.length) {
-      throw new RangeError(start + length);
-    }
-  }
-
   /** Returns the first element of the given collection, or null.
    */
   static first(Collection col)
