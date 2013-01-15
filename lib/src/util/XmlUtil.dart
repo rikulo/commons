@@ -95,7 +95,6 @@ class XmlUtil {
         }
       }
     }
-    return k == 0 ? txt:
-      k < tl ? (out..add(txt.substring(k))).toString(): out.toString();
+    return k == 0 ? txt: k < tl ? _sb2s(out, txt.substring(k)): out.toString();
   }
 }
