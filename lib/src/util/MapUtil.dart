@@ -25,6 +25,78 @@ class MapUtil {
    * Refer to [View.dataAttributes] for a sample implementation.
    */
   static Map onDemand(AsMap creator) => new _OnDemandMap(creator);
+
+  /** Parses the given string into a map.
+   * The format of data is the same as HTML: `=` is optional, and
+   * the value must be enclosed with `'` or `"`.
+   *
+   * * [backslash] specifies whether to handle backslash, such \n and \\.
+   * * [defaultValue] specifies the value to use if it is not specified
+   * (i.e., no equal sign).
+   */
+  static Map<String, String> parse(String data,
+    {bool backslash:true, String defaultValue}) {
+    Map<String, String> map = new LinkedHashMap();
+    for (int i = 0, len = data.length; i < len;) {
+      i = StringUtil.skipWhitespaces(data, i);
+      if (i < 0)
+        break; //no more
+
+      final j = i;
+      for (; i < len; ++i) {
+        final cc = data[i];
+        if (cc == '=' || StringUtil.isChar(cc, whitespace: true))
+          break;
+        if (cc == "'" || cc == '"')
+          throw "Quotation marks not allowed in key, $data";
+      }
+
+      final key = data.substring(j, i);
+      if (key.isEmpty)
+        throw "Key required, $data";
+
+      i = StringUtil.skipWhitespaces(data, i);
+      if (i < 0 || data[i] != '=') {
+        map[key] = defaultValue;
+        if (i < 0)
+          break; //done
+        continue;
+      }
+
+      final val = new StringBuffer();
+      i = StringUtil.skipWhitespaces(data, i + 1);
+      if (i >= 0) {
+        final sep = data[i];
+        if (sep != '"' &&  sep != "'")
+          throw "Quatation marks required for a value, $data";
+
+        for (;;) {
+          if (++i >= len)
+            throw "Unclosed string, $data";
+
+          final cc = data[i];
+          if (cc == sep) {
+            ++i;
+            break; //done
+          }
+          if (backslash && cc == '\\') {
+            if (++i >= len)
+              throw "Illegal backslash, $data";
+            switch (data[i]) {
+              case 'n': val.add('\n'); continue;
+              case 't': val.add('\t'); continue;
+              case 'b': val.add('\b'); continue;
+              case 'r': val.add('\r'); continue;
+              default: val.add(data[i]); continue;
+            }
+          }
+          val.add(cc);
+        }
+      } //if i >= 0
+      map[key] = val.toString();
+    }
+    return map; 
+  }
 }
 
 class _OnDemandMap<K, V> implements Map<K,V> {
