@@ -5,6 +5,7 @@
 library rikulo_js;
 
 import 'dart:html';
+import 'dart:async';
 import 'package:js/js.dart' as js;
 
 /** Utilities for JavaScript handling.

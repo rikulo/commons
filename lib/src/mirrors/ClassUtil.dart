@@ -160,7 +160,7 @@ class ClassUtil {
    * + [params] - the positional + optional parameters.
    * + [nameArgs] - the optional named arguments.
    */
-  static Object invokeObjectMirror(ObjectMirror inst, MethodMirror m,
+  static Future invokeObjectMirror(ObjectMirror inst, MethodMirror m,
       List<Object> params, [Map<String, Object> namedArgs]) {
     Future<InstanceMirror> result;
     if (m.isGetter)
@@ -174,9 +174,7 @@ class ClassUtil {
 
       result = inst.invoke(m.simpleName, params, namedArgs);
     }
-    while(!result.isComplete) //wait until complete
-      ;
-    return result.value.reflectee;
+    return result.then((value) => value.reflectee);
   }
 
   /**
@@ -186,14 +184,12 @@ class ClassUtil {
    * + [params] - the positional + optional parameters.
    * + [nameArgs] - the optional named arguments.
    */
-  static Object apply(Function fn, List<Object> params, [Map<String, Object> namedArgs]) {
+  static Future apply(Function fn, List<Object> params, [Map<String, Object> namedArgs]) {
     ClosureMirror closure = reflect(fn);
     params = _convertParams(params);
     namedArgs = _convertNamedArgs(namedArgs);
     Future<InstanceMirror> result = closure.apply(params, namedArgs);
-    while(!result.isComplete) //wait until complete
-      ;
-    return result.value.reflectee;
+    return result.then((value) => value.reflectee);
   }
 
   static List _convertParams(List params) {
@@ -234,11 +230,9 @@ class ClassUtil {
     return newInstanceByClassMirror(clz);
   }
 
-  static Object newInstanceByClassMirror(ClassMirror clz) {
+  static Future newInstanceByClassMirror(ClassMirror clz) {
     Future<InstanceMirror> inst = clz.newInstance("", []); //unamed constructor
-    while(!inst.isComplete)
-      ; //wait until created
-    return inst.value.reflectee;
+    return inst.then((value) => value.reflectee);
   }
 
   static String _toSetter(String name)
