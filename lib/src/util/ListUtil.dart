@@ -32,16 +32,14 @@ class ListUtil {
   /** Returns the first element of the given collection, or null.
    */
   static first(Collection col)
-  => col.isEmpty ? null: col.iterator().next();
+  => col.isEmpty ? null: (col.iterator..moveNext()).current;
 }
 
 class _EmptyIter<T> implements Iterator<T> {
   const _EmptyIter();
 
+  @override
+  T get current => null;
   //@override
-  T next() {
-    throw new StateError("No more elements");
-  }
-  //@override
-  bool get hasNext => false;
+  bool moveNext() => false;
 }
