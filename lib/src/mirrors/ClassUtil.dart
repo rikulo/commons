@@ -148,7 +148,7 @@ class ClassUtil {
    * + [params] - the positional + optional parameters.
    * + [nameArgs] - the optional named arguments.
    */
-  static Object invoke(Object inst, MethodMirror m, List<Object> params,
+  static Future invoke(Object inst, MethodMirror m, List<Object> params,
                        [Map<String, Object> namedArgs])
     => invokeObjectMirror(reflect(inst), m, params, namedArgs);
 
@@ -160,7 +160,7 @@ class ClassUtil {
    * + [params] - the positional + optional parameters.
    * + [nameArgs] - the optional named arguments.
    */
-  static Object invokeObjectMirror(ObjectMirror inst, MethodMirror m,
+  static Future invokeObjectMirror(ObjectMirror inst, MethodMirror m,
       List<Object> params, [Map<String, Object> namedArgs]) {
     Future<InstanceMirror> result;
     if (m.isGetter)
@@ -174,13 +174,7 @@ class ClassUtil {
 
       result = inst.invoke(m.simpleName, params, namedArgs);
     }
-    Object obj = null;
-    bool done = false;
-    result.then((value) { obj = value.reflectee; done = true; });
-    while (!done) { //wait
-      new Timer(0, (timer) => timer.cancel()); //yield control
-    }
-    return obj;
+    return result.then((value) => value.reflectee);
   }
 
   /**
@@ -190,18 +184,12 @@ class ClassUtil {
    * + [params] - the positional + optional parameters.
    * + [nameArgs] - the optional named arguments.
    */
-  static Object apply(Function fn, List<Object> params, [Map<String, Object> namedArgs]) {
+  static Future apply(Function fn, List<Object> params, [Map<String, Object> namedArgs]) {
     ClosureMirror closure = reflect(fn);
     params = _convertParams(params);
     namedArgs = _convertNamedArgs(namedArgs);
     Future<InstanceMirror> result = closure.apply(params, namedArgs);
-    Object obj = null;
-    bool done = false;
-    result.then((value) { obj = value.reflectee; done = true; });
-    while (!done) { //wait
-      new Timer(0, (timer) => timer.cancel()); //yield control
-    }
-    return obj;
+    return result.then((value) => value.reflectee);
   }
 
   static List _convertParams(List params) {
@@ -237,20 +225,14 @@ class ClassUtil {
   /**
    * Create a new instance of the specified class name.
    */
-  static Object newInstance(String className) {
+  static Future newInstance(String className) {
     ClassMirror clz = forName(className);
     return newInstanceByClassMirror(clz);
   }
 
-  static Object newInstanceByClassMirror(ClassMirror clz) {
+  static Future newInstanceByClassMirror(ClassMirror clz) {
     Future<InstanceMirror> inst = clz.newInstance("", []); //unamed constructor
-    Object obj = null;
-    bool done = false;
-    inst.then((value) { obj = value.reflectee; done = true; });
-    while(!done) { //wait
-      new Timer(0, (timer) => timer.cancel()); //yield control
-    }
-    return obj;
+    return inst.then((value) => value.reflectee);
   }
 
   static String _toSetter(String name)
