@@ -160,7 +160,7 @@ class ClassUtil {
    * + [params] - the positional + optional parameters.
    * + [nameArgs] - the optional named arguments.
    */
-  static Future invokeObjectMirror(ObjectMirror inst, MethodMirror m,
+  static Object invokeObjectMirror(ObjectMirror inst, MethodMirror m,
       List<Object> params, [Map<String, Object> namedArgs]) {
     Future<InstanceMirror> result;
     if (m.isGetter)
@@ -174,7 +174,13 @@ class ClassUtil {
 
       result = inst.invoke(m.simpleName, params, namedArgs);
     }
-    return result.then((value) => value.reflectee);
+    Object obj = null;
+    bool done = false;
+    result.then((value) { obj = value.reflectee; done = true; });
+    while (!done) { //wait
+      new Timer(0, (timer) => timer.cancel()); //yield control
+    }
+    return obj;
   }
 
   /**
@@ -184,12 +190,18 @@ class ClassUtil {
    * + [params] - the positional + optional parameters.
    * + [nameArgs] - the optional named arguments.
    */
-  static Future apply(Function fn, List<Object> params, [Map<String, Object> namedArgs]) {
+  static Object apply(Function fn, List<Object> params, [Map<String, Object> namedArgs]) {
     ClosureMirror closure = reflect(fn);
     params = _convertParams(params);
     namedArgs = _convertNamedArgs(namedArgs);
     Future<InstanceMirror> result = closure.apply(params, namedArgs);
-    return result.then((value) => value.reflectee);
+    Object obj = null;
+    bool done = false;
+    result.then((value) { obj = value.reflectee; done = true; });
+    while (!done) { //wait
+      new Timer(0, (timer) => timer.cancel()); //yield control
+    }
+    return obj;
   }
 
   static List _convertParams(List params) {
@@ -230,9 +242,15 @@ class ClassUtil {
     return newInstanceByClassMirror(clz);
   }
 
-  static Future newInstanceByClassMirror(ClassMirror clz) {
+  static Object newInstanceByClassMirror(ClassMirror clz) {
     Future<InstanceMirror> inst = clz.newInstance("", []); //unamed constructor
-    return inst.then((value) => value.reflectee);
+    Object obj = null;
+    bool done = false;
+    inst.then((value) { obj = value.reflectee; done = true; });
+    while(!done) { //wait
+      new Timer(0, (timer) => timer.cancel()); //yield control
+    }
+    return obj;
   }
 
   static String _toSetter(String name)
