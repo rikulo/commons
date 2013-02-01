@@ -148,7 +148,7 @@ class ClassUtil {
    * + [params] - the positional + optional parameters.
    * + [nameArgs] - the optional named arguments.
    */
-  static Object invoke(Object inst, MethodMirror m, List<Object> params,
+  static Future invoke(Object inst, MethodMirror m, List<Object> params,
                        [Map<String, Object> namedArgs])
     => invokeObjectMirror(reflect(inst), m, params, namedArgs);
 
@@ -225,7 +225,7 @@ class ClassUtil {
   /**
    * Create a new instance of the specified class name.
    */
-  static Object newInstance(String className) {
+  static Future newInstance(String className) {
     ClassMirror clz = forName(className);
     return newInstanceByClassMirror(clz);
   }
