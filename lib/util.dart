@@ -5,6 +5,7 @@ library rikulo_util;
 //don't include dart:html since this library is designed to work
 //at both client and server
 import "dart:math";
+import "dart:collection";
 
 part "src/util/StringUtil.dart";
 part "src/util/XmlUtil.dart";

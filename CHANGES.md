@@ -6,6 +6,7 @@ January 23, 2013
 
 
 * HttpHeadersWrapper is added.
+* ListUtil is removed (no longer needed).
 * Upgrade to new Dart SDK.
 
 ##0.6.2
