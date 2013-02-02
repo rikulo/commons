@@ -184,7 +184,7 @@ class JsUtil {
       final int freq, final int timeout) {
     final Completer cmpl = new Completer();
     final int end = timeout < 0 ?
-        timeout : new Date.now().millisecondsSinceEpoch + timeout;
+        timeout : new DateTime.now().millisecondsSinceEpoch + timeout;
     _doWhen0(cmpl, ready, freq, end);
     return cmpl.future;
   }
@@ -194,7 +194,7 @@ class JsUtil {
       if (ready())
         cmpl.complete(true);
       else {
-        int diff = end - new Date.now().millisecondsSinceEpoch;
+        int diff = end - new DateTime.now().millisecondsSinceEpoch;
         if (end < 0 || diff > 0) //still have time to try it
           _doWhen0(cmpl, ready, freq, end); //try again
         else

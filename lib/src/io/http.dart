@@ -131,21 +131,21 @@ class HttpHeadersWrapper extends HttpHeaders {
     origin.noFolding(name);
   }
   @override
-  Date get date => origin.date;
+  DateTime get date => origin.date;
   @override
-  void set date(Date date) {
+  void set date(DateTime date) {
     origin.date = date;
   }
   @override
-  Date get expires => origin.expires;
+  DateTime get expires => origin.expires;
   @override
-  void set expires(Date expires) {
+  void set expires(DateTime expires) {
     origin.expires = expires;
   }
   @override
-  Date get ifModifiedSince => origin.ifModifiedSince;
+  DateTime get ifModifiedSince => origin.ifModifiedSince;
   @override
-  void set ifModifiedSince(Date ifModifiedSince) {
+  void set ifModifiedSince(DateTime ifModifiedSince) {
     origin.ifModifiedSince = ifModifiedSince;
   }
   @override

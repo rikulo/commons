@@ -10,7 +10,7 @@ class ClassUtil {
   static final ClassMirror NUM_MIRROR = ClassUtil.forName("dart:core.num");
   static final ClassMirror INT_MIRROR = ClassUtil.forName("dart:core.int");
   static final ClassMirror DOUBLE_MIRROR = ClassUtil.forName("dart:core.double");
-  static final ClassMirror DATE_MIRROR = ClassUtil.forName("dart:core.Date");
+  static final ClassMirror DATE_TIME_MIRROR = ClassUtil.forName("dart:core.DateTime");
   static final ClassMirror STRING_MIRROR = ClassUtil.forName("dart:core.String");
   static final ClassMirror OBJECT_MIRROR = ClassUtil.forName("dart:core.Object");
 
@@ -75,7 +75,7 @@ class ClassUtil {
 
   /**
    * Returns whether the specified class is a simple class;
-   * i.e. num, bool, Date, String.
+   * i.e. num, bool, DateTime, String.
    *
    * + [cls] - the class
    */
@@ -84,7 +84,7 @@ class ClassUtil {
     return qname == "dart:core.int" ||
            qname == "dart:core.double" ||
            qname == "dart:core.String" ||
-           qname == "dart:core.Date" ||
+           qname == "dart:core.DateTime" ||
            qname == "dart:core.bool";
   }
 
