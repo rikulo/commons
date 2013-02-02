@@ -4,24 +4,11 @@
 
 part of rikulo_mirrors;
 
+final ClassMirror _OBJECT_MIRROR = ClassUtil.forName("dart:core.Object");
+final ClassMirror _MAP_MIRROR = ClassUtil.forName("dart:core.Map");
+
 /** Utility class used with Mirror */
 class ClassUtil {
-  static final ClassMirror BOOL_MIRROR = ClassUtil.forName("dart:core.bool");
-  static final ClassMirror NUM_MIRROR = ClassUtil.forName("dart:core.num");
-  static final ClassMirror INT_MIRROR = ClassUtil.forName("dart:core.int");
-  static final ClassMirror DOUBLE_MIRROR = ClassUtil.forName("dart:core.double");
-  static final ClassMirror DATE_TIME_MIRROR = ClassUtil.forName("dart:core.DateTime");
-  static final ClassMirror STRING_MIRROR = ClassUtil.forName("dart:core.String");
-  static final ClassMirror OBJECT_MIRROR = ClassUtil.forName("dart:core.Object");
-
-  static final ClassMirror ENUM_MIRROR = ClassUtil.forName("rikulo:orm.Enum");
-
-  static final ClassMirror MAP_MIRROR = ClassUtil.forName("dart:core.Map");
-  static final ClassMirror LIST_MIRROR = ClassUtil.forName("dart:core.List");
-  static final ClassMirror QUEUE_MIRROR = ClassUtil.forName("dart:core.Queue");
-  static final ClassMirror SET_MIRROR = ClassUtil.forName("dart:core.Set");
-  static final ClassMirror COLLECTION_MIRROR = ClassUtil.forName("dart:core.Collection");
-
   /**
    * Return the ClassMirror of the qualified class name
    *
@@ -92,7 +79,7 @@ class ClassUtil {
    * Returns the generic element class of the collection class.
    */
   static ClassMirror getElementClassMirror(ClassMirror collection) {
-    int idx = isAssignableFrom(MAP_MIRROR, collection) ? 1 : 0;
+    int idx = isAssignableFrom(_MAP_MIRROR, collection) ? 1 : 0;
     return _getElementClassMirror0(collection, idx);
   }
 
@@ -106,7 +93,7 @@ class ClassUtil {
 //TODO(henri): Dart have not implemented typeArguments!
 //    List<TypeMirror> vars = collection.typeArguments.getValues();
 //    return getCorrespondingClassMirror(vars[idx]);
-    return OBJECT_MIRROR;
+    return _OBJECT_MIRROR;
   }
 
   /**
@@ -251,7 +238,7 @@ class ClassUtil {
         setter = cm.methods[mname];
       if (setter != null && setter.parameters.length == 1)
         return setter;
-    } while((cm = cm.superclass) != OBJECT_MIRROR);
+    } while((cm = cm.superclass) != _OBJECT_MIRROR);
     return null;
   }
 }
