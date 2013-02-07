@@ -40,11 +40,6 @@ class ClassUtil {
     if (isTopClass(src)) //no more super class
       return false;
 
-    //PATCH(henri): reflect(new List()).qualifiedName is "dart:coreimpl.List"
-    if (src.owner != null && "dart:coreimpl" == src.owner.qualifiedName &&
-        tgt.qualifiedName == "dart:core.${src.simpleName}")
-      return true;
-
     //TypedefMirror does not implement superinterfaces/superclass
     if (src is TypedefMirror) return false;
 
