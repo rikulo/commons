@@ -15,6 +15,6 @@ class _EmptyIter<T> implements Iterator<T> {
 
   @override
   T get current => null;
-  //@override
+  @override
   bool moveNext() => false;
 }

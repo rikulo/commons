@@ -12,7 +12,7 @@ class StringUtil {
     int j = src.length;
     final List<int> dst = new List(j);
     while (--j >= 0)
-      dst[j] = src.charCodeAt(j) + diff;
+      dst[j] = src.codeUnitAt(j) + diff;
     return new String.fromCharCodes(dst);
   }
 
@@ -50,7 +50,7 @@ class StringUtil {
    */
   static bool isChar(String cc, {bool digit: false, bool upper: false, bool lower: false,
   bool whitespace: false, String match: null}) {
-    int v = cc.isEmpty ? 0: cc.charCodeAt(0);
+    int v = cc.isEmpty ? 0: cc.codeUnitAt(0);
     return (digit && v >= _CC_0 && v <= _CC_9)
     || (upper && v >= _CC_A && v <= _CC_Z)
     || (lower && v >= _CC_a && v <= _CC_z)
@@ -140,7 +140,7 @@ class StringUtil {
     StringBuffer sb;
     int k = 0;
     for (int i = 0, len = name.length; i < len; ++i) {
-      final cc = name.charCodeAt(i);
+      final cc = name.codeUnitAt(i);
       if (cc >= _CC_A && cc <= _CC_Z) {
         if (sb == null) sb = new StringBuffer();
         sb..add(name.substring(k, i))..add('-')..add(name[i].toLowerCase());
@@ -151,9 +151,9 @@ class StringUtil {
   }
 }
 
-final int _CC_0 = '0'.charCodeAt(0), _CC_9 = _CC_0 + 9,
-  _CC_A = 'A'.charCodeAt(0), _CC_Z = _CC_A + 25,
-  _CC_a = 'a'.charCodeAt(0), _CC_z = _CC_a + 25;
+final int _CC_0 = '0'.codeUnitAt(0), _CC_9 = _CC_0 + 9,
+  _CC_A = 'A'.codeUnitAt(0), _CC_Z = _CC_A + 25,
+  _CC_a = 'a'.codeUnitAt(0), _CC_z = _CC_a + 25;
 
 String _sb2s(StringBuffer sb, String add) //workaround Dart Issue 7883
 => (sb..add(add)).toString();

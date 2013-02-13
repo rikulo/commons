@@ -46,7 +46,7 @@ class Color {
   /*
   static Color parse(String colorCode) {
     final int len = colorCode.length;
-    if ((len != 7 && len != 3) || colorCode.charCodeAt(0) != 35) // #
+    if ((len != 7 && len != 3) || colorCode.codeUnitAt(0) != 35) // #
       throw new ArgumentError(colorCode);
     
     bool short = len == 3;

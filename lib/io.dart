@@ -5,5 +5,6 @@
 library rikulo_io;
 
 import "dart:io";
+import "package:meta/meta.dart";
 
 part "src/io/http.dart";

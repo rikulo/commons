@@ -42,9 +42,9 @@ class Offset {
     return n != null && n > 0 ? this / n : null;
   }
 
-  //@override  
+  @override  
   int get hashCode => (left + top).toInt();
-  //@override  
+  @override  
   String toString() => "($left, $top)";
 }
 /**
@@ -70,13 +70,13 @@ class Offset3d extends Offset {
   Offset3d operator /(num scalar)
   => new Offset3d(left / scalar, top / scalar, zIndex / scalar);
   
-  //@override  
+  @override  
   num norm() => left == null || top == null || zIndex == null ? null : 
     sqrt(left * left + top * top + zIndex * zIndex);
   
-  //@override  
+  @override  
   int get hashCode => (x + y + z).toInt();
-  //@override  
+  @override  
   String toString() => "($x, $y, $z)";
 }
 

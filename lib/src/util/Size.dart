@@ -46,9 +46,9 @@ class Size {
   bool operator ==(Size other)
   => other is Size && width == other.width && height == other.height;
 
-  //@override  
+  @override  
   int get hashCode => (width + height).toInt();
-  //@override  
+  @override  
   String toString() => "($width, $height)";
 }
 
@@ -98,9 +98,9 @@ class Rectangle extends Offset implements Size {
   Rectangle.from(Rectangle other)
   : this(other.left, other.top, other.right, other.bottom);
 
-  //@override
+  @override
   num get width => right - left;
-  //@override
+  @override
   num get height => bottom - top;
 
   /** Return true if the two Rectangles have the same left, right, top, bottom values. */

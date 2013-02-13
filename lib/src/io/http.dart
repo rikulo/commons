@@ -32,7 +32,7 @@ class HttpRequestWrapper implements HttpRequest {
   List<Cookie> get cookies => origin.cookies;
   @override
   X509Certificate get certificate => origin.certificate;
-  //@override
+  @override
   HttpSession session([init(HttpSession session)]) => origin.session(init);
   @override
   InputStream get inputStream => origin.inputStream;
@@ -87,7 +87,7 @@ class HttpResponseWrapper implements HttpResponse {
   List<Cookie> get cookies => origin.cookies;
   @override
   OutputStream get outputStream => origin.outputStream;
-  //@override
+  @override
   DetachedSocket detachSocket() => origin.detachSocket();
   @override
   HttpConnectionInfo get connectionInfo => origin.connectionInfo;
@@ -102,31 +102,31 @@ class HttpHeadersWrapper extends HttpHeaders {
 
   HttpHeadersWrapper(HttpHeaders this.origin);
 
-  //@override
+  @override
   List<String> operator[](String name) => origin[name];
-  //@override
+  @override
   String value(String name) => origin.value(name);
-  //@override
+  @override
   void add(String name, Object value) {
     origin.add(name, value);
   }
-  //@override
+  @override
   void set(String name, Object value) {
     origin.set(name, value);
   }
-  //@override
+  @override
   void remove(String name, Object value) {
     origin.remove(name, value);
   }
-  //@override
+  @override
   void removeAll(String name) {
     origin.removeAll(name);
   }
-  //@override
+  @override
   void forEach(void f(String name, List<String> values)) {
     origin.forEach(f);
   }
-  //@override
+  @override
   void noFolding(String name) {
     origin.noFolding(name);
   }
