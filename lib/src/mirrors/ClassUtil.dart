@@ -185,7 +185,7 @@ class ClassUtil {
 
   static Map<String, Object> _convertNamedArgs(Map namedArgs) {
     if (namedArgs != null) {
-      Map<String, Object> nargs = new Map();
+      Map<String, Object> nargs = new HashMap();
       namedArgs.forEach((k,v) => nargs[k] = _convertParam(v));
       return nargs;
     }

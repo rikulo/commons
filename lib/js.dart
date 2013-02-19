@@ -4,9 +4,10 @@
 
 library rikulo_js;
 
-import 'dart:html';
-import 'dart:async';
-import 'package:js/js.dart' as js;
+import "dart:html";
+import "dart:async";
+import "package:js/js.dart" as js;
+import "dart:collection" show HashMap;
 
 /** Utilities for JavaScript handling.
  */
@@ -64,7 +65,7 @@ class JsUtil {
     }
   }
 
-  static Map _callbacks = new Map(); //id -> callbacks
+  static Map _callbacks = new HashMap(); //id -> callbacks
 
   /** new a group of callbacks that will be disposed simultaniously whenever either
    * callback in the group is called once.
@@ -149,7 +150,7 @@ class JsUtil {
       Element elem = node;
       String tagname = elem.tagName;
       Map attrs = elem.attributes;
-      Map kidmap = attrs != null ? new Map.from(attrs) : new Map();
+      Map kidmap = attrs != null ? new HashMap.from(attrs) : new HashMap();
       var kidval = "";
       for (Node n in node.nodes)
         kidval = xmlNodeToDartMap(n, kidmap);

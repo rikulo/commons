@@ -4,8 +4,9 @@
 
 library rikulo_mirrors;
 
-import 'dart:mirrors';
-import 'dart:async';
+import "dart:mirrors";
+import "dart:async";
+import "dart:collection" show HashMap;
 
 part "src/mirrors/ClassUtil.dart";
 part "src/mirrors/NoSuchClassException.dart";
