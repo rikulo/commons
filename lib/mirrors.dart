@@ -9,4 +9,5 @@ import "dart:async";
 import "dart:collection" show HashMap;
 
 part "src/mirrors/ClassUtil.dart";
-part "src/mirrors/NoSuchClassException.dart";
+part "src/mirrors/ObjectUtil.dart";
+part "src/mirrors/NoSuchClassError.dart";

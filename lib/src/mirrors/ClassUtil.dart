@@ -4,15 +4,23 @@
 
 part of rikulo_mirrors;
 
-final ClassMirror _OBJECT_MIRROR = ClassUtil.forName("dart:core.Object");
-final ClassMirror _MAP_MIRROR = ClassUtil.forName("dart:core.Map");
+final ClassMirror
+  _OBJECT_MIRROR = ClassUtil.forName("dart:core.Object"),
+//  _LIST_MIRROR = ClassUtil.forName("dart:core.List"),
+  _MAP_MIRROR = ClassUtil.forName("dart:core.Map"),
+  _DATE_TIME_MIRROR = ClassUtil.forName("dart:core.DateTime"),
+  _STRING_MIRROR = reflect("").type,
+  _NUM_MIRROR = ClassUtil.forName("dart:core.num"),
+  _INT_MIRROR = reflect(0).type,
+  _DOUBLE_MIRROR = reflect(0.0).type,
+  _BOOL_MIRROR = reflect(false).type;
 
-/** Utility class used with Mirror */
+/** Utility class used with Mirror. */
 class ClassUtil {
   /**
    * Return the ClassMirror of the qualified class name
    *
-   * + [qname] - qulified class name (libname.classname)
+   * + [qname] - qualified class name (libname.classname)
    */
   static ClassMirror forName(String qname) {
     Map splited = splitQualifiedName(qname);
@@ -25,7 +33,7 @@ class ClassUtil {
         if (m != null) return m;
       }
     }
-    throw new NoSuchClassException(qname);
+    throw new NoSuchClassError(qname);
   }
 
   /**
@@ -54,21 +62,6 @@ class ClassUtil {
    */
   static ClassMirror getCorrespondingClassMirror(TypeMirror type)
     => type is ClassMirror ? type : forName(type.qualifiedName);
-
-  /**
-   * Returns whether the specified class is a simple class;
-   * i.e. num, bool, DateTime, String.
-   *
-   * + [cls] - the class
-   */
-  static bool isSimple(ClassMirror cls) {
-    String qname = cls.qualifiedName;
-    return qname == "dart:core.int" ||
-           qname == "dart:core.double" ||
-           qname == "dart:core.String" ||
-           qname == "dart:core.DateTime" ||
-           qname == "dart:core.bool";
-  }
 
   /**
    * Returns the generic element class of the collection class.
@@ -217,23 +210,62 @@ class ClassUtil {
     return inst.then((value) => value.reflectee);
   }
 
-  static String _toSetter(String name)
-    => "set${name.substring(0, 1).toUpperCase()}${name.substring(1)}";
-
-  /**
-   * Returns the setter 'xxx' or 'setXxx" method of the class
+  /** Coerces the given object to the specified class ([targetClass]).
+   *
+   * * [coercer] - the coercer used to coercer the given object to the given type.
+   * If omitted or null is returned, the default coercion will be done (it handles the basic types:
+   * `int`, `double`, `String`, `num` and `Datetime`).
    */
-  static MethodMirror getSetter(ClassMirror cm, String name) {
-    String sname = "$name=";
-    String mname = _toSetter(name);
-    MethodMirror setter = null;
-    do {
-      setter = cm.setters[sname];
-      if (setter == null) //try setXxx
-        setter = cm.methods[mname];
-      if (setter != null && setter.parameters.length == 1)
-        return setter;
-    } while((cm = cm.superclass) != _OBJECT_MIRROR);
-    return null;
+  static coerce(Object obj, ClassMirror targetClass,
+  {Object coercer(Object o, ClassMirror tClass)}) {
+    if (coercer != null) {
+      final o = coercer(obj, targetClass);
+      if (o != null)
+        return o;
+    }
+    if (obj == null)
+      return obj;
+
+    final clz = reflect(obj).type;
+    if (isAssignableFrom(targetClass, clz))
+      return obj;
+
+    var sval = obj.toString();
+    if (targetClass == _STRING_MIRROR)
+      return sval;
+    if (targetClass == _INT_MIRROR)
+      return int.parse(sval);
+    if (targetClass == _DOUBLE_MIRROR)
+      return double.parse(sval);
+    if (targetClass == _NUM_MIRROR)
+      return sval.indexOf('.') >= 0 ? double.parse(sval): int.parse(sval);
+    if (targetClass == _DATE_TIME_MIRROR)
+      return DateTime.parse(sval);
+    if (targetClass == _BOOL_MIRROR)
+      return sval != null && (sval = sval.toLowerCase()) != "false" && sval != "no"
+        && sval != "off" && sval != "none";
+  }
+
+  /** Returns the class mirror of the given field (including setter), or null
+   * if no such field nor setter.
+   */
+  static ClassMirror getSetterType(ClassMirror clz, String field) {
+    var mtd = clz.setters["$field="];
+    if (mtd != null)
+      return mtd.parameters[0].type;
+
+    mtd = clz.members[field];
+    return mtd is VariableMirror ? mtd.type: null;
+  }
+  /** Returns the class mirror of the given field (including getter), or null
+   * if no such field nor getter.
+   */
+  static ClassMirror getGetterType(ClassMirror clz, String field) {
+    var mtd = clz.getters[field];
+    if (mtd != null)
+      return mtd.returnType;
+
+    mtd = clz.members[field];
+    return mtd is VariableMirror ? mtd.type: null;
   }
 }

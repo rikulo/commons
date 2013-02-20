@@ -5,9 +5,9 @@
 part of rikulo_mirrors;
 
 /** Exception thrown because of non-existing class */
-class NoSuchClassException implements Exception {
+class NoSuchClassError implements Exception {
   final message;
-  const NoSuchClassException([this.message]);
+  const NoSuchClassError([this.message]);
 
   String toString() => (message == null) ? "Exception:" : "Exception: $message";
 }

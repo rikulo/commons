@@ -1,5 +1,10 @@
 #Rikulo Commons Changes
 
+##0.6.4
+
+* ObjectUtil is added to inject values into the given object
+* ClassUtil.coerce is added to coerce types
+
 ##0.6.3
 
 * HttpHeadersWrapper is added.
