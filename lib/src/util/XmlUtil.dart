@@ -39,24 +39,24 @@ class XmlUtil {
       for (int j = 0; j < tl; ++j) {
         String cc = txt[j];
         if ((enc = _encs[cc]) != null){
-          out..add(txt.substring(k, j))
-            ..add('&')..add(enc)..add(';');
+          out..write(txt.substring(k, j))
+            ..write('&')..write(enc)..write(';');
           k = j + 1;
         } else if (multiline && cc == '\n') {
-          out..add(txt.substring(k, j))..add("<br/>\n");
+          out..write(txt.substring(k, j))..write("<br/>\n");
           k = j + 1;
         } else if (pre && (cc == ' ' || cc == '\t')) {
-          out..add(txt.substring(k, j))..add("&nbsp;");
+          out..write(txt.substring(k, j))..write("&nbsp;");
           if (cc == '\t')
-            out.add("&nbsp;&nbsp;&nbsp;");
+            out.write("&nbsp;&nbsp;&nbsp;");
           k = j + 1;
         }
       }
     } else {
       for (int j = 0; j < tl; ++j) {
         if ((enc = _encs[txt[j]]) != null) {
-          out..add(txt.substring(k, j))
-            ..add('&')..add(enc)..add(';');
+          out..write(txt.substring(k, j))
+            ..write('&')..write(enc)..write(';');
           k = j + 1;
         }
       }
@@ -64,7 +64,7 @@ class XmlUtil {
 
     if (k == 0) return txt;
     if (k < tl)
-      out.add(txt.substring(k));
+      out.write(txt.substring(k));
     return out.toString();
   }
 
@@ -89,7 +89,7 @@ class XmlUtil {
                   txt.substring(j + 2, l))]):
             _decs[txt.substring(j + 1, l)];
           if (dec != null) {
-            out..add(txt.substring(k, j))..add(dec);
+            out..write(txt.substring(k, j))..write(dec);
             k = (j = l) + 1;
           }
         }

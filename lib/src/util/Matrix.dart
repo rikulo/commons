@@ -90,14 +90,14 @@ class Matrix {
     StringBuffer sb = new StringBuffer("[[");
     for (int r = 0; r < rows; r++) {
       if (r > 0)
-        sb.add("] [");
+        sb.write("] [");
       for (int c = 0; c < columns; c++) {
         if (c > 0)
-          sb.add(" ");
-        sb.add(_get(r, c));
+          sb.write(" ");
+        sb.write(_get(r, c));
       }
     }
-    return (sb..add("]]")).toString();
+    return (sb..write("]]")).toString();
   }
   
   // helper //

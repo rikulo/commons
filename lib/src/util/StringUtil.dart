@@ -73,12 +73,12 @@ class StringUtil {
   static String encodeId(int v, [String prefix]) {
     final StringBuffer sb = new StringBuffer();
     if (prefix != null)
-      sb.add(prefix);
+      sb.write(prefix);
 
     do {
       int v2 = v % 37;
-      if (v2 <= 9) sb.add(addCharCodes('0', v2));
-      else sb.add(v2 == 36 ? '_': addCharCodes('a', v2 - 10));
+      if (v2 <= 9) sb.write(addCharCodes('0', v2));
+      else sb.write(v2 == 36 ? '_': addCharCodes('a', v2 - 10));
     } while ((v ~/= 37) >= 1);
     return sb.toString();
   }
@@ -94,7 +94,7 @@ class StringUtil {
     for (int j = 0, len = source.length; j < len; ++j) {
       final String ch = source[j];
       if (!exclude.contains(ch))
-        sb.add(ch);
+        sb.write(ch);
     }
     return sb.toString();
   }
@@ -110,7 +110,7 @@ class StringUtil {
     for (int j = 0, len = source.length; j < len; ++j) {
       final String ch = source[j];
       if (include.contains(ch))
-        sb.add(ch);
+        sb.write(ch);
     }
     return sb.toString();
   }
@@ -126,8 +126,8 @@ class StringUtil {
     for (int i = 0, len = name.length; i < len; ++i) {
       if (name[i] == '-') {
         if (sb == null) sb = new StringBuffer();
-        sb..add(name.substring(k, i))
-          ..add(name[++i].toUpperCase());
+        sb..write(name.substring(k, i))
+          ..write(name[++i].toUpperCase());
         k = i + 1;
       }
     }
@@ -143,7 +143,7 @@ class StringUtil {
       final cc = name.codeUnitAt(i);
       if (cc >= _CC_A && cc <= _CC_Z) {
         if (sb == null) sb = new StringBuffer();
-        sb..add(name.substring(k, i))..add('-')..add(name[i].toLowerCase());
+        sb..write(name.substring(k, i))..write('-')..write(name[i].toLowerCase());
         k = i + 1;
       }
     }
@@ -156,4 +156,4 @@ final int _CC_0 = '0'.codeUnitAt(0), _CC_9 = _CC_0 + 9,
   _CC_a = 'a'.codeUnitAt(0), _CC_z = _CC_a + 25;
 
 String _sb2s(StringBuffer sb, String add) //workaround Dart Issue 7883
-=> (sb..add(add)).toString();
+=> (sb..write(add)).toString();

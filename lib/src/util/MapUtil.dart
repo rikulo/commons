@@ -22,7 +22,7 @@ class MapUtil {
    *
    * Notice you don't have to keep the object being returned by this method,
    * since it is just a proxy to the real map.
-   * Refer to [View.dataAttributes] for a sample implementation.
+   * Refer to Rikulo UI's `View.dataset` for a sample implementation.
    */
   static Map onDemand(AsMap creator) => new _OnDemandMap(creator);
 
@@ -83,14 +83,14 @@ class MapUtil {
             if (++i >= len)
               throw "Illegal backslash, $data";
             switch (data[i]) {
-              case 'n': val.add('\n'); continue;
-              case 't': val.add('\t'); continue;
-              case 'b': val.add('\b'); continue;
-              case 'r': val.add('\r'); continue;
-              default: val.add(data[i]); continue;
+              case 'n': val.write('\n'); continue;
+              case 't': val.write('\t'); continue;
+              case 'b': val.write('\b'); continue;
+              case 'r': val.write('\r'); continue;
+              default: val.write(data[i]); continue;
             }
           }
-          val.add(cc);
+          val.write(cc);
         }
       } //if i >= 0
       map[key] = val.toString();

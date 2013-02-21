@@ -191,7 +191,7 @@ class JsUtil {
   }
   static void _doWhen0(final Completer cmpl, final Function ready,
                 final int freq, final int end) {
-    window.setTimeout(() {
+    new Timer(freq, () {
       if (ready())
         cmpl.complete(true);
       else {
@@ -201,6 +201,6 @@ class JsUtil {
         else
           cmpl.complete(false); //timout. fail!
       }
-    }, freq);
+    });
   }
 }

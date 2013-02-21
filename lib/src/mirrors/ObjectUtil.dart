@@ -41,10 +41,14 @@ class ObjectUtil {
             return reflect(o2).getField(field)
               .then((inst) {
                 var o3 = inst.reflectee;
-                if (o3 == null)
-                  return ClassUtil.getSetterType(reflect(o2).type, field).newInstance("", []);
+                if (o3 == null) {
+                  final clz = ClassUtil.getSetterType(reflect(o2).type, field);
+                  if (clz == null)
+                    throw new MirrorException("Setter or non-null required for $field in $o2");
+                  return clz.newInstance("", []);
                     //1. use getSetterType since it will be assigned through setField
                     //2. assume there must be a default constructor. otherwise, it is caller's issue
+                }
                 o2 = o3;
               })
               .then((inst) {
