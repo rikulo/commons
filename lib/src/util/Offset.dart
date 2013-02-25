@@ -16,7 +16,7 @@ class Offset {
   /** The top offset (the same as [top], i.e., an alias). */
   num get y => top;
 
-  const Offset(num this.left, num this.top);
+  const Offset(this.left, this.top);
   Offset.from(Offset other) : this(other.left, other.top);
 
   bool operator ==(Offset other)
@@ -56,7 +56,7 @@ class Offset3d extends Offset {
   /** The Z index (the same as [zIndex], i.e., an alias). */
   num get z => zIndex;
 
-  const Offset3d(num x, num y, num z) : super(x, y), zIndex = z;
+  const Offset3d(num x, num y, num z) : zIndex = z, super(x, y);
   Offset3d.from(Offset3d other) : this(other.x, other.y, other.z);
 
   bool operator ==(Offset3d other)

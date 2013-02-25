@@ -17,7 +17,7 @@ class Dir {
    */
   static const Dir BOTH = const Dir._("both");
 
-  const Dir._(String this.name);
+  const Dir._(this.name);
 
   /** The name of this direction. */
   final String name;
@@ -38,7 +38,7 @@ class Size {
   final num height;
   
   /** Construct a Size object with given width and height. */
-  const Size(num this.width, num this.height);
+  const Size(this.width, this.height);
   /** Construct a Size object by cloning another. */
   Size.from(Size other) : this(other.width, other.height);
   
@@ -61,7 +61,7 @@ class Size3d extends Size  {
   final num depth;
   
   /** Construct a Size3d object with given width, height, and depth. */
-  const Size3d(num width, num height, num this.depth): super(width, height);
+  const Size3d(num width, num height, this.depth): super(width, height);
   /** Construct a Size3d object by cloning another. */
   Size3d.from(Size3d other) : this(other.width, other.height, other.depth);
   

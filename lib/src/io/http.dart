@@ -10,7 +10,7 @@ class HttpRequestWrapper implements HttpRequest {
   ///The original HTTP request
   final HttpRequest origin;
 
-  HttpRequestWrapper(HttpRequest this.origin);
+  HttpRequestWrapper(this.origin);
 
   @override
   int get contentLength => origin.contentLength;
@@ -51,7 +51,7 @@ class HttpResponseWrapper implements HttpResponse {
   ///The original HTTP response
   final HttpResponse origin;
 
-  HttpResponseWrapper(HttpResponse this.origin);
+  HttpResponseWrapper(this.origin);
 
   @override
   int get contentLength => origin.contentLength;
@@ -100,7 +100,7 @@ class HttpHeadersWrapper extends HttpHeaders {
   ///The original HTTP headers
   final HttpHeaders origin;
 
-  HttpHeadersWrapper(HttpHeaders this.origin);
+  HttpHeadersWrapper(this.origin);
 
   @override
   List<String> operator[](String name) => origin[name];
