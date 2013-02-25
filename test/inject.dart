@@ -3,6 +3,7 @@
 // Author: tomyeh
 library test_inject;
 
+import 'package:/unittest/unittest.dart';
 import "package:rikulo_commons/mirrors.dart";
 
 class User {
@@ -21,13 +22,31 @@ class User {
 }
 
 void main() {
-  ObjectUtil.inject(new User(), {
-    "firstName": "Bill",
-    "lastName": "Gates",
-    "age": "32", //test coercion
-    "manager.firstName": "John",
-    "manager.lastName": "Kyle"
-    }).then((user) {
-      print("Done: $user, adult: ${user.age > 20}, manager: ${user.manager}");
-    });;
+  test("inject one-level", () {
+    ObjectUtil.inject(new User(), {
+      "firstName": "Bill",
+      "lastName": "Gates",
+      "age": "32" //test coercion
+      }).then((user) {
+        expect(user.firstName, "Bill");
+        expect(user.lastName, "Gates");
+        expect(user.age, 32);
+      });
+    });
+  test("inject two-level and auto-assign", () {
+    ObjectUtil.inject(new User(), {
+      "firstName": "Bill",
+      "lastName": "Gates",
+      "age": "32", //test coercion
+      "manager.firstName": "John",
+      "manager.lastName": "Kyle"
+      }).then((user) {
+        expect(user.firstName, "Bill");
+        expect(user.lastName, "Gates");
+        expect(user.age, 32);
+        expect(user.manager, isNotNull);
+        expect(user.manager.firstName, "John");
+        expect(user.manager.lastName, "Kyle");
+      });
+    });
 }

@@ -42,35 +42,85 @@ class Color {
     return new HsvColor(hue, sat, val, alpha);
   }
   
-  // TODO: as utility, later
-  /*
+  /** Parses the color code as a Color literal and returns its value. Example,
+   *
+   *     Color.parse("#ffe");
+   *     Color.parse("#73b5a9");
+   *     Color.parse("white");
+   *     Color.parse("rgba(100, 80, 100%, 0.5)");
+   *     Color.parse("hsl(100, 65%, 100%, 0.5)");
+   *
+   * Notice: it recognized 17 standard colors:
+   * aqua, black, blue, fuchsia, gray, grey, green, lime, maroon, navy, olive, purple, red, silver, teal, white, and yellow.
+   */
   static Color parse(String colorCode) {
-    final int len = colorCode.length;
-    if ((len != 7 && len != 3) || colorCode.codeUnitAt(0) != 35) // #
-      throw new ArgumentError(colorCode);
-    
-    bool short = len == 3;
-    final bdr = short ? 2 : 3;
-    final bdg = short ? 3 : 5;
-    int r, g, b;
-    
+    final len = (colorCode = colorCode.trim()).length;
     try {
-      r = int.parse("0x${colorCode.substring(1,   bdr)}");
-      g = int.parse("0x${colorCode.substring(bdr, bdg)}");
-      b = int.parse("0x${colorCode.substring(bdg)}");
-      if (short) {
-        r *= 17;
-        g *= 17;
-        b *= 17;
-      }
-    } catch (final Exception e) {
-      throw new ArgumentError(colorCode);
-    }
-    
-    return new Color(r, g, b);
-  }
-  */
+      if (colorCode.codeUnitAt(0) == 35) { //#
+        final step = len <= 4 ? 1: 2;
+        List<int> rgb = [0, 0, 0];
+        for (int i = 1, j = 0; i < len && j < 3; i += step, ++j) {
+          rgb[j] = int.parse(colorCode.substring(i, i + step), radix: 16);
+          if (step == 1)
+            rgb[j] = (rgb[j] * 255) ~/ 15;
+        }
+        return new Color(rgb[0], rgb[1], rgb[1]);
+      } else {
+        final k = colorCode.indexOf('(');
+        if (k >= 0) {
+          List<num> val = [0, 0, 0, 1];
+          List<bool> hundredth = [false, false, false, false];
   
+          int i = colorCode.indexOf(')', k + 1);
+          final args = (i >= 0 ? colorCode.substring(k + 1, i): colorCode.substring(k + 1)).split(',');
+          for (i = 0; i < 4 && i < args.length; ++i) {
+            String arg = args[i].trim();
+            hundredth[i] = arg.endsWith("%");
+            if (hundredth[i])
+              arg = arg.substring(0, arg.length - 1).trim();
+            val[i] = arg.indexOf('.') >= 0 ? double.parse(arg): int.parse(arg);
+          }
+
+          final type = colorCode.substring(0, k).trim().toLowerCase();
+          switch (type) {
+            case "rgb":
+            case "rgba":
+              if (hundredth[3])
+                val[3] = val[3] / 100;
+              for (int i = 0; i < 3; ++i)
+                if (hundredth[i])
+                  val[i] = (255 * val[i]) ~/ 100;
+              return new Color(val[0], val[1], val[2], val[3]);
+
+            case "hsl":
+            case "hsla":
+            case "hsv":
+            case "hsva":
+              if (hundredth[0])
+                val[0] = (360 * val[0]) / 100;
+              for (int i = 1; i < 4; ++i)
+                if (hundredth[i])
+                  val[i] /= 100;
+              return type == "hsl" || type == "hsla" ?
+                new HsvColor(val[0], val[1], val[2], val[3]): //TOD: use HslColor instead
+                new HsvColor(val[0], val[1], val[2], val[3]);
+          }
+        } else {
+          final color = _stdcolors[colorCode.toLowerCase()];
+          if (color != null)
+            return color;
+        }
+      }
+    } catch (e, st) {
+print(">>$st");
+      throw new FormatException(colorCode);
+    }
+    throw new FormatException(colorCode);
+  }
+
+  int get hashCode => red.hashCode ^ green.hashCode ^ blue.hashCode ^ alpha.hashCode;
+  bool operator==(o)
+  => o is Color && o.red == red && o.green == green && o.blue == blue && o.alpha == alpha;
   String toString() => 
       alpha == 1 ? "#${_hex(red)}${_hex(green)}${_hex(blue)}" : 
       "rgba($red, $green, $blue, $alpha)";
@@ -79,8 +129,14 @@ class Color {
 // helper //
 String _hex(num n) => n.toInt().toRadixString(16);
 
-/// An HSV based color object.
-class HsvColor {
+/** An HSV based color object.
+ *
+ * Notice, although [HsvColor] also implements [Color], [red], [green] and [blue] are calculated
+ * when called. For better performance, you shall use [rgb] to convert it to [Color] and
+ * access the converted [Color] if you have to access [red], [green] and/or [blue] multiple
+ * times.
+ */
+class HsvColor implements Color {
   
   /** Construct a Color object with given HSV and alpha (i.e., opacity) values.
    * 
@@ -105,6 +161,18 @@ class HsvColor {
   /// The opacity of color.
   final num alpha;
   
+  /// The red component.
+  ///Note: it is a shortcut of `rgb().red`, so the performance might not be good
+  num get red => rgb().red;
+  /// The green component.
+  ///Note: it is a shortcut of `rgb().green`, so the performance might not be good
+  num get green => rgb().green;
+  /// The blue component.
+  ///Note: it is a shortcut of `rgb().blue`, so the performance might not be good
+  num get blue => rgb().blue;
+  //@override
+  HsvColor hsv() => this;
+
   /// Convert to RGB based [Color].
   Color rgb() {
     final num ch = value * saturation / 10000, h2 = hue / 60, 
@@ -125,5 +193,33 @@ class HsvColor {
     }
     return new Color((r + m) * 255, (g + m) * 255, (b + m) * 255, alpha);
   }
+
+  int get hashCode => hue.hashCode ^ saturation.hashCode ^ value.hashCode ^ alpha.hashCode;
+  bool operator==(o)
+  => o is Color && o.hue == hue && o.saturation == saturation && o.value == value && o.alpha == alpha;
   String toString() => "hsv($hue, $saturation, $value, $alpha)";
 }
+
+///The white color
+const BLACK = const Color(0, 0, 0);
+///The black color
+const WHITE = const Color(0xff, 0xff, 0xff);
+const Map<String, Color>_stdcolors = const {
+  "aqua": const Color(0, 0xff, 0xff),
+   "black": BLACK,
+   "blue": const Color(0, 0, 0xff),
+   "fuchsia": const Color(0xff, 0, 0xff),
+   "gray": const Color(0x80, 0x80, 0x80),
+   "grey": const Color(0x80, 0x80, 0x80),
+   "green": const Color(0, 0x80, 0),
+   "lime": const Color(0, 0xff, 0),
+   "maroon": const Color(0x80, 0, 0),
+   "navy": const Color(0, 0, 0x80),
+   "olive": const Color(0x80, 0x80, 0),
+   "purple": const Color(0x80, 0, 0x80),
+   "red": const Color(0xff, 0, 0),
+   "silver": const Color(0xc0, 0xc0, 0xc0),
+   "teal": const Color(0, 0x80, 0x80),
+   "white": WHITE,
+   "yellow": const Color(0xff, 0xff, 0)  
+};

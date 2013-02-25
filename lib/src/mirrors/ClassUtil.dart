@@ -13,7 +13,8 @@ final ClassMirror
   _NUM_MIRROR = ClassUtil.forName("dart:core.num"),
   _INT_MIRROR = reflect(0).type,
   _DOUBLE_MIRROR = reflect(0.0).type,
-  _BOOL_MIRROR = reflect(false).type;
+  _BOOL_MIRROR = reflect(false).type,
+  _COLOR_MIRROR = reflect(WHITE).type;
 
 /** Utility class used with Mirror. */
 class ClassUtil {
@@ -242,8 +243,11 @@ class ClassUtil {
     if (targetClass == _DATE_TIME_MIRROR)
       return DateTime.parse(sval);
     if (targetClass == _BOOL_MIRROR)
-      return sval != null && (sval = sval.toLowerCase()) != "false" && sval != "no"
+      return !sval.isEmpty && (sval = sval.toLowerCase()) != "false" && sval != "no"
         && sval != "off" && sval != "none";
+    if (targetClass == _COLOR_MIRROR)
+      return Color.parse(sval);
+    throw new CoercionError(obj, targetClass);
   }
 
   /** Returns the class mirror of the given field (including setter), or null
