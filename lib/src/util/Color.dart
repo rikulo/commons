@@ -43,7 +43,7 @@ class Color {
   }
   ///Convert to [HslColor]
   HslColor hsl() {
-    throw new UnsupportedError(); //TODO
+    throw new UnsupportedError("TODO");
   }
   
   /** Parses the color code as a Color literal and returns its value. Example,
@@ -178,11 +178,11 @@ class HslColor implements Color {
 
   /// Convert to RGB based [Color].
   Color rgb() {
-    throw new UnsupportedError(); //TODO
+    throw new UnsupportedError("TODO");
   }
   ///Convert to [HsvColor]
   HsvColor hsv() {
-    throw new UnsupportedError(); //TODO
+    throw new UnsupportedError("TODO");
   }
 
   int get hashCode => hue.hashCode ^ saturation.hashCode ^ lightness.hashCode ^ alpha.hashCode;
@@ -257,7 +257,7 @@ class HsvColor implements Color {
   }
   ///Convert to [HslColor]
   HslColor hsl() {
-    throw new UnsupportedError(); //TODO
+    throw new UnsupportedError("TODO");
   }
 
   int get hashCode => hue.hashCode ^ saturation.hashCode ^ value.hashCode ^ alpha.hashCode;

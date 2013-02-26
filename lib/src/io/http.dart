@@ -6,11 +6,11 @@ part of rikulo_io;
 /**
  * The HTTP request wrapper.
  */
-class HttpRequestWrapper implements HttpRequest {
-  ///The original HTTP request
-  final HttpRequest origin;
+class HttpRequestWrapper extends StreamWrapper implements HttpRequest {
+  HttpRequestWrapper(HttpRequest origin): super(origin);
 
-  HttpRequestWrapper(this.origin);
+  ///The original HTTP request
+  HttpRequest get origin => super.origin as HttpRequest;
 
   @override
   int get contentLength => origin.contentLength;
@@ -19,11 +19,7 @@ class HttpRequestWrapper implements HttpRequest {
   @override
   String get method => origin.method;
   @override
-  String get uri => origin.uri;
-  @override
-  String get path => origin.path;
-  @override
-  String get queryString => origin.queryString;
+  Uri get uri => origin.uri;
   @override
   Map<String, String> get queryParameters => origin.queryParameters;
   @override
@@ -33,9 +29,9 @@ class HttpRequestWrapper implements HttpRequest {
   @override
   X509Certificate get certificate => origin.certificate;
   @override
-  HttpSession session([init(HttpSession session)]) => origin.session(init);
+  HttpSession get session => origin.session;
   @override
-  InputStream get inputStream => origin.inputStream;
+  HttpResponse get response => origin.response;
   @override
   String get protocolVersion => origin.protocolVersion;
   @override
@@ -47,11 +43,11 @@ class HttpRequestWrapper implements HttpRequest {
 /**
  * The HTTP response wrapper.
  */
-class HttpResponseWrapper implements HttpResponse {
-  ///The original HTTP response
-  final HttpResponse origin;
+class HttpResponseWrapper extends IOSinkWrapper<HttpResponse> implements HttpResponse {
+  HttpResponseWrapper(HttpResponse origin): super(origin);
 
-  HttpResponseWrapper(this.origin);
+  ///The original HTTP response
+  HttpResponse get origin => super.origin as HttpResponse;
 
   @override
   int get contentLength => origin.contentLength;
@@ -86,9 +82,7 @@ class HttpResponseWrapper implements HttpResponse {
   @override
   List<Cookie> get cookies => origin.cookies;
   @override
-  OutputStream get outputStream => origin.outputStream;
-  @override
-  DetachedSocket detachSocket() => origin.detachSocket();
+  Future<Socket> detachSocket() => origin.detachSocket();
   @override
   HttpConnectionInfo get connectionInfo => origin.connectionInfo;
 }

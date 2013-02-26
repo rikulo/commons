@@ -4,5 +4,7 @@
 library rikulo_async;
 
 import "dart:async";
+import "package:meta/meta.dart";
 
 part "src/async/stream.dart";
+part "src/async/stream_wrapper.dart";

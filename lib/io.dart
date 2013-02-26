@@ -5,6 +5,11 @@
 library rikulo_io;
 
 import "dart:io";
+import "dart:async";
+import "dart:uri";
 import "package:meta/meta.dart";
 
+import "package:rikulo_commons/async.dart";
+
 part "src/io/http.dart";
+part "src/io/io_stream.dart";

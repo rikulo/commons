@@ -1,5 +1,10 @@
 #Rikulo Commons Changes
 
+##0.6.5
+
+* StreamWrapper is added
+* HttpRequestWrapper and HttpResponseWrapper are upgraded to new Dart API
+
 ##0.6.4
 
 * ObjectUtil is added to inject values into the given object
