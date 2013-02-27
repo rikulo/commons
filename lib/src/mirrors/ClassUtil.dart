@@ -234,6 +234,8 @@ class ClassUtil {
     var sval = obj.toString();
     if (targetClass == _STRING_MIRROR)
       return sval;
+    if (sval.isEmpty)
+      return null;
     if (targetClass == _INT_MIRROR)
       return int.parse(sval);
     if (targetClass == _DOUBLE_MIRROR)
