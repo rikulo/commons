@@ -9,7 +9,8 @@ part of rikulo_mirrors;
 class ObjectUtil {
   /** Injects the given values into the given object.
    *
-   * Notice that the injection is done asynchronously. To continue after the injection is completed,
+   * Notice that the injection is done asynchronously. To continue after the
+   * injection is completed,
    * you have to invoke:
    *
    *     ObjectUtil.inject(obj, {"user.name": userName, "foo": whatever}).then((o) {
@@ -18,59 +19,107 @@ class ObjectUtil {
    *     });
    *
    * * [obj] - the object to inject the value.
-   * * [values] - the map of values. The key is the field name, such as `name`, `field1.field2` and so on.
-   * * [coercer] - the coercer used to coercer the given object to the given type.
-   * If omitted or null is returned, the default coercion will be done (it handles the basic types:
-   * `int`, `double`, `String`, `num` and `Datetime`).
-   * * [silent] - whether to ignore if the given field doesn't exist. If false (default), an exception
-   * will be thrown.
+   * * [values] - the map of values. The key is the field name, such as `name`,
+   * `field1.field2` and so on.
+   * * [coerce] - used to coerce the given object to the given type.
+   * If omitted or null is returned, the default coercion will be done (
+   * it handles the basic types: `int`, `double`, `String`, `num`, `Datetime`
+   * and `Color`).
+   * * [onCoerceError] - used to handle the coercion error.
+   * If not specified, the exception won't be caught.
+   * * [onSetterError] - used to handle the error thrown by a setter.
+   * If not specified, the exception won't be caught.
+   ** [validate] - used to validate if the coerced value can be assigned.
+   * * [silent] - whether to ignore if no field matches the keys of the given
+   * values.
+   * If false (default), an exception will be thrown.
    */
   static Future inject(Object obj, Map<String, dynamic> values,
-  {Object coercer(Object o, ClassMirror targetClass), bool silent:false})
+      {coerce(value, ClassMirror targetClass),
+      void onCoerceError(o, String field, value, ClassMirror targetClass, error),
+      void onSetterError(o, String field, value, error),
+      void validate(o, String field, value),
+      bool silent: false})
   => Future.forEach(values.keys, (key) {
       final fields = key.split('.');
       final value = values[key];
       if (fields.length == 1)
-        return _inject(obj, key.trim(), value, coercer, silent);
+        return _inject(obj, key.trim(), value,
+            coerce, onCoerceError, onSetterError, validate, silent);
+
+      //nothing to do if silent && no getter matches the first element of fields
+      if (silent && ClassUtil.getGetterType(
+          reflect(obj).type, fields.first.trim()) == null)
+        return new Future.immediate(obj);
 
       key = fields.removeLast();
       var o2 = obj;
-      return Future.forEach(fields,
-          (field) {
-            field = field.trim();
-            return reflect(o2).getField(field)
-              .then((inst) {
-                var o3 = inst.reflectee;
-                if (o3 == null) {
-                  final clz = ClassUtil.getSetterType(reflect(o2).type, field);
-                  if (clz == null)
-                    throw new MirrorException("Setter or non-null required for $field in $o2");
-                  return clz.newInstance("", []);
-                    //1. use getSetterType since it will be assigned through setField
-                    //2. assume there must be a default constructor. otherwise, it is caller's issue
-                }
+      return Future.forEach(fields, (field) {
+        field = field.trim();
+        final ret = reflect(o2).getField(field).then((inst) {
+          final o3 = inst.reflectee;
+          if (o3 == null) {
+            final clz = ClassUtil.getSetterType(reflect(o2).type, field);
+            if (clz == null)
+              throw new NoSuchMethodError(o2, "$field=", null, null);
+            return clz.newInstance("", []);
+              //1. use getSetterType since it will be assigned through setField
+              //2. assume there must be a default constructor. otherwise, it is caller's issue
+          }
+          o2 = o3;
+          //no return to indicate no further processing
+        })
+        .then((inst) {
+          if (inst != null) { //i.e., newInstance was called
+            final o3 = inst.reflectee;
+            return reflect(o2).setField(field, ClassUtil._convertParam(o3))
+              .then((_) {
                 o2 = o3;
-              })
-              .then((inst) {
-                if (inst != null) { //i.e., newInstance was called
-                  var o3 = inst.reflectee;
-                  _inject(o2, field, o3, null, false);
-                  o2 = o3;
-                }
               });
-          }).then((_) => _inject(o2, key.trim(), value, coercer, silent));
+          }
+        });
+        return onSetterError == null ? ret: ret.catchError((err) {
+          onSetterError(o2, field, null, err);
+        });
+      }).then((_) => _inject(o2, key.trim(), value,
+          coerce, onCoerceError, onSetterError, validate, silent));
     }).then((_) => obj);
 
-  static Future _inject(Object obj, String name, Object value,
-  Object coercer(Object o, ClassMirror targetClass), bool silent) {
+  static Future _inject(Object obj, String name, value,
+      coerce(o, ClassMirror tClass),
+      void onCoerceError(o, String field, value, ClassMirror tClass, err),
+      void onSetterError(o, String field, value, err),
+      void validate(o, String field, value),
+      bool silent) {
     final clz = ClassUtil.getSetterType(reflect(obj).type, name);
-    if (clz != null)
-      return reflect(obj).setField(name,
-          ClassUtil._convertParam(ClassUtil.coerce(value, clz, coercer: coercer)))
-            //_convertParam to convert so-called non-simple-value to mirror
-        .then((_) => obj);
-    if (silent)
+    if (clz == null) { //not found
+      if (!silent) {
+        final err = new NoSuchMethodError(obj, "$name=", null, null);
+        if (onSetterError == null)
+          throw err;
+        onSetterError(obj, name, value, err);
+      }
       return new Future.immediate(obj);
-    throw new NoSuchMethodError(obj, name, null, null);
+    }
+
+    if (onCoerceError != null) {
+      try {
+        value = ClassUtil.coerce(value, clz, coerce: coerce);
+      } catch (ex) {
+        onCoerceError(obj, name, value, clz, ex);
+      }
+    } else {
+      value = ClassUtil.coerce(value, clz, coerce: coerce);
+    }
+
+    if (validate != null)
+      validate(obj, name, value);
+
+    final ret = reflect(obj).setField(name, ClassUtil._convertParam(value))
+          //_convertParam to convert so-called non-simple-value to mirror
+      .then((_) => obj);
+    return onSetterError == null ? ret: ret.catchError((err) {
+      onSetterError(obj, name, value, err);
+    });
   }
 }

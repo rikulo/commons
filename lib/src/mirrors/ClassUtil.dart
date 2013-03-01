@@ -213,14 +213,17 @@ class ClassUtil {
 
   /** Coerces the given object to the specified class ([targetClass]).
    *
-   * * [coercer] - the coercer used to coercer the given object to the given type.
-   * If omitted or null is returned, the default coercion will be done (it handles the basic types:
-   * `int`, `double`, `String`, `num` and `Datetime`).
+   * * [coerce] - used to coerce the given object to the given type.
+   * If omitted or null is returned, the default coercion will be done (it
+   * handles the basic types: `int`, `double`, `String`, `num`, `Datetime`
+   * and `Color`).
+   *
+   * It throws [CoercionError] if failed to coerce.
    */
   static coerce(Object obj, ClassMirror targetClass,
-  {Object coercer(Object o, ClassMirror tClass)}) {
-    if (coercer != null) {
-      final o = coercer(obj, targetClass);
+      {coerce(o, ClassMirror tClass)}) {
+    if (coerce != null) {
+      final o = coerce(obj, targetClass);
       if (o != null)
         return o;
     }
