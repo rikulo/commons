@@ -181,17 +181,15 @@ class JsUtil {
    * + [timeout] - the timeout time in milliseconds to give up; -1 means never
    *               timeout.
    */
-  static Future<bool> doWhenReady(final Function ready,
-      final int freq, final int timeout) {
+  static Future<bool> doWhenReady(Function ready, int freq, int timeout) {
     final Completer cmpl = new Completer();
     final int end = timeout < 0 ?
         timeout : new DateTime.now().millisecondsSinceEpoch + timeout;
     _doWhen0(cmpl, ready, freq, end);
     return cmpl.future;
   }
-  static void _doWhen0(final Completer cmpl, final Function ready,
-                final int freq, final int end) {
-    new Timer(freq, () {
+  static void _doWhen0(Completer cmpl, Function ready, int freq, int end) {
+    new Timer(new Duration(milliseconds: freq), () {
       if (ready())
         cmpl.complete(true);
       else {

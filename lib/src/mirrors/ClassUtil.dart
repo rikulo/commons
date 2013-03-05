@@ -5,12 +5,12 @@
 part of rikulo_mirrors;
 
 final ClassMirror
-  _OBJECT_MIRROR = ClassUtil.forName("dart:core.Object"),
-//  _LIST_MIRROR = ClassUtil.forName("dart:core.List"),
-  _MAP_MIRROR = ClassUtil.forName("dart:core.Map"),
-  _DATE_TIME_MIRROR = ClassUtil.forName("dart:core.DateTime"),
+//  _LIST_MIRROR = ClassUtil.forName("dart.core.List"),
+  _MAP_MIRROR = ClassUtil.forName("dart.core.Map"),
+  _DATE_TIME_MIRROR = ClassUtil.forName("dart.core.DateTime"),
+  _NUM_MIRROR = ClassUtil.forName("dart.core.num"),
   _STRING_MIRROR = reflect("").type,
-  _NUM_MIRROR = ClassUtil.forName("dart:core.num"),
+  _OBJECT_MIRROR = reflect(const Object()).type,
   _INT_MIRROR = reflect(0).type,
   _DOUBLE_MIRROR = reflect(0.0).type,
   _BOOL_MIRROR = reflect(false).type,
@@ -50,11 +50,13 @@ class ClassUtil {
       return false;
 
     //TypedefMirror does not implement superinterfaces/superclass
-    if (src is TypedefMirror) return false;
+    if (src is TypedefMirror)
+      return false;
 
     //check superinterfaces and superclass
     for (ClassMirror inf in src.superinterfaces)
-      if (isAssignableFrom(tgt, inf)) return true; //recursive
+      if (isAssignableFrom(tgt, inf))
+        return true; //recursive
 
     return isAssignableFrom(tgt, src.superclass); //recursive
   }
@@ -196,7 +198,7 @@ class ClassUtil {
    * Returns whether the specified class is the top class (no super class).
    */
   static bool isTopClass(ClassMirror clz)
-    => "dart:core.Object" == clz.qualifiedName || "void" == clz.qualifiedName;
+    => _OBJECT_MIRROR.qualifiedName == clz.qualifiedName || "void" == clz.qualifiedName;
 
   /**
    * Create a new instance of the specified class name.
