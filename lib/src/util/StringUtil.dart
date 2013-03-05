@@ -46,7 +46,7 @@ class StringUtil {
    * + [upper] specifies if it matches upper case.
    * + [lower] specifies if it matches lower case.
    * + [whitespace] specifies if it matches whitespace.
-   * + [match] specifies a string of characters that are matched.
+   * + [match] specifies a string of characters that are matched (aka., allowed).
    */
   static bool isChar(String cc, {bool digit: false, bool upper: false, bool lower: false,
   bool whitespace: false, String match: null}) {
