@@ -87,6 +87,43 @@ class HttpResponseWrapper extends IOSinkWrapper<HttpResponse> implements HttpRes
   HttpConnectionInfo get connectionInfo => origin.connectionInfo;
 }
 
+/** A buffered HTTP response that stores the output in the given buffer
+ * rather than the original `HttpResponse` instance.
+ */
+class BufferedResponse extends HttpResponseWrapper {
+  ///The buffer for holding the output (instead of [origin])
+  final StringBuffer buffer;
+  BufferedResponse(HttpResponse origin, this.buffer): super(origin);
+
+  @override
+  Future<HttpResponse> addStream(Stream<List<int>> stream) {
+    final completer = new Completer();
+    stream.listen((data) {add(data);})
+      ..onDone(() {completer.complete(this);})
+      ..onError((err) {completer.completeError(err);});
+    return completer.future;
+  }
+  @override
+  void add(List<int> data) {
+    for (final d in data)
+      buffer.writeCharCode(d);
+  }
+  @override
+  void addString(String string, [Encoding encoding = Encoding.UTF_8]) {
+    buffer.write(string);
+  }
+  @override
+  void close() {
+    _closer.complete(this);
+  }
+  @override
+  Future<HttpResponse> get done => _closer.future;
+
+  //Used for implementing [close] and [done]//
+  Completer get _closer => _$closer != null ? _$closer: (_$closer = new Completer());
+  Completer _$closer;
+}
+
 /**
  * The HTTP headers wrapper.
  */

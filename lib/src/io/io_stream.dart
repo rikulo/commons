@@ -25,5 +25,5 @@ class IOSinkWrapper<T> extends StreamConsumerWrapper<List<int>, T> implements IO
     origin.close();
   }
   @override
-  Future<T> get done => origin.done;
+  Future<T> get done => origin.done.then((_) => this);
 }
