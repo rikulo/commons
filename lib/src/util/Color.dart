@@ -173,7 +173,7 @@ class HslColor implements Color {
   /// The blue component.
   ///Note: it is a shortcut of `rgb().blue`, so the performance might not be good
   num get blue => rgb().blue;
-  //@override
+  @override
   HslColor hsl() => this;
 
   /// Convert to RGB based [Color].
@@ -232,7 +232,7 @@ class HsvColor implements Color {
   /// The blue component.
   ///Note: it is a shortcut of `rgb().blue`, so the performance might not be good
   num get blue => rgb().blue;
-  //@override
+  @override
   HsvColor hsv() => this;
 
   /// Convert to RGB based [Color].

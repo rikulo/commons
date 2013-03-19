@@ -74,14 +74,14 @@ class StreamWrapper<T> implements Stream<T> {
   @override
   Future<T> get single => origin.single;
   @override
-  Future<T> firstMatching(bool test(T value), {T defaultValue()})
-  => origin.firstMatching(test, defaultValue: defaultValue);
+  Future<T> firstWhere(bool test(T value), {T defaultValue()})
+  => origin.firstWhere(test, defaultValue: defaultValue);
   @override
-  Future<T> lastMatching(bool test(T value), {T defaultValue()})
-  => origin.lastMatching(test, defaultValue: defaultValue);
+  Future<T> lastWhere(bool test(T value), {T defaultValue()})
+  => origin.lastWhere(test, defaultValue: defaultValue);
   @override
-  Future<T> singleMatching(bool test(T value))
-  => origin.singleMatching(test);
+  Future<T> singleWhere(bool test(T value))
+  => origin.singleWhere(test);
   @override
   Future<T> elementAt(int index) => origin.elementAt(index);
 }

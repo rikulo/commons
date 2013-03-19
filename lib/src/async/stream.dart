@@ -81,8 +81,7 @@ class _Stream<T> extends _AbstractStream<T> {
 
   StreamSubscription<T> listen(void onData(T event),
       {void onError(AsyncError error), void onDone(), bool unsubscribeOnError})
-    => new _StreamSubscription<T>(
-      this._target, this._type, onData);
+    => new _StreamSubscription<T>(this._target, this._type, onData);
 }
 
 class _CapturableStream<T> extends _AbstractStream<T> {
