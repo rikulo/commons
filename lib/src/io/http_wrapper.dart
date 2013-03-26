@@ -101,7 +101,7 @@ class BufferedResponse extends HttpResponseWrapper {
   Future<HttpResponse> writeStream(Stream<List<int>> stream) => _writeStream(stream, true);
   @override
   void writeBytes(List<int> data) {
-    buffer.write(decodeString(data, encoding));
+    buffer.write(EncodingUtil.decode(data, encoding));
   }
   @override
   void write(Object obj) {
