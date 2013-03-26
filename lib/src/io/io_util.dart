@@ -3,8 +3,8 @@
 // Author: tomyeh
 part of rikulo_io;
 
-///A collection of [Encoding] related utilities
-class EncodingUtil {
+///A collection of I/O related utilities
+class IOUtil {
   /** Utility function to synchronously decode a list of bytes.
    */
   static String decode(List<int> bytes, [Encoding encoding = Encoding.UTF_8]) {
@@ -36,4 +36,26 @@ class EncodingUtil {
     controller.close();
     return bytes;
   }
+
+  /** Reads the entire stream as a string using the given [Encoding].
+   */
+  static Future<String> readAsString(Stream<List<int>> stream, {Encoding encoding: Encoding.UTF_8,
+      void onError(AsyncError error)}) {
+    final completer = new Completer<String>();
+    final List<int> result = [];
+    stream.listen((data) {
+      result.addAll(data);
+    }, onDone: () {
+      completer.complete(decode(result, encoding));
+      result.clear();
+    }, onError: onError);
+    return completer.future;
+  }
+  /** Reads the entire stream as a JSON string using the given [Encoding],
+   * and then convert to an object.
+   */
+  static Future<dynamic> readAsJson(Stream<List<int>> stream, {Encoding encoding: Encoding.UTF_8,
+      void onError(AsyncError error)})
+  => readAsString(stream, encoding: encoding, onError: onError)
+    .then((data) => Json.parse(data));
 }

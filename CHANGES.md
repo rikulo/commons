@@ -1,5 +1,10 @@
 #Rikulo Commons Changes
 
+##0.6.8
+
+* encodeString and decodeString are put into IOUtil, and renamed to encode and decode
+* IOUtil.readAsString and readAsJson are added.
+
 ##0.6.5
 
 * StreamWrapper is added

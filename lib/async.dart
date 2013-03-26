@@ -3,13 +3,10 @@
 // Author: tomyeh
 library rikulo_async;
 
-import "dart:async";
-import "dart:io" show Encoding;
-import "dart:json" as Json;
-import "package:meta/meta.dart";
+//!!Note: don't import dart:io since this lib might be used at client!!//
 
-import "io.dart" show EncodingUtil;
+import "dart:async";
+import "package:meta/meta.dart";
 
 part "src/async/stream_provider.dart";
 part "src/async/stream_wrapper.dart";
-part "src/async/stream_util.dart";

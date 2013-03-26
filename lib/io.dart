@@ -7,6 +7,7 @@ library rikulo_io;
 import "dart:io";
 import "dart:async";
 import "dart:uri";
+import "dart:json" as Json;
 import "package:meta/meta.dart";
 
 import "package:rikulo_commons/async.dart";
