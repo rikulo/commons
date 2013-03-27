@@ -17,7 +17,7 @@ class IOUtil {
       .listen((data) => string = data);
     controller.add(bytes);
     controller.close();
-    return string;
+    return string; //note: it is done synchronously
   }
 
 
