@@ -34,6 +34,9 @@ class StreamWrapper<T> implements Stream<T> {
   @override
   Future reduce(var initialValue, combine(var previous, T element))
   => origin.reduce(initialValue, combine);
+  @override
+  Future fold(var initialValue, combine(var previous, T element))
+  => origin.fold(initialValue, combine);
   // Deprecated method, previously called 'pipe', retained for compatibility.
   @override
   Future pipeInto(StreamSink<T> sink,
@@ -93,5 +96,10 @@ class StreamConsumerWrapper<S, T> implements StreamConsumer<S, T> {
 
   StreamConsumerWrapper(this.origin);
 
+  @override
+  Future addStream(Stream<S> stream) => origin.addStream(stream);
+  @override
+  Future close() => origin.close();
+  @override
   Future<T> consume(Stream<S> stream) => origin.consume(stream);
 }

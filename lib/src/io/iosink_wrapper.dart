@@ -26,12 +26,13 @@ class IOSinkWrapper<T> extends StreamConsumerWrapper<List<int>, T> implements IO
   @override
   Future<T> consume(Stream<List<int>> stream) => origin.consume(stream);
   @override
+  Future<T> addStream(Stream<List<int>> stream) => origin.addStream(stream);
+  /** *Deprecated*: use [addStream] instead. */
+  @override
   Future<T> writeStream(Stream<List<int>> stream) => origin.writeStream(stream);
 
   @override
-  void close() {
-    origin.close();
-  }
+  Future close() => origin.close();
   @override
   Future<T> get done => origin.done.then((_) => this);
 
@@ -41,8 +42,8 @@ class IOSinkWrapper<T> extends StreamConsumerWrapper<List<int>, T> implements IO
     origin.write(obj);
   }
   @override
-  void writeAll(Iterable objects) {
-    origin.write(objects);
+  void writeAll(Iterable objects, [String separator = ""]) {
+    origin.writeAll(objects, separator);
   }
   @override
   void writeln([Object obj = ""])  {

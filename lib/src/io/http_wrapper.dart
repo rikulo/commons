@@ -108,8 +108,9 @@ class BufferedResponse extends HttpResponseWrapper {
     buffer.write(obj);
   }
   @override
-  void close() {
+  Future close() {
     _closer.complete(this);
+    return done;
   }
   @override
   Future<HttpResponse> get done => _closer.future.then((_) => this);
