@@ -11,6 +11,8 @@
 
 Rikulo Commons is distributed under an Apache 2.0 License.
 
+[![](https://drone.io/rikulo/commons/status.png)](https://drone.io/rikulo/commons/latest)
+
 ##Install from Dart Pub Repository
 
 Add this to your `pubspec.yaml` (or create it):
