@@ -10,3 +10,4 @@ homepage: http://rikulo.org
 dependencies:
   js: any
   meta: any
+  unittest: any
