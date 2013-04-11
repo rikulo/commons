@@ -9,7 +9,7 @@ import "package:rikulo_commons/io.dart";
 
 main() {
   group("http tests", () {
-    test("query string", () {
+    test("query string 1", () {
       final params = {
         "first": "the first item",
         "second": null, //means not to sure at all
@@ -21,6 +21,15 @@ main() {
 
       params["second"] = "=&?";
       expect(HttpUtil.decodeQueryString(HttpUtil.encodeQueryString(params)), params);
+    });
+
+    test("query string 2", () {
+      final params = {
+        "first": 123, //test conversion
+        "second": "\t"
+      };
+      expect(HttpUtil.encodeQueryString(params),
+        "first=123&second=%09");
     });
  });
 }

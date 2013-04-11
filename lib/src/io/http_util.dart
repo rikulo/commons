@@ -36,14 +36,19 @@ class HttpUtil {
   }
   /** Encodes the given paramters into a query string.
    * Notice the returned string won't start with `'?'`.
+   *
+   * The value of a parameter will be converted to a string first.
+   * If it is null, an empty string is generated.
    */
-  static String encodeQueryString(Map<String, String> parameters) {
+  static String encodeQueryString(Map<String, dynamic> parameters) {
     final buf = new StringBuffer();
     for (final name in parameters.keys) {
       if (!buf.isEmpty)
         buf.write('&');
       buf..write(encodeUriComponent(name))..write('=');
-      final value = parameters[name];
+      var value = parameters[name];
+      if (value != null)
+        value = value.toString();
       if (value != null && !value.isEmpty)
         buf.write(encodeUriComponent(value));
     }
