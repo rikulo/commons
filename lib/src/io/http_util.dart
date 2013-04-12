@@ -11,7 +11,7 @@ class HttpUtil {
    *
    * [queryString] - the query string shall not contain `'?'`.
    */
-  static Map<String, String> decodeQueryString(String queryString) {
+  static Map<String, String> decodeQuery(String queryString) {
     Map<String, String> result = new LinkedHashMap<String, String>();
     int i = 0;
     while (i < queryString.length) {
@@ -40,7 +40,7 @@ class HttpUtil {
    * The value of a parameter will be converted to a string first.
    * If it is null, an empty string is generated.
    */
-  static String encodeQueryString(Map<String, dynamic> parameters) {
+  static String encodeQuery(Map<String, dynamic> parameters) {
     final buf = new StringBuffer();
     for (final name in parameters.keys) {
       if (!buf.isEmpty)

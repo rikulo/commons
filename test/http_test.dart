@@ -16,11 +16,11 @@ main() {
         "third": "",
         "fourth": "\tand\n&or=?",
       };
-      expect(HttpUtil.encodeQueryString(params),
+      expect(HttpUtil.encodeQuery(params),
         "first=the+first+item&second=&third=&fourth=%09and%0A%26or%3D%3F");
 
       params["second"] = "=&?";
-      expect(HttpUtil.decodeQueryString(HttpUtil.encodeQueryString(params)), params);
+      expect(HttpUtil.decodeQuery(HttpUtil.encodeQuery(params)), params);
     });
 
     test("query string 2", () {
@@ -28,7 +28,7 @@ main() {
         "first": 123, //test conversion
         "second": "\t"
       };
-      expect(HttpUtil.encodeQueryString(params),
+      expect(HttpUtil.encodeQuery(params),
         "first=123&second=%09");
     });
  });
