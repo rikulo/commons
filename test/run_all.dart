@@ -9,12 +9,14 @@ import 'package:unittest/unittest.dart';
 
 import 'inject_test.dart' as inject_test;
 import 'io_test.dart' as io_test;
+import 'util_test.dart' as util_test;
 import 'http_test.dart' as http_test;
 
 main() {
   useCompactVMConfiguration();
 
   io_test.main();
+  util_test.main();
   http_test.main();
   inject_test.main();
 }

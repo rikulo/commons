@@ -16,7 +16,6 @@ part "src/html/css_util.dart";
 part "src/html/Points.dart";
 part "src/html/Size.dart";
 part "src/html/Matrix.dart";
-part "src/html/Color.dart";
 
 /** A function that returns a [Point].
  */

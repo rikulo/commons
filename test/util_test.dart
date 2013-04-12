@@ -1,10 +1,10 @@
 //Copyright (C) 2013 Potix Corporation. All Rights Reserved.
 //History: Mon, Feb 25, 2013  5:28:08 PM
 // Author: tomyeh
-library test_html;
+library test_util;
 
 import 'package:/unittest/unittest.dart';
-import "package:rikulo_commons/html.dart";
+import "package:rikulo_commons/util.dart";
 
 void main() {
   test("Color.parse", () {
