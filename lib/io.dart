@@ -11,7 +11,7 @@ import "dart:collection" show LinkedHashMap;
 import "dart:json" as Json;
 import "package:meta/meta.dart";
 
-import "package:rikulo_commons/async.dart";
+import "async.dart";
 
 part "src/io/http_wrapper.dart";
 part "src/io/iosink_wrapper.dart";

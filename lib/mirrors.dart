@@ -8,7 +8,7 @@ import "dart:mirrors";
 import "dart:async";
 import "dart:collection" show HashMap;
 
-import "package:rikulo_commons/util.dart" show Color, WHITE;
+import "util.dart" show Color, WHITE;
 
 part "src/mirrors/ClassUtil.dart";
 part "src/mirrors/ObjectUtil.dart";
