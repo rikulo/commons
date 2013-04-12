@@ -8,8 +8,6 @@ import "dart:mirrors";
 import "dart:async";
 import "dart:collection" show HashMap;
 
-import "util.dart" show Color, WHITE;
-
 part "src/mirrors/ClassUtil.dart";
 part "src/mirrors/ObjectUtil.dart";
 part "src/mirrors/error.dart";

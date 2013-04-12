@@ -23,8 +23,7 @@ class ObjectUtil {
    * `field1.field2` and so on.
    * * [coerce] - used to coerce the given object to the given type.
    * If omitted or null is returned, the default coercion will be done (
-   * it handles the basic types: `int`, `double`, `String`, `num`, `Datetime`
-   * and `Color`).
+   * it handles the basic types: `int`, `double`, `String`, `num`, and `Datetime`).
    * * [onCoerceError] - used to handle the coercion error.
    * If not specified, the exception won't be caught.
    * * [onSetterError] - used to handle the error thrown by a setter.

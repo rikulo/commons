@@ -13,8 +13,7 @@ final ClassMirror
   _OBJECT_MIRROR = reflect(const Object()).type,
   _INT_MIRROR = reflect(0).type,
   _DOUBLE_MIRROR = reflect(0.0).type,
-  _BOOL_MIRROR = reflect(false).type,
-  _COLOR_MIRROR = reflect(WHITE).type;
+  _BOOL_MIRROR = reflect(false).type;
 
 /** Utility class used with Mirror. */
 class ClassUtil {
@@ -217,8 +216,7 @@ class ClassUtil {
    *
    * * [coerce] - used to coerce the given object to the given type.
    * If omitted or null is returned, the default coercion will be done (it
-   * handles the basic types: `int`, `double`, `String`, `num`, `Datetime`
-   * and `Color`).
+   * handles the basic types: `int`, `double`, `String`, `num`, and `Datetime`).
    *
    * It throws [CoercionError] if failed to coerce.
    */
@@ -252,8 +250,6 @@ class ClassUtil {
     if (targetClass == _BOOL_MIRROR)
       return !sval.isEmpty && (sval = sval.toLowerCase()) != "false" && sval != "no"
         && sval != "off" && sval != "none";
-    if (targetClass == _COLOR_MIRROR)
-      return Color.parse(sval);
     throw new CoercionError(obj, targetClass);
   }
 

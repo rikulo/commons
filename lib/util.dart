@@ -12,7 +12,6 @@ part "src/util/StringUtil.dart";
 part "src/util/XmlUtil.dart";
 part "src/util/ListUtil.dart";
 part "src/util/MapUtil.dart";
-part "src/util/Color.dart";
 
 /** A task that is a function taking no argument and returning nothing.
  */
