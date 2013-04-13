@@ -43,6 +43,11 @@ For more information, please refer to [Pub: Dependencies](http://pub.dartlang.or
     <td>Run on Client</td>
   </tr>
   <tr>
+    <td><code>async.dart</code></td>
+    <td>Yes</td>
+    <td>No</td>
+  </tr>
+  <tr>
     <td><code>io.dart</code></td>
     <td>Yes</td>
     <td>No</td>
