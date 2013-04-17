@@ -60,11 +60,6 @@ class ClassUtil {
     return isAssignableFrom(tgt, src.superclass); //recursive
   }
 
-  /** Returns the corresponding ClassMirror of a given TypeMirror.
-   */
-  static ClassMirror getCorrespondingClassMirror(TypeMirror type)
-    => type is ClassMirror ? type : forName(type.qualifiedName);
-
   /**
    * Returns the generic element class of the collection class.
    */
@@ -105,14 +100,14 @@ class ClassUtil {
   /**
    * Returns the types of the specified parameters
    */
-  static List<ClassMirror> getParameterTypes(List<ParameterMirror> params) {
-    List<ClassMirror> types = new List();
+  static List<TypeMirror> getParameterTypes(List<ParameterMirror> params) {
+    List<TypeMirror> types = new List();
     for (ParameterMirror param in params) {
 //TODO(henri) : we have not supported named parameter
 //      if (param.isNamed) {
 //        continue;
 //      }
-      types.add(getCorrespondingClassMirror(param.type));
+      types.add(param.type);
     }
     return types;
   }
@@ -146,8 +141,8 @@ class ClassUtil {
       result = inst.setFieldAsync(m.simpleName, _convertParam(params[0]));
     } else {
       params = _convertParams(params);
-      namedArgs = _convertNamedArgs(namedArgs);
-      result = inst.invokeAsync(m.simpleName, params, namedArgs);
+      Map<Symbol, Object> namedArgs0 = _convertNamedArgs(namedArgs);
+      result = inst.invokeAsync(m.simpleName, params, namedArgs0);
     }
     return result.then((value) => value.reflectee);
   }
@@ -162,8 +157,8 @@ class ClassUtil {
   static Future apply(Function fn, List<Object> params, [Map<String, Object> namedArgs]) {
     ClosureMirror closure = reflect(fn);
     params = _convertParams(params);
-    namedArgs = _convertNamedArgs(namedArgs);
-    Future<InstanceMirror> result = closure.applyAsync(params, namedArgs);
+    Map<Symbol, Object> namedArgs0 = _convertNamedArgs(namedArgs);
+    Future<InstanceMirror> result = closure.applyAsync(params, namedArgs0);
     return result.then((value) => value.reflectee);
   }
 
@@ -176,10 +171,10 @@ class ClassUtil {
     return null;
   }
 
-  static Map<String, Object> _convertNamedArgs(Map namedArgs) {
+  static Map<Symbol, Object> _convertNamedArgs(Map<String, Object> namedArgs) {
     if (namedArgs != null) {
-      Map<String, Object> nargs = new HashMap();
-      namedArgs.forEach((k,v) => nargs[k] = _convertParam(v));
+      Map<Symbol, Object> nargs = new HashMap();
+      namedArgs.forEach((k,v) => nargs[new Symbol(k)] = _convertParam(v));
       return nargs;
     }
     return null;
