@@ -27,9 +27,9 @@ class ClassUtil {
     if (splited != null) {
       String libName = splited["libName"];
       String clsName = splited["clsName"];
-      LibraryMirror l = currentMirrorSystem().libraries[libName];
+      LibraryMirror l = currentMirrorSystem().libraries[new Symbol(libName)];
       if (l != null) {
-        ClassMirror m = l.classes[clsName];
+        ClassMirror m = l.classes[new Symbol(clsName)];
         if (m != null) return m;
       }
     }
