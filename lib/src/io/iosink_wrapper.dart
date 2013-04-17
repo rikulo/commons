@@ -22,6 +22,10 @@ class IOSinkWrapper extends StreamConsumerWrapper<List<int>> implements IOSink {
   void add(List<int> data) {
     origin.add(data);
   }
+  @override
+  void addError(error) {
+    origin.addError(error);
+  }
 
   @override
   Future addStream(Stream<List<int>> stream) => origin.addStream(stream);

@@ -96,11 +96,19 @@ class BufferedResponse extends HttpResponseWrapper {
   BufferedResponse(HttpResponse origin, this.buffer): super(origin);
 
   @override
-  Future<HttpResponse> consume(Stream<List<int>> stream) => _writeStream(stream, false);
+  Future<HttpResponse> addStream(Stream<List<int>> stream) {
+    final completer = new Completer();
+    stream.listen((data) {add(data);})
+      ..onDone(() {
+        completer.complete(this);
+      })
+      ..onError((err) {
+        completer.completeError(err);
+      });
+    return completer.future;
+  }
   @override
-  Future<HttpResponse> writeStream(Stream<List<int>> stream) => _writeStream(stream, true);
-  @override
-  void writeBytes(List<int> data) {
+  void add(List<int> data) {
     buffer.write(IOUtil.decode(data, encoding));
   }
   @override
@@ -114,17 +122,6 @@ class BufferedResponse extends HttpResponseWrapper {
   }
   @override
   Future<HttpResponse> get done => _closer.future.then((_) => this);
-
-  Future<HttpResponse> _writeStream(Stream<List<int>> stream, bool unbind)  {
-    final completer = new Completer();
-    stream.listen((data) {writeBytes(data);})
-      ..onDone(() {
-        if (!unbind) close();
-        completer.complete(this);
-      })
-      ..onError((err) {completer.completeError(err);});
-    return completer.future;
-  }
 
   //Used for implementing [close] and [done]//
   Completer get _closer => _$closer != null ? _$closer: (_$closer = new Completer());
