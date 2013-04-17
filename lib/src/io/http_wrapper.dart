@@ -43,7 +43,7 @@ class HttpRequestWrapper extends StreamWrapper implements HttpRequest {
 /**
  * The HTTP response wrapper.
  */
-class HttpResponseWrapper extends IOSinkWrapper<HttpResponse> implements HttpResponse {
+class HttpResponseWrapper extends IOSinkWrapper implements HttpResponse {
   HttpResponseWrapper(HttpResponse origin): super(origin);
 
   ///The original HTTP response

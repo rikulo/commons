@@ -126,9 +126,9 @@ class _OnDemandMap<K, V> implements Map<K,V> {
     if (_map != null) _map.forEach(f);
   }
   @override
-  Collection<K> get keys => _map != null ? _map.keys: EMPTY_LIST;
+  Iterable<K> get keys => _map != null ? _map.keys: EMPTY_LIST;
   @override
-  Collection<V> get values => _map != null ? _map.values: EMPTY_LIST;
+  Iterable<V> get values => _map != null ? _map.values: EMPTY_LIST;
   @override
   bool get isEmpty => _map == null || _map.isEmpty;
   @override

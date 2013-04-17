@@ -18,7 +18,7 @@ class StringUtil {
 
   /** Return a string representation of the integer argument in base 16.
    *
-   * [digits] specifies how many digits to generate at least.
+   * * [digits] specifies how many digits to generate at least.
    * If non-positive, it is ignored (i.e., any number is OK).
    */
   static String toHexString(num value, [int digits=0]) {
@@ -30,11 +30,11 @@ class StringUtil {
       val >>= 4;
       if (cc < 10) cc += _CC_0;
       else cc += _CC_a - 10;
-      codes.insertRange(0, 1, cc);
+      codes.insert(0, cc);
     }
     
-    if ((val = digits - codes.length) > 0)
-      codes.insertRange(0, val, _CC_0);
+    for (int i = digits - codes.length; --i >= 0;)
+      codes.insert(0, _CC_0);
     return codes.isEmpty ? "0": new String.fromCharCodes(codes);
   }
 

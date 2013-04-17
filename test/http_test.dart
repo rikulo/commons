@@ -4,7 +4,7 @@
 library test_http;
 
 import "dart:async";
-import 'package:/unittest/unittest.dart';
+import 'package:unittest/unittest.dart';
 import "package:rikulo_commons/io.dart";
 
 main() {

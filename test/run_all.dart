@@ -13,10 +13,10 @@ import 'util_test.dart' as util_test;
 import 'http_test.dart' as http_test;
 
 main() {
-  useCompactVMConfiguration();
+//  useCompactVMConfiguration();
 
-  io_test.main();
-  util_test.main();
-  http_test.main();
-  inject_test.main();
+  group("io test", io_test.main);
+  group("util test", util_test.main);
+  group("http test", http_test.main);
+  group("inject tests", inject_test.main);
 }

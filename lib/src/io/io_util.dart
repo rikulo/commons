@@ -20,7 +20,6 @@ class IOUtil {
     return string; //note: it is done synchronously
   }
 
-
   /** Utility function to synchronously encode a String.
    * It will throw an exception if the encoding is invalid.
    */
@@ -39,8 +38,8 @@ class IOUtil {
 
   /** Reads the entire stream as a string using the given [Encoding].
    */
-  static Future<String> readAsString(Stream<List<int>> stream, {Encoding encoding: Encoding.UTF_8,
-      void onError(AsyncError error)}) {
+  static Future<String> readAsString(Stream<List<int>> stream,
+      {Encoding encoding: Encoding.UTF_8, void onError(error)}) {
     final completer = new Completer<String>();
     final List<int> result = [];
     stream.listen((data) {
@@ -54,8 +53,8 @@ class IOUtil {
   /** Reads the entire stream as a JSON string using the given [Encoding],
    * and then convert to an object.
    */
-  static Future<dynamic> readAsJson(Stream<List<int>> stream, {Encoding encoding: Encoding.UTF_8,
-      void onError(AsyncError error)})
+  static Future<dynamic> readAsJson(Stream<List<int>> stream,
+      {Encoding encoding: Encoding.UTF_8, void onError(error)})
   => readAsString(stream, encoding: encoding, onError: onError)
     .then((data) => Json.parse(data));
 }

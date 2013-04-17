@@ -74,7 +74,7 @@ class JsUtil {
    * + [argnums] - the number of arguments for each corresponding callback.
    */
   static newCallbackOnceGroup(var name, List callbacks, List<int> argnums) {
-    _callbackId = ++_callbackId & 0xffffffff;
+    _callbackId = (++_callbackId as int) & 0xffffffff; //TODO: Issue 9957
     var id = _unique(name, _callbackId);
     List results = new List();
     for(int j = 0, len = callbacks.length; j < len; ++j) {

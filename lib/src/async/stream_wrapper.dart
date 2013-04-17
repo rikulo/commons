@@ -15,33 +15,27 @@ class StreamWrapper<T> implements Stream<T> {
   Stream<T> asBroadcastStream() => origin.asBroadcastStream();
   @override
   StreamSubscription<T> listen(void onData(T event),
-  { void onError(AsyncError error), void onDone(), bool unsubscribeOnError})
-  => origin.listen(onData, onError: onError, onDone: onDone, unsubscribeOnError: unsubscribeOnError);
+  { void onError(error), void onDone(), bool cancelOnError})
+  => origin.listen(onData, onError: onError, onDone: onDone, cancelOnError: cancelOnError);
   @override
   Stream<T> where(bool test(T event)) => origin.where(test); 
   @override
   Stream map(convert(T event)) => origin.map(convert);
   @override
-  Stream<T> handleError(void handle(AsyncError error), { bool test(error) })
+  Stream<T> handleError(void handle(error), { bool test(error) })
   => origin.handleError(handle, test: test);
   @override
   Stream expand(Iterable convert(T value)) => origin.expand(convert);
   @override
-  Future pipe(StreamConsumer<T, dynamic> streamConsumer) => origin.pipe(streamConsumer);
+  Future pipe(StreamConsumer<T> streamConsumer) => origin.pipe(streamConsumer);
   @override
   Stream transform(StreamTransformer<T, dynamic> streamTransformer)
   => origin.transform(streamTransformer);
   @override
-  Future reduce(var initialValue, combine(var previous, T element))
-  => origin.reduce(initialValue, combine);
+  Future reduce(T combine(T previous, T element)) => origin.reduce(combine);
   @override
   Future fold(var initialValue, combine(var previous, T element))
   => origin.fold(initialValue, combine);
-  // Deprecated method, previously called 'pipe', retained for compatibility.
-  @override
-  Future pipeInto(StreamSink<T> sink,
-  {void onError(AsyncError error), bool unsubscribeOnError})
-  => origin.pipeInto(sink, onError: onError, unsubscribeOnError: unsubscribeOnError);
   @override
   Future<bool> contains(T match) => origin.contains(match);
   @override
@@ -50,10 +44,6 @@ class StreamWrapper<T> implements Stream<T> {
   Future<bool> any(bool test(T element)) => origin.any(test);
   @override
   Future<int> get length => origin.length;
-  @override
-  Future<T> min([int compare(T a, T b)]) => origin.min(compare);
-  @override
-  Future<T> max([int compare(T a, T b)]) => origin.max(compare);
   @override
   Future<bool> get isEmpty => origin.isEmpty;
   @override
@@ -90,9 +80,9 @@ class StreamWrapper<T> implements Stream<T> {
 }
 
 ///The StreamConsumer wrapper
-class StreamConsumerWrapper<S, T> implements StreamConsumer<S, T> {
+class StreamConsumerWrapper<S> implements StreamConsumer<S> {
   ///The original stream consumer
-  final StreamConsumer<S, T> origin;
+  final StreamConsumer<S> origin;
 
   StreamConsumerWrapper(this.origin);
 
@@ -100,6 +90,4 @@ class StreamConsumerWrapper<S, T> implements StreamConsumer<S, T> {
   Future addStream(Stream<S> stream) => origin.addStream(stream);
   @override
   Future close() => origin.close();
-  @override
-  Future<T> consume(Stream<S> stream) => origin.consume(stream);
 }

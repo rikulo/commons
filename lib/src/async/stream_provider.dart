@@ -80,7 +80,7 @@ class _Stream<T> extends _AbstractStream<T> {
   _Stream(this._target, String type): super(type);
 
   StreamSubscription<T> listen(void onData(T event),
-      {void onError(AsyncError error), void onDone(), bool unsubscribeOnError})
+      {void onError(error), void onDone(), bool unsubscribeOnError})
     => new _StreamSubscription<T>(this._target, this._type, onData);
 }
 
@@ -91,7 +91,7 @@ class _CapturableStream<T> extends _AbstractStream<T> {
   _CapturableStream(this._target, String type, this._useCapture): super(type);
 
   StreamSubscription<T> listen(void onData(T event),
-      {void onError(AsyncError error), void onDone(), bool unsubscribeOnError})
+      {void onError(error), void onDone(), bool unsubscribeOnError})
     => new _CapturableStreamSubscription<T>(
       this._target, this._type, onData, this._useCapture);
 }
@@ -127,7 +127,7 @@ abstract class _AbstractStreamSubscription<T> extends StreamSubscription<T> {
   }
 
   /// Has no effect.
-  void onError(void handleError(AsyncError error)) {}
+  void onError(void handleError(error)) {}
 
   /// Has no effect.
   void onDone(void handleDone()) {}

@@ -4,11 +4,11 @@
 part of rikulo_io;
 
 ///The IOSink wrapper
-class IOSinkWrapper<T> extends StreamConsumerWrapper<List<int>, T> implements IOSink<T> {
+class IOSinkWrapper extends StreamConsumerWrapper<List<int>> implements IOSink {
   IOSinkWrapper(IOSink origin) : super(origin);
 
   ///The original IO sink
-  IOSink<T> get origin => super.origin as IOSink;
+  IOSink get origin => super.origin as IOSink;
 
   //IOSink//
   @override
@@ -19,22 +19,17 @@ class IOSinkWrapper<T> extends StreamConsumerWrapper<List<int>, T> implements IO
   }
 
   @override
-  void writeBytes(List<int> data) {
-    origin.writeBytes(data);
+  void add(List<int> data) {
+    origin.add(data);
   }
 
   @override
-  Future<T> consume(Stream<List<int>> stream) => origin.consume(stream);
-  @override
-  Future<T> addStream(Stream<List<int>> stream) => origin.addStream(stream);
-  /** *Deprecated*: use [addStream] instead. */
-  @override
-  Future<T> writeStream(Stream<List<int>> stream) => origin.writeStream(stream);
+  Future addStream(Stream<List<int>> stream) => origin.addStream(stream);
 
   @override
   Future close() => origin.close();
   @override
-  Future<T> get done => origin.done.then((_) => this);
+  Future get done => origin.done.then((_) => this);
 
   //StringSink//
   @override
