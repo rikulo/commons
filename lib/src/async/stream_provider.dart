@@ -65,56 +65,49 @@ class CapturableStreamProvider<T> {
   }
 }
 
-abstract class _AbstractStream<T> extends Stream<T> {
+class _Stream<T> extends Stream<T> {
   final String _type;
-
-  _AbstractStream(this._type);
-
-  // events are inherently multi-subscribers.
-  Stream<T> asMultiSubscriberStream() => this;
-}
-
-class _Stream<T> extends _AbstractStream<T> {
   final StreamTarget _target;
 
-  _Stream(this._target, String type): super(type);
+  _Stream(this._target, this._type);
 
   StreamSubscription<T> listen(void onData(T event),
-      {void onError(error), void onDone(), bool unsubscribeOnError})
+      {void onError(error), void onDone(), bool cancelOnError})
     => new _StreamSubscription<T>(this._target, this._type, onData);
 }
 
-class _CapturableStream<T> extends _AbstractStream<T> {
+class _CapturableStream<T> extends Stream<T> {
+  final String _type;
   final CapturableStreamTarget _target;
   final bool _useCapture;
 
-  _CapturableStream(this._target, String type, this._useCapture): super(type);
+  _CapturableStream(this._target, this._type, this._useCapture);
 
   StreamSubscription<T> listen(void onData(T event),
-      {void onError(error), void onDone(), bool unsubscribeOnError})
+      {void onError(error), void onDone(), bool cancelOnError})
     => new _CapturableStreamSubscription<T>(
       this._target, this._type, onData, this._useCapture);
 }
 
-abstract class _AbstractStreamSubscription<T> extends StreamSubscription<T> {
+abstract class _StreamSubscriptionBase<T> extends StreamSubscription<T> {
   int _pauseCount = 0;
   final String _type;
   var _onData;
 
-  _AbstractStreamSubscription(this._type, this._onData) {
+  _StreamSubscriptionBase(this._type, this._onData) {
     _tryResume();
   }
 
+  @override
   void cancel() {
-    if (_canceled) {
-      throw new StateError("Subscription has been canceled.");
-    }
+    if (_canceled) return;
 
     _unlisten();
     // Clear out the target to indicate this is complete.
     _onData = null;
   }
 
+  @override
   void onData(void handleData(T event)) {
     if (_canceled) {
       throw new StateError("Subscription has been canceled.");
@@ -127,15 +120,16 @@ abstract class _AbstractStreamSubscription<T> extends StreamSubscription<T> {
   }
 
   /// Has no effect.
+  @override
   void onError(void handleError(error)) {}
 
   /// Has no effect.
+  @override
   void onDone(void handleDone()) {}
 
+  @override
   void pause([Future resumeSignal]) {
-    if (_canceled) {
-      throw new StateError("Subscription has been canceled.");
-    }
+    if (_canceled) return;
     ++_pauseCount;
     _unlisten();
 
@@ -146,13 +140,9 @@ abstract class _AbstractStreamSubscription<T> extends StreamSubscription<T> {
 
   bool get _paused => _pauseCount > 0;
 
+  @override
   void resume() {
-    if (_canceled) {
-      throw new StateError("Subscription has been canceled.");
-    }
-    if (!_paused) {
-      throw new StateError("Subscription is not paused.");
-    }
+    if (_canceled || !_paused) return;
     --_pauseCount;
     _tryResume();
   }
@@ -167,18 +157,26 @@ abstract class _AbstractStreamSubscription<T> extends StreamSubscription<T> {
       _remove();
   }
 
+  @override
+  Future asFuture([var futureValue]) {
+    // We just need a future that will never succeed or fail.
+    Completer completer = new Completer();
+    return completer.future;
+  }
+
   //deriving to override//
   bool get _canceled;
   void _add();
   void _remove();
 }
 
-class _StreamSubscription<T> extends _AbstractStreamSubscription<T> {
+class _StreamSubscription<T> extends _StreamSubscriptionBase<T> {
   StreamTarget _target;
 
   _StreamSubscription(this._target, String type, void onData(T event)):
     super(type, onData);
 
+  @override
   void cancel() {
     super.cancel();
 
@@ -195,13 +193,14 @@ class _StreamSubscription<T> extends _AbstractStreamSubscription<T> {
   }
 }
 
-class _CapturableStreamSubscription<T> extends _AbstractStreamSubscription<T> {
+class _CapturableStreamSubscription<T> extends _StreamSubscriptionBase<T> {
   CapturableStreamTarget _target;
   final bool _useCapture;
 
   _CapturableStreamSubscription(this._target, String type, void onData(T event), this._useCapture):
     super(type, onData);
 
+  @override
   void cancel() {
     super.cancel();
 

@@ -140,16 +140,14 @@ class ClassUtil {
   static Future invokeObjectMirror(ObjectMirror inst, MethodMirror m,
       List<Object> params, [Map<String, Object> namedArgs]) {
     Future<InstanceMirror> result;
-    if (m.isGetter)
-      result = inst.getField(m.simpleName);
-    else if (m.isSetter) {
-      String fieldnm = m.simpleName.substring(0, m.simpleName.length-1);
-      result = inst.setField(fieldnm, _convertParam(params[0]));
+    if (m.isGetter) {
+      result = inst.getFieldAsync(m.simpleName);
+    } else if (m.isSetter) {
+      result = inst.setFieldAsync(m.simpleName, _convertParam(params[0]));
     } else {
       params = _convertParams(params);
       namedArgs = _convertNamedArgs(namedArgs);
-
-      result = inst.invoke(m.simpleName, params, namedArgs);
+      result = inst.invokeAsync(m.simpleName, params, namedArgs);
     }
     return result.then((value) => value.reflectee);
   }
@@ -165,7 +163,7 @@ class ClassUtil {
     ClosureMirror closure = reflect(fn);
     params = _convertParams(params);
     namedArgs = _convertNamedArgs(namedArgs);
-    Future<InstanceMirror> result = closure.apply(params, namedArgs);
+    Future<InstanceMirror> result = closure.applyAsync(params, namedArgs);
     return result.then((value) => value.reflectee);
   }
 
@@ -208,7 +206,7 @@ class ClassUtil {
   }
 
   static Future newInstanceByClassMirror(ClassMirror clz) {
-    Future<InstanceMirror> inst = clz.newInstance("", []); //unamed constructor
+    Future<InstanceMirror> inst = clz.newInstanceAsync(new Symbol(""), []); //unamed constructor
     return inst.then((value) => value.reflectee);
   }
 
@@ -257,22 +255,22 @@ class ClassUtil {
    * if no such field nor setter.
    */
   static ClassMirror getSetterType(ClassMirror clz, String field) {
-    var mtd = clz.setters["$field="];
+    var mtd = clz.setters[new Symbol("$field=")];
     if (mtd != null)
       return mtd.parameters[0].type;
 
-    mtd = clz.members[field];
+    mtd = clz.members[new Symbol(field)];
     return mtd is VariableMirror ? mtd.type: null;
   }
   /** Returns the class mirror of the given field (including getter), or null
    * if no such field nor getter.
    */
   static ClassMirror getGetterType(ClassMirror clz, String field) {
-    var mtd = clz.getters[field];
+    var mtd = clz.getters[new Symbol(field)];
     if (mtd != null)
       return mtd.returnType;
 
-    mtd = clz.members[field];
+    mtd = clz.members[new Symbol(field)];
     return mtd is VariableMirror ? mtd.type: null;
   }
 }

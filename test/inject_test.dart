@@ -3,6 +3,7 @@
 // Author: tomyeh
 library test_inject;
 
+import 'dart:mirrors';
 import 'package:unittest/unittest.dart';
 import "package:rikulo_commons/mirrors.dart";
 

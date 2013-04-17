@@ -49,19 +49,19 @@ class ObjectUtil {
       //nothing to do if silent && no getter matches the first element of fields
       if (silent && ClassUtil.getGetterType(
           reflect(obj).type, fields.first.trim()) == null)
-        return new Future.immediate(obj);
+        return new Future.value(obj);
 
       key = fields.removeLast();
       var o2 = obj;
-      return Future.forEach(fields, (field) {
+      return Future.forEach(fields, (String field) {
         field = field.trim();
-        final ret = reflect(o2).getField(field).then((inst) {
+        final ret = reflect(o2).getFieldAsync(new Symbol(field)).then((inst) {
           final o3 = inst.reflectee;
           if (o3 == null) {
             final clz = ClassUtil.getSetterType(reflect(o2).type, field);
             if (clz == null)
               throw new NoSuchMethodError(o2, "$field=", null, null);
-            return clz.newInstance("", []);
+            return clz.newInstanceAsync(new Symbol(""), []);
               //1. use getSetterType since it will be assigned through setField
               //2. assume there must be a default constructor. otherwise, it is caller's issue
           }
@@ -71,7 +71,7 @@ class ObjectUtil {
         .then((inst) {
           if (inst != null) { //i.e., newInstance was called
             final o3 = inst.reflectee;
-            return reflect(o2).setField(field, ClassUtil._convertParam(o3))
+            return reflect(o2).setFieldAsync(new Symbol(field), ClassUtil._convertParam(o3))
               .then((_) {
                 o2 = o3;
               });
@@ -98,7 +98,7 @@ class ObjectUtil {
           throw err;
         onSetterError(obj, name, value, err);
       }
-      return new Future.immediate(obj);
+      return new Future.value(obj);
     }
 
     if (onCoerceError != null) {
@@ -114,7 +114,7 @@ class ObjectUtil {
     if (validate != null)
       validate(obj, name, value);
 
-    final ret = reflect(obj).setField(name, ClassUtil._convertParam(value))
+    final ret = reflect(obj).setFieldAsync(new Symbol(name), ClassUtil._convertParam(value))
           //_convertParam to convert so-called non-simple-value to mirror
       .then((_) => obj);
     return onSetterError == null ? ret: ret.catchError((err) {
