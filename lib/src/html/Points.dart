@@ -54,10 +54,10 @@ class Point3D extends Point {
   => other is Point3D && x == other.x && y == other.y && z == other.z;
   @override
   Point3D operator -(Point3D other)
-  => new Point3D(x - other.x, y - other.y, z - other.z);
+  => new Point3D(x - other.x, y - other.y, other is Point3D ? z - other.z: z);
   @override
   Point3D operator +(Point3D other)
-  => new Point3D(x + other.x, y + other.y, z + other.z);
+  => new Point3D(x + other.x, y + other.y, other is Point3D ? z + other.z: z);
   @override
   Point3D operator *(num scalar)
   => new Point3D(x * scalar, y * scalar, z * scalar);
@@ -66,7 +66,7 @@ class Point3D extends Point {
   double distanceTo(Point3D other) {
     var dx = x - other.x;
     var dy = y - other.y;
-    var dz = z - other.z;
+    var dz = other is Point3D ? z - other.z: z;
     return sqrt(dx * dx + dy * dy + dz * dz);
   }
   @override  
