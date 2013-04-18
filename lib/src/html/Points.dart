@@ -53,14 +53,16 @@ class Point3D extends Point {
   bool operator ==(Point3D other)
   => other is Point3D && x == other.x && y == other.y && z == other.z;
   @override
-  Point3D operator -(Point3D other)
+  Point3D operator -(Point other)
   => new Point3D(x - other.x, y - other.y, other is Point3D ? z - other.z: z);
   @override
-  Point3D operator +(Point3D other)
+  Point3D operator +(Point other)
   => new Point3D(x + other.x, y + other.y, other is Point3D ? z + other.z: z);
   @override
   Point3D operator *(num scalar)
   => new Point3D(x * scalar, y * scalar, z * scalar);
+  Point3D operator /(num factor)
+  => new Point3D(x / factor, y / factor, z / factor);
   
   @override  
   double distanceTo(Point3D other) {
