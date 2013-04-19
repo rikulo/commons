@@ -201,7 +201,7 @@ class ClassUtil {
   }
 
   static Future newInstanceByClassMirror(ClassMirror clz) {
-    Future<InstanceMirror> inst = clz.newInstanceAsync(new Symbol(""), []); //unamed constructor
+    Future<InstanceMirror> inst = clz.newInstanceAsync(const Symbol(""), []); //unamed constructor
     return inst.then((value) => value.reflectee);
   }
 

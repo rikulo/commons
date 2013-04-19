@@ -39,6 +39,8 @@ class StreamWrapper<T> implements Stream<T> {
   @override
   Future<bool> contains(T match) => origin.contains(match);
   @override
+  Future forEach(void action(T element)) => origin.forEach(action);
+  @override
   Future<bool> every(bool test(T element)) => origin.every(test);
   @override
   Future<bool> any(bool test(T element)) => origin.any(test);
