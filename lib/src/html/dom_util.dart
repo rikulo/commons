@@ -9,14 +9,20 @@ part of rikulo_html;
 class DomUtil {
   /** Returns the client size (aka., the inner size) of the given element, including padding
    * but not border.
+   *
+   * It is a shortcut of `new Size(node.clientWidth, node.clientHeight)`.
    */
   static Size clientSize(Element node) => new Size(node.clientWidth, node.clientHeight);
   /** Returns the offset size (aka., the outer size) of the given element, including padding
    * but not border.
+   *
+   * It is a shortcut of `new Size(node.offsetWidth, node.offsetHeight)`.
    */
   static Size offsetSize(Element node) => new Size(node.offsetWidth, node.offsetHeight);
   /** Returns the scroll size (aka., the total size) of the given element's content,
    * including padding but not including border, margin and scroll bar.
+   *
+   * It is a shortcut of `new Size(node.scrollWidth, node.scrollHeight)`.
    */
   static Size scrollSize(Element node) => new Size(node.scrollWidth, node.scrollHeight);
 
@@ -149,7 +155,9 @@ class DomUtil {
   }
   static Element _txtdiv;
 
-  /** show the element.
+  /** Show the element.
+   *
+   * It is a shortcut of `node.style.display = ""`.
    *
    * Notice that this method actually *resets* `Element`'s `style.display`
    * to empty. In other words, if the CSS rules associated with the given node
@@ -158,7 +166,10 @@ class DomUtil {
   static void show(Element node) {
     node.style.display = "";
   }
-  /// hide the element.
+  /** Hide the element.
+   *
+   * It is a shortcut of `node.style.display = "none"`.
+   */
   static void hide(Element node) {
     node.style.display = "none";
   }
