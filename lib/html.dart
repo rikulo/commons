@@ -11,7 +11,7 @@ import "package:meta/meta.dart";
 import "util.dart";
 
 part "src/html/Browser.dart";
-part "src/html/DomAgent.dart";
+part "src/html/dom_util.dart";
 part "src/html/css_util.dart";
 part "src/html/Points.dart";
 part "src/html/Size.dart";

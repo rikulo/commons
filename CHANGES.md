@@ -1,5 +1,10 @@
 #Rikulo Commons Changes
 
+##0.7.0
+
+* Css was renamed to CssUtil
+* DomAgent was removed and replaced with DomUtil, which is a collection of static utilities.
+
 ##0.6.8
 
 * encodeString and decodeString are put into IOUtil, and renamed to encode and decode

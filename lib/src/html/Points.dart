@@ -54,10 +54,12 @@ class Point3D extends Point {
   => other is Point3D && x == other.x && y == other.y && z == other.z;
   @override
   Point3D operator -(Point other)
-  => new Point3D(x - other.x, y - other.y, other is Point3D ? z - other.z: z);
+  => new Point3D(x - other.x, y - other.y,
+      other is Point3D ? z - (other as Point3D).z: z);
   @override
   Point3D operator +(Point other)
-  => new Point3D(x + other.x, y + other.y, other is Point3D ? z + other.z: z);
+  => new Point3D(x + other.x, y + other.y,
+      other is Point3D ? z + (other as Point3D).z: z);
   @override
   Point3D operator *(num scalar)
   => new Point3D(x * scalar, y * scalar, z * scalar);

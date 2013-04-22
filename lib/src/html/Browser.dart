@@ -133,8 +133,7 @@ class Browser {
       version = 1.0;
     }
 
-    final q = new WindowAgent(window);
-    size = new Size(q.innerWidth, q.innerHeight);
+    size = new Size(window.innerWidth, window.innerHeight);
   }
   static double _versionOf(String version, [String separator='.']) {
     int j = version.indexOf(separator);
@@ -157,8 +156,7 @@ class Browser {
    * unless it changed the margin or border of `document.body`.
    */
   void updateSize() {
-    final q = new WindowAgent(window);
-    size = new Size(q.innerWidth, q.innerHeight);
+    size = new Size(window.innerWidth, window.innerHeight);
   }
 }
 
