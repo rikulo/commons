@@ -13,14 +13,22 @@ class HttpUtil {
    */
   static Map<String, String> decodeQuery(String queryString) {
     Map<String, String> result = new LinkedHashMap<String, String>();
-    int i = 0;
-    while (i < queryString.length) {
-      int j = queryString.indexOf("=", i);
-      if (j == -1)
-        break;
+    int i = 0, len = queryString.length;
+    while (i < len) {
+      int j = i;
+      bool eqFound = false;
+      for (; j < len; ++j) {
+        final cc = queryString[j];
+        if (cc == '=') {
+          eqFound = true;
+          break;
+        }
+        if (cc == '&')
+          break;
+      }
 
       String name = queryString.substring(i, j);
-      i = j + 1;
+      i = eqFound ? j + 1: j;
       j = queryString.indexOf("&", i);
       String value;
       if (j == -1) {
