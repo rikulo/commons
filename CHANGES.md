@@ -1,5 +1,9 @@
 #Rikulo Commons Changes
 
+##0.7.1
+
+* HttpUtil.decodePostedParameter was introduced to decode the parameters of a POST requests.
+
 ##0.7.0
 
 * Css was renamed to CssUtil

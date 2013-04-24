@@ -7,12 +7,31 @@ part of rikulo_io;
  * HTTP related utilities
  */
 class HttpUtil {
+  /** Decodes the parameters of the POST request.
+   *
+   * * [parameters] - the map to put the decoded parameters into.
+   * If null, this method will instantiate a new map.
+   * To merge the parameters found in the query string, you can do:
+   *
+   *     final params = HttpUtil.decodePostedParameters(
+   *       request, request.queryParameters);
+   */
+  static Future<Map<String, String>> decodePostedParameters(
+      Stream<List<int>> request, [Map<String, String> parameters])
+  => IOUtil.readAsString(request)
+      .then((String data) => decodeQuery(data, parameters));
+
   /** Decodes the query string into a map of name-value pairs (aka., parameters).
    *
-   * [queryString] - the query string shall not contain `'?'`.
+   * * [queryString] - the query string shall not contain `'?'`.
+   * * [parameters] - the map to put the decoded parameters into.
+   * If null, this method will instantiate a new map.
    */
-  static Map<String, String> decodeQuery(String queryString) {
-    Map<String, String> result = new LinkedHashMap<String, String>();
+  static Map<String, String> decodeQuery(
+      String queryString, [Map<String, String> parameters]) {
+    if (parameters == null)
+      parameters = new LinkedHashMap();
+
     int i = 0, len = queryString.length;
     while (i < len) {
       int j = i;
@@ -38,9 +57,9 @@ class HttpUtil {
         value = queryString.substring(i, j);
         i = j + 1;
       }
-      result[decodeUriComponent(name)] = decodeUriComponent(value);
+      parameters[decodeUriComponent(name)] = decodeUriComponent(value);
     }
-    return result;
+    return parameters;
   }
   /** Encodes the given paramters into a query string.
    * Notice the returned string won't start with `'?'`.

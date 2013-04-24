@@ -38,23 +38,19 @@ class IOUtil {
 
   /** Reads the entire stream as a string using the given [Encoding].
    */
-  static Future<String> readAsString(Stream<List<int>> stream,
-      {Encoding encoding: Encoding.UTF_8, void onError(error)}) {
-    final completer = new Completer<String>();
+  static Future<String> readAsString(Stream<List<int>> stream, 
+      {Encoding encoding: Encoding.UTF_8}) {
     final List<int> result = [];
-    stream.listen((data) {
+    return stream.listen((data) {
       result.addAll(data);
-    }, onDone: () {
-      completer.complete(decode(result, encoding));
-      result.clear();
-    }, onError: onError);
-    return completer.future;
+    }).asFuture().then((_) {
+      return decode(result, encoding);
+    });
   }
   /** Reads the entire stream as a JSON string using the given [Encoding],
    * and then convert to an object.
    */
   static Future<dynamic> readAsJson(Stream<List<int>> stream,
-      {Encoding encoding: Encoding.UTF_8, void onError(error)})
-  => readAsString(stream, encoding: encoding, onError: onError)
-    .then((data) => Json.parse(data));
+      {Encoding encoding: Encoding.UTF_8})
+  => readAsString(stream, encoding: encoding).then((data) => Json.parse(data));
 }
