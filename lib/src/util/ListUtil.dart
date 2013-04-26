@@ -38,7 +38,7 @@ class ListUtil {
   }
 
   ///Compares if a list equals another
-  static bool equals(List a, Object b) {
+  static bool areEqual(List a, Object b) {
     if (identical(a, b)) return true;
     if (!(b is List)) return false;
     int length = a.length;
