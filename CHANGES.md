@@ -32,7 +32,6 @@
 ##0.6.3
 
 * HttpHeadersWrapper is added.
-* ListUtil is removed (no longer needed).
 * Upgrade to new Dart SDK.
 * StreamProvider and CapturableStreamProvider are added.
 

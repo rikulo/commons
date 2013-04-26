@@ -5,15 +5,17 @@
 part of rikulo_mirrors;
 
 final ClassMirror
-//  _LIST_MIRROR = ClassUtil.forName("dart.core.List"),
-  _MAP_MIRROR = ClassUtil.forName("dart.core.Map"),
-  _DATE_TIME_MIRROR = ClassUtil.forName("dart.core.DateTime"),
-  _NUM_MIRROR = ClassUtil.forName("dart.core.num"),
-  _STRING_MIRROR = reflect("").type,
-  _OBJECT_MIRROR = reflect(const Object()).type,
-  _INT_MIRROR = reflect(0).type,
-  _DOUBLE_MIRROR = reflect(0.0).type,
-  _BOOL_MIRROR = reflect(false).type;
+  LIST_MIRROR = ClassUtil.forName("dart.core.List"),
+  MAP_MIRROR = ClassUtil.forName("dart.core.Map"),
+  DATE_TIME_MIRROR = ClassUtil.forName("dart.core.DateTime"),
+  QUEUE_MIRROR = ClassUtil.forName("dart.collection.Queue"),
+  SET_MIRROR = ClassUtil.forName("dart.core.Set"),
+  NUM_MIRROR = ClassUtil.forName("dart.core.num"),
+  STRING_MIRROR = reflect("").type,
+  OBJECT_MIRROR = reflect(const Object()).type,
+  INT_MIRROR = reflect(0).type,
+  DOUBLE_MIRROR = reflect(0.0).type,
+  BOOL_MIRROR = reflect(false).type;
 
 /** Utility class used with Mirror. */
 class ClassUtil {
@@ -64,7 +66,7 @@ class ClassUtil {
    * Returns the generic element class of the collection class.
    */
   static ClassMirror getElementClassMirror(ClassMirror collection) {
-    int idx = isAssignableFrom(_MAP_MIRROR, collection) ? 1 : 0;
+    int idx = isAssignableFrom(MAP_MIRROR, collection) ? 1 : 0;
     return _getElementClassMirror0(collection, idx);
   }
 
@@ -78,7 +80,7 @@ class ClassUtil {
 //TODO(henri): Dart have not implemented typeArguments!
 //    List<TypeMirror> vars = collection.typeArguments.getValues();
 //    return getCorrespondingClassMirror(vars[idx]);
-    return _OBJECT_MIRROR;
+    return OBJECT_MIRROR;
   }
 
   /**
@@ -174,7 +176,7 @@ class ClassUtil {
     }
     return null;
   }
-  ///Converts a map of named parameters to Mirror for asynchronous invocation
+  ///Converts a map of named parameters to Symbol and Mirror for asynchronous invocation
   static Map<Symbol, Object> _toAsyncNamedParams(Map<String, Object> namedArgs) {
     if (namedArgs != null) {
       Map<Symbol, Object> nargs = new HashMap();
@@ -183,7 +185,7 @@ class ClassUtil {
     }
     return null;
   }
-  ///Converts a map of named parameters to Mirror for synchronous invocation
+  ///Converts a map of named parameters to Symbol for synchronous invocation
   static Map<Symbol, Object> _toNamedParams(Map<String, Object> namedArgs) {
     if (namedArgs != null) {
       Map<Symbol, Object> nargs = new HashMap();
@@ -203,7 +205,7 @@ class ClassUtil {
    * Returns whether the specified class is the top class (no super class).
    */
   static bool isTopClass(ClassMirror classMirror)
-    => _OBJECT_MIRROR.qualifiedName == classMirror.qualifiedName || "void" == classMirror.qualifiedName;
+    => OBJECT_MIRROR.qualifiedName == classMirror.qualifiedName || "void" == classMirror.qualifiedName;
 
   /**
    * Create a new instance of the specified class name.
@@ -239,19 +241,19 @@ class ClassUtil {
       return instance;
 
     var sval = instance.toString();
-    if (targetClass == _STRING_MIRROR)
+    if (targetClass == STRING_MIRROR)
       return sval;
     if (sval.isEmpty)
       return null;
-    if (targetClass == _INT_MIRROR)
+    if (targetClass == INT_MIRROR)
       return int.parse(sval);
-    if (targetClass == _DOUBLE_MIRROR)
+    if (targetClass == DOUBLE_MIRROR)
       return double.parse(sval);
-    if (targetClass == _NUM_MIRROR)
+    if (targetClass == NUM_MIRROR)
       return sval.indexOf('.') >= 0 ? double.parse(sval): int.parse(sval);
-    if (targetClass == _DATE_TIME_MIRROR)
+    if (targetClass == DATE_TIME_MIRROR)
       return DateTime.parse(sval);
-    if (targetClass == _BOOL_MIRROR)
+    if (targetClass == BOOL_MIRROR)
       return !sval.isEmpty && (sval = sval.toLowerCase()) != "false" && sval != "no"
         && sval != "off" && sval != "none";
     throw new CoercionError(instance, targetClass);
