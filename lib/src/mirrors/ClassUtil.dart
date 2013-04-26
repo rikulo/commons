@@ -29,8 +29,8 @@ class ClassUtil {
       String clsName = splited["clsName"];
       LibraryMirror l = currentMirrorSystem().libraries[new Symbol(libName)];
       if (l != null) {
-        ClassMirror m = l.classes[new Symbol(clsName)];
-        if (m != null) return m;
+        ClassMirror cm = l.classes[new Symbol(clsName)];
+        if (cm != null) return cm;
       }
     }
     throw new NoSuchClassError(qname);
@@ -84,11 +84,11 @@ class ClassUtil {
   /**
    * Returns whether the specified object is an instance of the specified class.
    *
-   * + [cls] - the class
-   * + [obj] - the object
+   * + [classMirror] - the class
+   * + [instance] - the object
    */
-  static bool isInstance(ClassMirror cls, Object obj)
-    => isAssignableFrom(cls, reflect(obj).type);
+  static bool isInstance(ClassMirror classMirror, Object instance)
+    => isAssignableFrom(classMirror, reflect(instance).type);
 
   static Map splitQualifiedName(String qname) {
     int j = qname.lastIndexOf(".");
@@ -115,72 +115,85 @@ class ClassUtil {
   /**
    * Invoke a method of the specified instance.
    *
-   * + [inst] - the object instance.
-   * + [m] - the method
+   * + [instance] - the object instance.
+   * + [method] - the method
    * + [params] - the positional + optional parameters.
-   * + [nameArgs] - the optional named arguments.
+   * + [nameArgs] - the optional named arguments. Ignored if the method is a getter or setter.
    */
-  static Future invoke(Object inst, MethodMirror m, List<Object> params,
-                       [Map<String, Object> namedArgs])
-    => invokeObjectMirror(reflect(inst), m, params, namedArgs);
-
+  static Object invoke(Object instance, MethodMirror method, List<Object> params,
+      [Map<String, Object> namedArgs])
+    => invokeByMirror(reflect(instance), method, params, namedArgs);
   /**
    * Invoke a method of the specified ObjectMirror.
    *
-   * + [inst] - the ObjectMirror.
-   * + [m] - the method.
+   * + [instance] - the ObjectMirror.
+   * + [method] - the method.
    * + [params] - the positional + optional parameters.
-   * + [nameArgs] - the optional named arguments.
+   * + [nameArgs] - the optional named arguments. Ignored if the method is a getter or setter.
    */
-  static Future invokeObjectMirror(ObjectMirror inst, MethodMirror m,
+  static Object invokeByMirror(ObjectMirror instance, MethodMirror method,
       List<Object> params, [Map<String, Object> namedArgs]) {
-    Future<InstanceMirror> result;
-    if (m.isGetter) {
-      result = inst.getFieldAsync(m.simpleName);
-    } else if (m.isSetter) {
-      result = inst.setFieldAsync(m.simpleName, _convertParam(params[0]));
+    InstanceMirror result;
+    if (method.isGetter) {
+      result = instance.getField(method.simpleName);
+    } else if (method.isSetter) {
+      result = instance.setField(method.simpleName, params[0]);
     } else {
-      params = _convertParams(params);
-      Map<Symbol, Object> namedArgs0 = _convertNamedArgs(namedArgs);
-      result = inst.invokeAsync(m.simpleName, params, namedArgs0);
+      result = instance.invoke(method.simpleName, params, _toNamedParams(namedArgs));
     }
-    return result.then((value) => value.reflectee);
+    return result.reflectee;
   }
 
   /**
    * apply a closure function.
    *
-   * + [fn] - the closure function.
+   * + [function] - the closure function.
    * + [params] - the positional + optional parameters.
    * + [nameArgs] - the optional named arguments.
    */
-  static Future apply(Function fn, List<Object> params, [Map<String, Object> namedArgs]) {
-    ClosureMirror closure = reflect(fn);
-    params = _convertParams(params);
-    Map<Symbol, Object> namedArgs0 = _convertNamedArgs(namedArgs);
-    Future<InstanceMirror> result = closure.applyAsync(params, namedArgs0);
-    return result.then((value) => value.reflectee);
-  }
+  static Object apply(Function function, List<Object> params,
+      [Map<String, Object> namedArgs])
+    => applyByMirror(reflect(function), params, namedArgs);
+  /**
+   * apply a closure mirror.
+   *
+   * + [function] - the closure mirror.
+   * + [params] - the positional + optional parameters.
+   * + [nameArgs] - the optional named arguments.
+   */
+  static Object applyByMirror(ClosureMirror function, List<Object> params,
+      [Map<String, Object> namedArgs])
+    => function.apply(params, _toNamedParams(namedArgs)).reflectee;
 
-  static List _convertParams(List params) {
+  ///Converts a list of parameters to Mirror for asynchronous invocation
+  static List _toAsyncParams(List params) {
     if (params != null) {
       List ps = new List();
-      params.forEach((v) => ps.add(_convertParam(v)));
+      params.forEach((v) => ps.add(_toAsyncParam(v)));
       return ps;
     }
     return null;
   }
-
-  static Map<Symbol, Object> _convertNamedArgs(Map<String, Object> namedArgs) {
+  ///Converts a map of named parameters to Mirror for asynchronous invocation
+  static Map<Symbol, Object> _toAsyncNamedParams(Map<String, Object> namedArgs) {
     if (namedArgs != null) {
       Map<Symbol, Object> nargs = new HashMap();
-      namedArgs.forEach((k,v) => nargs[new Symbol(k)] = _convertParam(v));
+      namedArgs.forEach((k,v) => nargs[new Symbol(k)] = _toAsyncParam(v));
       return nargs;
     }
     return null;
   }
-
-  static Object _convertParam(var v) {
+  ///Converts a map of named parameters to Mirror for synchronous invocation
+  static Map<Symbol, Object> _toNamedParams(Map<String, Object> namedArgs) {
+    if (namedArgs != null) {
+      Map<Symbol, Object> nargs = new HashMap();
+      namedArgs.forEach((k,v) => nargs[new Symbol(k)] = v);
+      return nargs;
+    }
+    return null;
+  }
+  ///Converts a parameter to Mirror for asynchronous invocation
+  static Object _toAsyncParam(var v) {
     if (v == null || v is num || v is bool || v is String || v is Mirror)
       return v;
     return reflect(v);
@@ -189,21 +202,19 @@ class ClassUtil {
   /**
    * Returns whether the specified class is the top class (no super class).
    */
-  static bool isTopClass(ClassMirror clz)
-    => _OBJECT_MIRROR.qualifiedName == clz.qualifiedName || "void" == clz.qualifiedName;
+  static bool isTopClass(ClassMirror classMirror)
+    => _OBJECT_MIRROR.qualifiedName == classMirror.qualifiedName || "void" == classMirror.qualifiedName;
 
   /**
    * Create a new instance of the specified class name.
    */
-  static Future newInstance(String className) {
-    ClassMirror clz = forName(className);
-    return newInstanceByClassMirror(clz);
-  }
-
-  static Future newInstanceByClassMirror(ClassMirror clz) {
-    Future<InstanceMirror> inst = clz.newInstanceAsync(const Symbol(""), []); //unamed constructor
-    return inst.then((value) => value.reflectee);
-  }
+  static Object newInstance(String className)
+    => newInstanceByMirror(forName(className));
+  /**
+   * Create a new instance of the specified class mirror.
+   */
+  static Object newInstanceByMirror(ClassMirror classMirror)
+    => classMirror.newInstance(const Symbol(""), []).reflectee; //unamed constructor
 
   /** Coerces the given object to the specified class ([targetClass]).
    *
@@ -213,21 +224,21 @@ class ClassUtil {
    *
    * It throws [CoercionError] if failed to coerce.
    */
-  static coerce(Object obj, ClassMirror targetClass,
+  static coerce(Object instance, ClassMirror targetClass,
       {coerce(o, ClassMirror tClass)}) {
     if (coerce != null) {
-      final o = coerce(obj, targetClass);
+      final o = coerce(instance, targetClass);
       if (o != null)
         return o;
     }
-    if (obj == null)
-      return obj;
+    if (instance == null)
+      return instance;
 
-    final clz = reflect(obj).type;
+    final clz = reflect(instance).type;
     if (isAssignableFrom(targetClass, clz))
-      return obj;
+      return instance;
 
-    var sval = obj.toString();
+    var sval = instance.toString();
     if (targetClass == _STRING_MIRROR)
       return sval;
     if (sval.isEmpty)
@@ -243,29 +254,29 @@ class ClassUtil {
     if (targetClass == _BOOL_MIRROR)
       return !sval.isEmpty && (sval = sval.toLowerCase()) != "false" && sval != "no"
         && sval != "off" && sval != "none";
-    throw new CoercionError(obj, targetClass);
+    throw new CoercionError(instance, targetClass);
   }
 
   /** Returns the class mirror of the given field (including setter), or null
    * if no such field nor setter.
    */
-  static ClassMirror getSetterType(ClassMirror clz, String field) {
-    var mtd = clz.setters[new Symbol("$field=")];
+  static ClassMirror getSetterType(ClassMirror classMirror, String field) {
+    var mtd = classMirror.setters[new Symbol("$field=")];
     if (mtd != null)
       return mtd.parameters[0].type;
 
-    mtd = clz.members[new Symbol(field)];
+    mtd = classMirror.members[new Symbol(field)];
     return mtd is VariableMirror ? mtd.type: null;
   }
   /** Returns the class mirror of the given field (including getter), or null
    * if no such field nor getter.
    */
-  static ClassMirror getGetterType(ClassMirror clz, String field) {
-    var mtd = clz.getters[new Symbol(field)];
+  static ClassMirror getGetterType(ClassMirror classMirror, String field) {
+    var mtd = classMirror.getters[new Symbol(field)];
     if (mtd != null)
       return mtd.returnType;
 
-    mtd = clz.members[new Symbol(field)];
+    mtd = classMirror.members[new Symbol(field)];
     return mtd is VariableMirror ? mtd.type: null;
   }
 }

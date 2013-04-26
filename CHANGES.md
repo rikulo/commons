@@ -1,5 +1,10 @@
 #Rikulo Commons Changes
 
+##0.7.2
+
+* ClassUtil and ObjectUtil are both synchronous (no Future required)
+* ClassUtil: renamed invokeObjectMirror to invokeByMirror; newInstanceByClassMirror to newInstanceByMirror
+
 ##0.7.1
 
 * HttpUtil.decodePostedParameter was introduced to decode the parameters of a POST requests.
