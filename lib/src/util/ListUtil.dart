@@ -22,7 +22,7 @@ class _EmptyIter<T> implements Iterator<T> {
 /** List utilities.
  */
 class ListUtil {
-  ///Copy a list (src) to another (dst)
+  ///Copy a list ([src]) to another ([dst])
   static void copy(List src, int srcStart,
                    List dst, int dstStart, int count) {
     if (srcStart < dstStart) {
@@ -37,15 +37,21 @@ class ListUtil {
     }
   }
 
-  ///Compares if a list equals another
+  /** Compares if a list equals another
+   *
+	 * Notice that it compares each item in the list with
+   * `identical(a[i], b[i])`.
+   */
   static bool areEqual(List a, Object b) {
     if (identical(a, b)) return true;
     if (!(b is List)) return false;
-    int length = a.length;
-    if (length != b.length) return false;
+
+    final bl = b as List,
+    	length = a.length;
+    if (length != bl.length) return false;
 
     for (int i = 0; i < length; i++) {
-      if (!identical(a[i], b[i])) return false;
+      if (!identical(a[i], bl[i])) return false;
     }
     return true;
   }

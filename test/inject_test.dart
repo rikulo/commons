@@ -33,7 +33,7 @@ void main() {
   });
   group("inject tests", () {
     test("inject one-level", () {
-      var user = ObjectUtil.inject(new User(), {
+      User user = ObjectUtil.inject(new User(), {
         "firstName": "Bill",
         "lastName": "Gates",
         "age": "32" //test coercion
@@ -57,7 +57,7 @@ void main() {
     });
 
     test("inject three-level and auto-assign", () {
-      var user = ObjectUtil.inject(new User(), {
+      User user = ObjectUtil.inject(new User(), {
         "firstName": "Bill",
         "lastName": "Gates",
         "age": "32", //test coercion
@@ -95,7 +95,7 @@ void main() {
     });
 
     test("inject non-existing", () {
-      var user = ObjectUtil.inject(new User(), {
+      User user = ObjectUtil.inject(new User(), {
         "firstName": "Bill",
         "nonExisting": "Gates",
         "level1.level2": 123,
@@ -123,7 +123,7 @@ void main() {
     test("inject validate and onSetterError", () {
       List<String> validated = [];
       List<String> setterFailed = [];
-      var user = ObjectUtil.inject(new User(), {
+      User user = ObjectUtil.inject(new User(), {
         "firstName": "Bill",
         "lastName": "Gates",
         "age": "32", //test coercion
@@ -166,7 +166,7 @@ void main() {
 
     test("inject two-level and onSetterError", () {
       List<String> setterFailed = [];
-      var user = ObjectUtil.inject(new User(), {
+      User user = ObjectUtil.inject(new User(), {
         "manager.wrong": false,
         "whatever": 123,
         "manager.firstName": "John",
