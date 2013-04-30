@@ -39,8 +39,7 @@ class ListUtil {
 
   /** Compares if a list equals another
    *
-	 * Notice that it compares each item in the list with
-   * `identical(a[i], b[i])`.
+	 * Notice that it compares each item in the list with `identical()`.
    */
   static bool areEqual(List a, Object b) {
     if (identical(a, b)) return true;

@@ -22,17 +22,18 @@ class ClassUtil {
   /**
    * Return the ClassMirror of the qualified class name
    *
-   * + [qname] - qualified class name (libname.classname)
+   * + [qname] - qualified class name (*libname.classname*), such as
+   * `dart:core.List` and `rikulo_mirrors.ClassMirror`.
    */
   static ClassMirror forName(String qname) {
-    Map splited = splitQualifiedName(qname);
+    Map splited = _splitQualifiedName(qname);
     if (splited != null) {
-      String libName = splited["libName"];
-      String clsName = splited["clsName"];
-      LibraryMirror l = currentMirrorSystem().libraries[new Symbol(libName)];
-      if (l != null) {
-        ClassMirror cm = l.classes[new Symbol(clsName)];
-        if (cm != null) return cm;
+      String libName = splited["lib"];
+      String clsName = splited["class"];
+      for (final lib in currentMirrorSystem().findLibrary(new Symbol(libName))) {
+        final cm = lib.classes[new Symbol(clsName)];
+        if (cm != null)
+          return cm;
       }
     }
     throw new NoSuchClassError(qname);
@@ -92,11 +93,11 @@ class ClassUtil {
   static bool isInstance(ClassMirror classMirror, Object instance)
     => isAssignableFrom(classMirror, reflect(instance).type);
 
-  static Map splitQualifiedName(String qname) {
+  static Map<String, String> _splitQualifiedName(String qname) {
     int j = qname.lastIndexOf(".");
     return j < 1 || j >= (qname.length - 1) ?
-      {"libName" : null, "clsName" : qname} :
-      {"libName" : qname.substring(0, j), "clsName" : qname.substring(j+1)};
+      {"lib" : null, "class" : qname} :
+      {"lib" : qname.substring(0, j), "class" : qname.substring(j+1)};
   }
 
   /**
@@ -120,7 +121,7 @@ class ClassUtil {
    * + [instance] - the object instance.
    * + [method] - the method
    * + [params] - the positional + optional parameters.
-   * + [nameArgs] - the optional named arguments. Ignored if the method is a getter or setter.
+   * + [namedArgs] - the optional named arguments. Ignored if the method is a getter or setter.
    */
   static Object invoke(Object instance, MethodMirror method, List<Object> params,
       [Map<String, Object> namedArgs])
@@ -131,7 +132,7 @@ class ClassUtil {
    * + [instance] - the ObjectMirror.
    * + [method] - the method.
    * + [params] - the positional + optional parameters.
-   * + [nameArgs] - the optional named arguments. Ignored if the method is a getter or setter.
+   * + [namedArgs] - the optional named arguments. Ignored if the method is a getter or setter.
    */
   static Object invokeByMirror(ObjectMirror instance, MethodMirror method,
       List<Object> params, [Map<String, Object> namedArgs]) {
@@ -151,7 +152,7 @@ class ClassUtil {
    *
    * + [function] - the closure function.
    * + [params] - the positional + optional parameters.
-   * + [nameArgs] - the optional named arguments.
+   * + [namedArgs] - the optional named arguments.
    */
   static Object apply(Function function, List<Object> params,
       [Map<String, Object> namedArgs])
@@ -161,7 +162,7 @@ class ClassUtil {
    *
    * + [function] - the closure mirror.
    * + [params] - the positional + optional parameters.
-   * + [nameArgs] - the optional named arguments.
+   * + [namedArgs] - the optional named arguments.
    */
   static Object applyByMirror(ClosureMirror function, List<Object> params,
       [Map<String, Object> namedArgs])

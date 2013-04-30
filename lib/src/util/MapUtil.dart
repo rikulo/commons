@@ -12,7 +12,7 @@ const Map EMPTY_MAP = const {};
  */
 class MapUtil {
   /** Returns a map that will be created only when necessary, such as
-   * [putIfAbsent] is called.
+   * [Map.putIfAbsent] is called.
    *
    * It assumes the map was empty, and creates by invoking [creator]
    * when necessary. Don't use this method if the map already exists.

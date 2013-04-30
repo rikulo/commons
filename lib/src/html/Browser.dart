@@ -64,8 +64,6 @@ class Browser {
   double androidVersion;
 
   /** The browser size (outer), including the margins and borders.
-   *
-   * For the inner size, please use [innerSize] instead.
    */
   Size size;
 

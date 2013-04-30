@@ -9,8 +9,6 @@ part of rikulo_html;
 class CssUtil {
   /** The prefix used for non-standard CSS property.
    * For example, it is `-webkit-` for a Webkit-based browser.
-   * If you're not sure whether to prefix a CSS property, please use
-   * [name] instead.
    */
   static final String prefix = browser.webkit ? "-webkit-":
     browser.msie ? "-ms-": browser.firefox ? "-moz-": browser.opera ? "-o-": "";
