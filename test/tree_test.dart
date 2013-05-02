@@ -6,14 +6,18 @@ library test_tree;
 import 'package:unittest/unittest.dart';
 import "package:rikulo_commons/util.dart";
 
-_getLink(node) => node._link;
+class _MyTreeLink extends TreeLink<Node> {
+  _MyTreeLink(Node owner): super(owner);
+
+  TreeLink getLink_(Node node) => node._link;
+}
 
 class Node {
   String data;
-  TreeLink<Node> _link;
+  _MyTreeLink _link;
 
   Node(this.data) {
-    _link = new TreeLink(this, _getLink);
+    _link = new _MyTreeLink(this);
   }
 
   Node get parent => _link.parent;
@@ -52,7 +56,7 @@ void main() {
     }
 
     var n1 = root.firstChild;
-    n1.children[3].remove();
+    var n3 = n1.children[3]..remove();
     n1.removeChild(n1.lastChild);
     var n2 = n1.children.removeAt(6);
     expect(n1.children.length, 7);
@@ -63,5 +67,14 @@ void main() {
     n1.children[6] = n2;
     expect(n1.children[6].data, "0,7");
     expect(n2.parent, n1);
+    n1.children.insert(6, n3);
+    expect(n1.children.length, 8);
+    expect(n1.children[6], n3);
+    expect(n1.children[6].nextSibling, n2);
+    n1.children.remove(n3);
+    expect(n1.children.length, 7);
+    expect(n1.lastChild.data, "0,7");
+
+    expect(root.children[2].children[5].children[8].data, "2,5,8");
   });
 }

@@ -3,39 +3,50 @@
 // Author: tomyeh
 part of rikulo_util;
 
-typedef TreeLink _GetLink(node);
-
 /**
  * Used for implementing a tree object with linked children.
  *
- * + `TreeLink` - the type of each node. For example,
+ * As shown below, you have to provide an implementation for [getLink_].
+ * Then, you instantiate an instance of it as your memeber:
  *
+ *     class _MyTreeLink extends TreeLink<Node> {
+ *       _MyTreeLink(Node owner): super(owner);
+ *
+ *       TreeLink getLink_(Node node) => node._link;
+ *     }
  *     class Node {
- *       TreeLink<Node> _link;
+ *       _MyTreeLink _link;
  *
- *        Node(this.data) {
- *         _link = new TreeLink(this, (node) => node._link);
+ *       Node(this.data) {
+ *         _link = new _MyTreeLink(this);
  *       }
  *     }
  *
  * Please refer to [this example](https://github.com/rikulo/commons/blob/master/test/tree_test.dart).
+ *
+ * + `T` - the type of each node.
  */
-class TreeLink<T> {
+abstract class TreeLink<T> {
   final T _owner;
-  final _GetLink _getLink;
   TreeLink _parent;
   TreeLink _nextLink, _prevLink;
+  List<T> _children;
   _ChildInfo<T> _childInfo;
 
-  TreeLink(T owner, TreeLink getLink(T node)): _owner = owner, _getLink = getLink;
+  TreeLink(T owner): _owner = owner;
+
+  /** The derived class must override this to return the [TreeLink] instance
+   * contained in the given owner.
+   */
+  TreeLink<T> getLink_(T node);
 
   /** Returns if the given object is a descendant of this object or
    * it is identical to this object.
    */
-  bool isDescendantOf(T parent) {
-    final p = _getLink(parent);
+  bool isDescendantOf(T parent) => _descendantLinkOf(getLink_(parent));
+  bool _descendantLinkOf(TreeLink parent) {
     for (var w = this; w != null; w = w._parent) {
-      if (identical(w, p))
+      if (identical(w, parent))
         return true;
     }
     return false;
@@ -49,10 +60,10 @@ class TreeLink<T> {
   T get parent => _getOwner(_parent);
   /** Returns the first child, or null if this object has no child at all.
    */
-  T get firstChild => _childInfo != null ? _getOwner(_childInfo.firstLink): null;
+  T get firstChild => _getOwner(_firstLink);
   /** Returns the last child, or null if this object has no child at all.
    */
-  T get lastChild => _childInfo != null ? _getOwner(_childInfo.lastLink): null;
+  T get lastChild => _getOwner(_lastLink);
   /** Returns the next sibling, or null if this object is the last sibling.
    */
   T get nextSibling => _getOwner(_nextLink);
@@ -63,20 +74,13 @@ class TreeLink<T> {
   /** Returns a list of child objects.
    */
   List<T> get children {
-    final ci = _initChildInfo();
-    if (ci.children == null)
-      ci.children = new _Children(this);
-    return ci.children;
+    if (_children == null)
+      _children = new _Children(this);
+    return _children;
   }
   /** Returns the number of child objects.
    */
   int get childCount => _childInfo != null ? _childInfo.nChild: 0;
-
-  _ChildInfo _initChildInfo() {
-    if (_childInfo == null)
-      _childInfo = new _ChildInfo();
-    return _childInfo;
-  }
 
   /** Adds a child object.
    * If [beforeChild] is specified, the child will be inserted before it.
@@ -89,13 +93,14 @@ class TreeLink<T> {
    * the right position.
    */
   bool addChild(T child, [T beforeChild]) {
-    if (isDescendantOf(child))
+    final link = getLink_(child);
+    if (_descendantLinkOf(link))
       throw new ArgumentError("$child is an ancestor of $_owner");
 
-    final link = _getLink(child);
-    TreeLink beforeLink;
-    if (beforeChild != null) {
-      beforeLink = _getLink(beforeChild);
+    return _addLink(link, beforeChild != null ? getLink_(beforeChild): null);
+  }
+  bool _addLink(TreeLink link, [TreeLink beforeLink]) {
+    if (beforeLink != null) {
       if (!identical(beforeLink._parent, this))
         beforeLink = null;
       else if (identical(link, beforeLink))
@@ -124,7 +129,7 @@ class TreeLink<T> {
    * Return true if [child] has been removed successfull.
    * Return false if [child] is not a child.
    */
-  bool removeChild(T child) => child != null && _removeLink(_getLink(child));
+  bool removeChild(T child) => child != null && _removeLink(getLink_(child));
   bool _removeLink(TreeLink link) {
     if (identical(link._parent, this)) {
       _unlink(this, link);
@@ -137,7 +142,10 @@ class TreeLink<T> {
 _getOwner(TreeLink link) => link != null ? link._owner: null;
 
 void _link(TreeLink parent, TreeLink child, TreeLink beforeLink) {
-  final _ChildInfo ci = parent._initChildInfo();
+  _ChildInfo ci = parent._childInfo;
+  if (ci == null)
+    ci = parent._childInfo = new _ChildInfo();
+
   if (beforeLink == null) {
     final p = ci.lastLink;
     if (p != null) {
@@ -161,25 +169,27 @@ void _link(TreeLink parent, TreeLink child, TreeLink beforeLink) {
   }
   child._parent = parent;
 
-  ++parent._childInfo.nChild;
+  ++ci.nChild;
 }
 void _unlink(TreeLink parent, TreeLink child) {
+  final ci = parent._childInfo;
   var p = child._prevLink, n = child._nextLink;
   if (p != null) p._nextLink = n;
-  else parent._childInfo.firstLink = n;
+  else ci.firstLink = n;
   if (n != null) n._prevLink = p;
-  else parent._childInfo.lastLink = p;
+  else ci.lastLink = p;
   child._nextLink = child._prevLink = child._parent = null;
 
-  --parent._childInfo.nChild;
+  if (--ci.nChild == 0)
+    parent._childInfo = null; //free
 }
 
 /** The children information used in [TreeLink].
+ * It is designed to save the memory use (since most of them has no child).
  */
 class _ChildInfo<T> {
   TreeLink firstLink, lastLink;
   int nChild = 0;
-  List<T> children;
 }
 
 class _ChildrenIter<T> implements Iterator<T> {
@@ -211,7 +221,7 @@ class _Children<T> extends IterableBase<T> with ListMixin<T> implements List<T> 
 
   _Children(this._owner);
 
-  TreeLink _getLink(T owner) => _owner._getLink(owner);
+  TreeLink _getLink(T node) => _owner.getLink_(node);
 
   @override
   int get length => _owner.childCount;
@@ -256,11 +266,12 @@ class _Children<T> extends IterableBase<T> with ListMixin<T> implements List<T> 
     if (value == null)
       throw new ArgumentError();
 
-    final TreeLink target = _at(index);
-    if (!identical(target, _getLink(value))) {
+    final TreeLink target = _at(index),
+      valueLink = _getLink(value);
+    if (!identical(target, valueLink)) {
       final TreeLink next = target._nextLink;
       _owner._removeLink(target);
-      _owner.addChild(value, _getOwner(next));
+      _owner._addLink(valueLink, next);
     }
   }
   @override
@@ -304,7 +315,7 @@ class _Children<T> extends IterableBase<T> with ListMixin<T> implements List<T> 
         final next = dst._nextLink;
         if (!identical(dst, valueLink)) {
           _owner._removeLink(dst);
-          _owner.addChild(value, _getOwner(next));
+          _owner._addLink(valueLink, next);
         }
         if ((dst = next) == null)
           break;
