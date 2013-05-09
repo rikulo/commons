@@ -1,5 +1,9 @@
 #Rikulo Commons Changes
 
+##0.7.3
+
+* Browser.size was removed. Use new Size(window.innerWidth, window.innerHeight) instead.
+
 ##0.7.2
 
 * ClassUtil and ObjectUtil are both synchronous (no Future required)

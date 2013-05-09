@@ -63,10 +63,6 @@ class Browser {
    */
   double androidVersion;
 
-  /** The browser size (outer), including the margins and borders.
-   */
-  Size size;
-
   Browser() {
     _initBrowserInfo();
   }
@@ -83,7 +79,7 @@ class Browser {
   }
 
   String toString() {
-    return "$name(v$version, $size)";
+    return "$name(v$version)";
   }
   void _initBrowserInfo() {
     final String ua = window.navigator.userAgent.toLowerCase();
@@ -130,8 +126,6 @@ class Browser {
       name = "unknown";
       version = 1.0;
     }
-
-    size = new Size(window.innerWidth, window.innerHeight);
   }
   static double _versionOf(String version, [String separator='.']) {
     int j = version.indexOf(separator);
@@ -145,16 +139,6 @@ class Browser {
     } catch (e) {
       return 1.0; //ignore it
     }
-  }
-
-  /** Updates the browser's size. It is called when the browser's size
-   * is changed (including device's orientation is changed).
-   *
-   * Notice that it is called automatically, so the application rarely need to call it
-   * unless it changed the margin or border of `document.body`.
-   */
-  void updateSize() {
-    size = new Size(window.innerWidth, window.innerHeight);
   }
 }
 

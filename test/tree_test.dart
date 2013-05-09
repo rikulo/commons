@@ -33,7 +33,7 @@ class Node {
 }
 
 void main() {
-  test("TreeMixin", () {
+  test("TreeLink", () {
     final root = new Node("root");
     for (int i = 0; i < 10; ++i) {
       final gp = new Node("$i");
