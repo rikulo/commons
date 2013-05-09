@@ -7,6 +7,10 @@ part of rikulo_html;
  * DOM utilities
  */
 class DomUtil {
+  /** Returns the inner size of the window, i.e., `window.innerWidth` and `window.innerHeight`.
+   */
+  static Size get windowSize => new Size(window.innerWidth, window.innerHeight);
+
   /** Returns the client size (aka., the inner size) of the given element, including padding
    * but not border.
    *

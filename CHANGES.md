@@ -2,7 +2,7 @@
 
 ##0.7.3
 
-* Browser.size was removed. Use new Size(window.innerWidth, window.innerHeight) instead.
+* Browser.size was removed. Use DomUtil.windowSize or window.innerWidth/innerHeight instead.
 
 ##0.7.2
 
