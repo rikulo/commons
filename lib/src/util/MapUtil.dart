@@ -26,6 +26,17 @@ class MapUtil {
    */
   static Map onDemand(AsMap creator) => new _OnDemandMap(creator);
 
+  /** Copies the given map ([source]) to the destination ([dest]).
+   */
+  static Map copy(Map source, Map dest, [bool filter(key, value)]) {
+    for (final key in source.keys) {
+      final value = source[key];
+      if (filter != null || filter(key, value))
+        dest[key] = value;
+    }
+    return dest;
+  }
+
   /** Parses the given string into a map.
    * The format of data is the same as HTML: `=` is optional, and
    * the value must be enclosed with `'` or `"`.

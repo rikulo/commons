@@ -149,9 +149,9 @@ class DomUtil {
     final dst = _txtdiv.style;
     _txtdiv.innerHtml = text;
     if (node != null)
-      CssUtil.copy(dst, node.getComputedStyle(), CssUtil.textNames);
+      CssUtil.copy(node.getComputedStyle(), dst, CssUtil.textNames);
     if (style != null)
-      CssUtil.copy(dst, style, CssUtil.textNames);
+      CssUtil.copy(style, dst, CssUtil.textNames);
 
     final Size sz = new Size(_txtdiv.offsetWidth, _txtdiv.offsetHeight);
     _txtdiv.innerHtml = "";

@@ -93,11 +93,13 @@ class CssUtil {
   }
 
   ///Copy the properties of the given names from one declaration, src, to another, dest.
-  static void copy(CssStyleDeclaration dest, CssStyleDeclaration src, List<String> names) {
+  static CssStyleDeclaration copy(CssStyleDeclaration source,
+      CssStyleDeclaration dest, List<String> names) {
     for (int j = names.length; --j >= 0;) {
-      final String nm = names[j];
-      final String val = src.getPropertyValue(nm);
+      final nm = names[j];
+      final val = source.getPropertyValue(nm);
       dest.setProperty(nm, val != null ? val: "");
     }
+    return dest;
   }
 }

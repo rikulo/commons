@@ -1,5 +1,10 @@
 #Rikulo Commons Changes
 
+##0.7.4
+
+* MapUtil.copy was introduced.
+* The signature CssUtil.copy has been changed. To be consistent with others, the first argument is now the source.
+
 ##0.7.3
 
 * Browser.size was removed. Use DomUtil.windowSize or window.innerWidth/innerHeight instead.

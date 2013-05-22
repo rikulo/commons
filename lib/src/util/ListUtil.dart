@@ -23,7 +23,7 @@ class _EmptyIter<T> implements Iterator<T> {
  */
 class ListUtil {
   ///Copy a list ([src]) to another ([dst])
-  static void copy(List src, int srcStart,
+  static List copy(List src, int srcStart,
                    List dst, int dstStart, int count) {
     if (srcStart < dstStart) {
       for (int i = srcStart + count - 1, j = dstStart + count - 1;
@@ -35,6 +35,7 @@ class ListUtil {
         dst[j] = src[i];
       }
     }
+    return dst;
   }
 
   /** Compares if a list equals another
