@@ -138,17 +138,18 @@ abstract class _StreamSubscriptionBase<T> extends StreamSubscription<T> {
     }
   }
 
-  bool get _paused => _pauseCount > 0;
+  @override
+  bool get isPaused => _pauseCount > 0;
 
   @override
   void resume() {
-    if (_canceled || !_paused) return;
+    if (_canceled || !isPaused) return;
     --_pauseCount;
     _tryResume();
   }
 
   void _tryResume() {
-    if (_onData != null && !_paused)
+    if (_onData != null && !isPaused)
       _add();
   }
 
