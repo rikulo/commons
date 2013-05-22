@@ -92,7 +92,8 @@ class CssUtil {
     return sum;
   }
 
-  ///Copy the properties of the given names from one declaration, src, to another, dest.
+  ///Copy the properties of the given names, [names], from
+  ///one declaration, [source], to another, [dest].
   static CssStyleDeclaration copy(CssStyleDeclaration source,
       CssStyleDeclaration dest, List<String> names) {
     for (int j = names.length; --j >= 0;) {
