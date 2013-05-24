@@ -1,14 +1,14 @@
 //Copyright (C) 2012 Potix Corporation. All Rights Reserved.
 //History: Mon, Mar 12, 2012  9:26:04 AM
 // Author: tomyeh
-part of rikulo_html;
+library rikulo_browser;
 
 typedef bool _BrowserMatch(RegExp regex);
 
 /**
  * The browser.
  */
-class Browser {
+abstract class Browser {
   // all RegExp shall be lower case here
   static final RegExp _rwebkit = new RegExp(r"(webkit)[ /]([\w.]+)"),
     _rsafari = new RegExp(r"(safari)[ /]([\w.]+)"),
@@ -66,23 +66,15 @@ class Browser {
   Browser() {
     _initBrowserInfo();
   }
-  /** Returns the URL of this page.
-   * For example, "http://www.yourserver.com" and "file://".
-   */
-  String get url {
-    final l = window.location;
-    final sb = new StringBuffer();
-    sb..write(l.protocol)..write("//")..write(l.hostname);
-    if (l.port != "80" && !l.port.isEmpty)
-      sb..write(':')..write(l.port);
-    return sb.toString();
-  }
+
+  ///Returns the user agent.
+  String get userAgent;
 
   String toString() {
     return "$name(v$version)";
   }
   void _initBrowserInfo() {
-    final String ua = window.navigator.userAgent.toLowerCase();
+    final String ua = userAgent.toLowerCase();
     final _BrowserMatch bm = (RegExp regex) {
       Match m = regex.firstMatch(ua);
       if (m != null) {
@@ -141,7 +133,3 @@ class Browser {
     }
   }
 }
-
-/** The browser information.
- */
-final Browser browser = new Browser();

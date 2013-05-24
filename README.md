@@ -48,6 +48,11 @@ For more information, please refer to [Pub: Dependencies](http://pub.dartlang.or
     <td>Yes</td>
   </tr>
   <tr>
+    <td><code>browser.dart</code></td>
+    <td>Yes</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
     <td><code>html.dart</code></td>
     <td>No</td>
     <td>Yes</td>

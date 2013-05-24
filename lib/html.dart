@@ -9,8 +9,8 @@ import "dart:math";
 
 import "package:meta/meta.dart";
 import "util.dart";
+import "browser.dart" as bwr show Browser;
 
-part "src/html/Browser.dart";
 part "src/html/dom_util.dart";
 part "src/html/css_util.dart";
 part "src/html/Points.dart";

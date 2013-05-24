@@ -3,6 +3,27 @@
 // Author: tomyeh
 part of rikulo_html;
 
+/** The browser.
+ */
+class Browser extends bwr.Browser {
+  /** Returns the URL of this page.
+   * For example, "http://www.yourserver.com" and "file://".
+   */
+  String get url {
+    final l = window.location;
+    final sb = new StringBuffer();
+    sb..write(l.protocol)..write("//")..write(l.hostname);
+    if (l.port != "80" && !l.port.isEmpty)
+      sb..write(':')..write(l.port);
+    return sb.toString();
+  }
+  @override
+  String get userAgent => window.navigator.userAgent;
+}
+/** The browser information.
+ */
+final Browser browser = new Browser();
+
 /**
  * DOM utilities
  */

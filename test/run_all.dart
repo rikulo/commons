@@ -12,6 +12,7 @@ import 'io_test.dart' as io_test;
 import 'util_test.dart' as util_test;
 import 'http_test.dart' as http_test;
 import 'tree_test.dart' as tree_test;
+import 'browser_test.dart' as browser_test;
 
 main() {
 //  useCompactVMConfiguration();
@@ -21,4 +22,5 @@ main() {
   group("http test", http_test.main);
   group("inject tests", inject_test.main);
   group("tree tests", tree_test.main);
+  group("browser tests", browser_test.main);
 }
