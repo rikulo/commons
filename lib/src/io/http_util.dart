@@ -34,29 +34,24 @@ class HttpUtil {
 
     int i = 0, len = queryString.length;
     while (i < len) {
-      int j = i;
-      bool eqFound = false;
+      int j = i, iEquals;
       for (; j < len; ++j) {
         final cc = queryString[j];
-        if (cc == '=') {
-          eqFound = true;
-          break;
-        }
-        if (cc == '&')
+        if (cc == '=')
+          iEquals = j;
+        else if (cc == '&' || cc == ';')
           break;
       }
 
-      String name = queryString.substring(i, j);
-      i = eqFound ? j + 1: j;
-      j = queryString.indexOf("&", i);
-      String value;
-      if (j == -1) {
-        value = queryString.substring(i);
-        i = queryString.length;
+      String name, value;
+      if (iEquals != null) {
+        name = queryString.substring(i, iEquals);
+        value = queryString.substring(iEquals + 1, j);
       } else {
-        value = queryString.substring(i, j);
-        i = j + 1;
+        name = queryString.substring(i, j);
+        value = "";
       }
+      i = j + 1;
       parameters[decodeUriComponent(name)] = decodeUriComponent(value);
     }
     return parameters;
