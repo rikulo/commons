@@ -53,6 +53,8 @@ class StreamWrapper<T> implements Stream<T> {
   @override
   Future<Set<T>> toSet() => origin.toSet();
   @override
+  Future drain([var futureValue]) => origin.drain(futureValue);
+  @override
   Stream<T> take(int count) => origin.take(count);
   @override
   Stream<T> takeWhile(bool test(T value)) => origin.takeWhile(test);
