@@ -143,6 +143,8 @@ class _OnDemandMap<K, V> implements Map<K,V> {
   @override
   bool get isEmpty => _map == null || _map.isEmpty;
   @override
+  bool get isNotEmpty => !isEmpty;
+  @override
   int get length => _map != null ? _map.length: 0;
   @override
   V putIfAbsent(K key, V ifAbsent()) => _init().putIfAbsent(key, ifAbsent);

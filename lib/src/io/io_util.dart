@@ -10,13 +10,15 @@ class IOUtil {
   static String decode(List<int> bytes, [Encoding encoding = Encoding.UTF_8]) {
     if (bytes.length == 0) return "";
 
-    var string;
-    var controller = new StreamController();
+    var string, error;
+    var controller = new StreamController(sync: true);
     controller.stream
       .transform(new StringDecoder(encoding))
-      .listen((data) => string = data);
+      .listen((data) => string = data,
+        onError: (e) => error = e);
     controller.add(bytes);
     controller.close();
+    if (error != null) throw error;
     return string; //note: it is done synchronously
   }
 
@@ -27,7 +29,7 @@ class IOUtil {
     if (string.length == 0) return [];
 
     var bytes;
-    var controller = new StreamController();
+    var controller = new StreamController(sync: true);
     controller.stream
       .transform(new StringEncoder(encoding))
       .listen((data) => bytes = data);

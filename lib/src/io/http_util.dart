@@ -52,7 +52,7 @@ class HttpUtil {
         value = "";
       }
       i = j + 1;
-      parameters[decodeUriComponent(name)] = decodeUriComponent(value);
+      parameters[Uri.decodeQueryComponent(name)] = Uri.decodeQueryComponent(value);
     }
     return parameters;
   }
@@ -67,12 +67,12 @@ class HttpUtil {
     for (final name in parameters.keys) {
       if (!buf.isEmpty)
         buf.write('&');
-      buf..write(encodeUriComponent(name))..write('=');
+      buf..write(Uri.encodeQueryComponent(name))..write('=');
       var value = parameters[name];
       if (value != null)
         value = value.toString();
       if (value != null && !value.isEmpty)
-        buf.write(encodeUriComponent(value));
+        buf.write(Uri.encodeQueryComponent(value));
     }
     return buf.toString();
   }

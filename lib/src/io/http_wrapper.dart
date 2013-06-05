@@ -21,8 +21,6 @@ class HttpRequestWrapper extends StreamWrapper implements HttpRequest {
   @override
   Uri get uri => origin.uri;
   @override
-  Map<String, String> get queryParameters => origin.queryParameters;
-  @override
   HttpHeaders get headers => origin.headers;
   @override
   List<Cookie> get cookies => origin.cookies;

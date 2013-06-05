@@ -6,7 +6,6 @@ library rikulo_io;
 
 import "dart:io";
 import "dart:async";
-import "dart:uri";
 import "dart:collection" show LinkedHashMap;
 import "dart:json" as Json;
 import "package:meta/meta.dart";
