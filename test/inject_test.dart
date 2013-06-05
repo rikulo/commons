@@ -45,7 +45,7 @@ void main() {
     });
 
     test("inject one-level (async)", () {
-      ObjectUtil.injectAsync(new User(), {
+      return ObjectUtil.injectAsync(new User(), {
         "firstName": "Bill",
         "lastName": "Gates",
         "age": "32" //test coercion
@@ -76,7 +76,7 @@ void main() {
     });
 
     test("inject three-level and auto-assign (async)", () {
-      ObjectUtil.injectAsync(new User(), {
+      return ObjectUtil.injectAsync(new User(), {
         "firstName": "Bill",
         "lastName": "Gates",
         "age": "32", //test coercion
@@ -108,7 +108,7 @@ void main() {
     });
 
     test("inject non-existing (async)", () {
-      ObjectUtil.injectAsync(new User(), {
+      return ObjectUtil.injectAsync(new User(), {
         "firstName": "Bill",
         "nonExisting": "Gates",
         "level1.level2": 123,
@@ -145,7 +145,7 @@ void main() {
     test("inject validate and onSetterError (async)", () {
       List<String> validated = [];
       List<String> setterFailed = [];
-      ObjectUtil.injectAsync(new User(), {
+      return ObjectUtil.injectAsync(new User(), {
         "firstName": "Bill",
         "lastName": "Gates",
         "age": "32", //test coercion
@@ -183,7 +183,7 @@ void main() {
 
     test("inject two-level and onSetterError (async)", () {
       List<String> setterFailed = [];
-      ObjectUtil.injectAsync(new User(), {
+      return ObjectUtil.injectAsync(new User(), {
         "manager.wrong": false,
         "whatever": 123,
         "manager.firstName": "John",

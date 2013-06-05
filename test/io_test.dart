@@ -18,9 +18,9 @@ main() {
     test("stream to json", () {
       final val = {"abc": 123, "foo": ["this", "is", 200]};
       final list = IOUtil.encode(stringify(val));
-      IOUtil.readAsJson(new Stream.fromIterable([list]))
+      return IOUtil.readAsJson(new Stream.fromIterable([list]))
       .then((got) {
-          expect(got, val);
+        expect(got, val);
       });
     });
   });
