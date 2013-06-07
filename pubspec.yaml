@@ -8,6 +8,5 @@ authors:
 - Simon Pai <simonpai@rikulo.org>
 homepage: http://rikulo.org
 dependencies:
-  js: any
   meta: any
   unittest: any

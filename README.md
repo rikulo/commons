@@ -63,11 +63,6 @@ For more information, please refer to [Pub: Dependencies](http://pub.dartlang.or
     <td>No</td>
   </tr>
   <tr>
-    <td><code>js.dart</code></td>
-    <td>No</td>
-    <td>Yes</td>
-  </tr>
-  <tr>
     <td><code>mirrors.dart</code></td>
     <td>Yes</td>
     <td>Yes</td>
