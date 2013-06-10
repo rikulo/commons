@@ -93,6 +93,8 @@ abstract class TreeLink<T> {
    * the right position.
    */
   bool addChild(T child, [T beforeChild]) {
+    if (child == null)
+      throw new ArgumentError();
     final link = getLink_(child);
     if (_descendantLinkOf(link))
       throw new ArgumentError("$child is an ancestor of $_owner");
