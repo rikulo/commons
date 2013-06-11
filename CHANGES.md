@@ -1,5 +1,9 @@
 #Rikulo Commons Changes
 
+##0.7.6
+
+* The js package was removed. Please use js-interop instead.
+
 ##0.7.4
 
 * MapUtil.copy was introduced.
