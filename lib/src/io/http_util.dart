@@ -14,7 +14,7 @@ class HttpUtil {
    * To merge the parameters found in the query string, you can do:
    *
    *     final params = HttpUtil.decodePostedParameters(
-   *       request, request.queryParameters);
+   *       request, new Map.from(request.queryParameters));
    */
   static Future<Map<String, String>> decodePostedParameters(
       Stream<List<int>> request, [Map<String, String> parameters])
