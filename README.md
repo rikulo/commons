@@ -13,7 +13,7 @@ Rikulo Commons is distributed under an Apache 2.0 License.
 
 [![Build Status](https://drone.io/github.com/rikulo/commons/status.png)](https://drone.io/github.com/rikulo/commons/latest)
 
-##Install from Dart Pub Repository
+##Install
 
 Add this to your `pubspec.yaml` (or create it):
 
@@ -23,16 +23,6 @@ Add this to your `pubspec.yaml` (or create it):
 Then run the [Pub Package Manager](http://pub.dartlang.org/doc) (comes with the Dart SDK):
 
     pub install
-
-##Install from Github for Bleeding Edge Stuff
-
-To install stuff that is still in development, add this to your `pubspec.yam`:
-
-    dependencies:
-      rikulo_commmons:
-        git: git://github.com/rikulo/commons.git
-
-For more information, please refer to [Pub: Dependencies](http://pub.dartlang.org/doc/pubspec.html#dependencies).
 
 ##Run on Client and/or Server
 
@@ -61,6 +51,11 @@ For more information, please refer to [Pub: Dependencies](http://pub.dartlang.or
     <td><code>io.dart</code></td>
     <td>Yes</td>
     <td>No</td>
+  </tr>
+  <tr>
+    <td><code>logging.dart</code></td>
+    <td>Yes</td>
+    <td>Yes</td>
   </tr>
   <tr>
     <td><code>mirrors.dart</code></td>
