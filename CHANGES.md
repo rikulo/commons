@@ -2,7 +2,7 @@
 
 ##0.7.6
 
-* The js package was removed. Please use js-interop instead.
+* The js package was removed (part of Rikulo Gap).
 
 ##0.7.4
 
