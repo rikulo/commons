@@ -14,10 +14,11 @@ main() {
       expect(browser.firefox, isFalse);
       expect(browser.name, "chrome");
       expect(browser.version, 26.0);
+      expect(browser.dart, isTrue);
     });
   });
 }
 
 class _Browser extends Browser {
-  String get userAgent => "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31";
+  String get userAgent => "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 (Dart) Safari/537.31";
 }

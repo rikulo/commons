@@ -17,7 +17,8 @@ abstract class Browser {
     _rmozilla = new RegExp(r"(mozilla)(?:.*? rv:([\w.]+))?"),
     _ropera = new RegExp(r"(opera)(?:.*version)?[ /]([\w.]+)"),
     _rios = new RegExp(r"os[ /]([\w_]+) like mac os"),
-    _randroid = new RegExp(r"android[ /]([\w.]+)");
+    _randroid = new RegExp(r"android[ /]([\w.]+)"),
+    _rdart = new RegExp(r"[^a-z]dart[^a-z]");
 
   /** The browser's name. */
   String name;
@@ -51,6 +52,10 @@ abstract class Browser {
   /** Whether it supports the touch gestures.
    */
   bool touch = false;
+
+  /** Whether Dart is supported.
+   */
+  bool dart = false;
 
   /** The webkit's version if this is a webkit-based browser, or null
    * if it is not webkit-based.
@@ -108,7 +113,7 @@ abstract class Browser {
       }
     } else if (bm(_rmsie)) {
       msie = true;
-      touch = mobile = ua.indexOf("IEMobile") >= 0;
+      touch = mobile = ua.indexOf("iemobile") >= 0;
     } else if (bm(_ropera)) {
       opera = true;
     } else if (ua.indexOf("compatible") < 0 && bm(_rmozilla)) {
@@ -118,6 +123,8 @@ abstract class Browser {
       name = "unknown";
       version = 1.0;
     }
+
+    dart = _rdart.hasMatch(ua);
   }
   static double _versionOf(String version, [String separator='.']) {
     int j = version.indexOf(separator);
