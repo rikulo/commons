@@ -7,6 +7,11 @@ import 'package:unittest/unittest.dart';
 import "package:rikulo_commons/util.dart";
 
 void main() {
+  test("MapUtil", () {
+    final map = MapUtil.parse('abc="first" xyz="second item"');
+    expect(map["abc"], "first");
+    expect(map["xyz"], "second item");
+  });
   test("Color.parse", () {
     expect(Color.parse("#ffffff"), equals(WHITE));
     expect(Color.parse("#fff"), WHITE);
