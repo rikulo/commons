@@ -125,6 +125,10 @@ class _OnDemandMap<K, V> implements Map<K,V> {
     _init()[key] = value;
   }
   @override
+  void addAll(Map<K, V> other) {
+    _init().addAll(other);
+  }
+  @override
   void clear() {
     if (_map != null) _map.clear();
   }
