@@ -50,7 +50,7 @@ class MapUtil {
     Map<String, String> map = new LinkedHashMap();
     for (int i = 0, len = data.length; i < len;) {
       i = StringUtil.skipWhitespaces(data, i);
-      if (i < 0)
+      if (i >= len)
         break; //no more
 
       final j = i;
@@ -67,16 +67,16 @@ class MapUtil {
         throw "Key required, $data";
 
       i = StringUtil.skipWhitespaces(data, i);
-      if (i < 0 || data[i] != '=') {
+      if (i >= len || data[i] != '=') {
         map[key] = defaultValue;
-        if (i < 0)
+        if (i >= len)
           break; //done
         continue;
       }
 
       final val = new StringBuffer();
       i = StringUtil.skipWhitespaces(data, i + 1);
-      if (i >= 0) {
+      if (i < len) {
         final sep = data[i];
         if (sep != '"' &&  sep != "'")
           throw "Quatation marks required for a value, $data";

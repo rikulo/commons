@@ -59,14 +59,15 @@ class StringUtil {
   }
 
   /** Returns the index of the first non-whitespace character starting at [from],
-   * -1 if not found.
+   * `min(from, str.length)` if not found.
    */
   static int skipWhitespaces(String str, int from) {
     for (int len = str.length; from < len; ++from)
       if (!isChar(str[from], whitespace: true))
-        return from;
-    return -1;
+        break;
+    return from;
   }
+
   /** Encodes an integer to a string consisting of alpanumeric characters
    * and underscore. With a prefix, it can be used as an identifier.
    */
