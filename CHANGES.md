@@ -1,5 +1,10 @@
 #Rikulo Commons Changes
 
+##0.7.8
+
+* gzip and gzipString were introduced.
+* IOUtil.decode and IOUtil.encode became public methods: decodeString and encodeString.
+
 ##0.7.6
 
 * The js package was removed (part of Rikulo Gap).

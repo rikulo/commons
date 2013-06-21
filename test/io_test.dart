@@ -12,16 +12,26 @@ main() {
   group("io tests", () {
     test("decode/encode", () {
       final str = "abcdefg";
-      expect(IOUtil.decode(IOUtil.encode(str)), str);
+      expect(decodeString(encodeString(str)), str);
     });
 
     test("stream to json", () {
       final val = {"abc": 123, "foo": ["this", "is", 200]};
-      final list = IOUtil.encode(stringify(val));
+      final list = encodeString(stringify(val));
       return IOUtil.readAsJson(new Stream.fromIterable([list]))
       .then((got) {
         expect(got, val);
       });
+    });
+
+    test("gzip test", () {
+      final buf = new StringBuffer();
+      for (int i = 100; --i >= 0;)
+        buf.write("this is a test for string");
+      final source = buf.toString();
+      final result = gzipString(source);
+      expect(source.length / 10 > result.length, isTrue);
+      expect(ungzipString(result), source);
     });
   });
 }

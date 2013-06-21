@@ -107,7 +107,7 @@ class BufferedResponse extends HttpResponseWrapper {
   }
   @override
   void add(List<int> data) {
-    buffer.write(IOUtil.decode(data, encoding));
+    buffer.write(decodeString(data, encoding: encoding));
   }
   @override
   void write(Object obj) {
