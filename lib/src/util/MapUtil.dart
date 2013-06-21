@@ -59,12 +59,12 @@ class MapUtil {
         if (cc == '=' || StringUtil.isChar(cc, whitespace: true))
           break;
         if (cc == "'" || cc == '"')
-          throw "Quotation marks not allowed in key, $data";
+          throw new FormatException("Quotation marks not allowed in key, $data");
       }
 
       final key = data.substring(j, i);
       if (key.isEmpty)
-        throw "Key required, $data";
+        throw new FormatException("Key required, $data");
 
       i = StringUtil.skipWhitespaces(data, i);
       if (i >= len || data[i] != '=') {
@@ -79,11 +79,11 @@ class MapUtil {
       if (i < len) {
         final sep = data[i];
         if (sep != '"' &&  sep != "'")
-          throw "Quatation marks required for a value, $data";
+          throw new FormatException("Quatation marks required for a value, $data");
 
         for (;;) {
           if (++i >= len)
-            throw "Unclosed string, $data";
+            throw new FormatException("Unclosed string, $data");
 
           final cc = data[i];
           if (cc == sep) {
@@ -92,7 +92,7 @@ class MapUtil {
           }
           if (backslash && cc == '\\') {
             if (++i >= len)
-              throw "Illegal backslash, $data";
+              throw new FormatException("Illegal backslash, $data");
             switch (data[i]) {
               case 'n': val.write('\n'); continue;
               case 't': val.write('\t'); continue;
