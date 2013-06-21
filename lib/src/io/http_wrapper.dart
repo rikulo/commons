@@ -85,13 +85,10 @@ class HttpResponseWrapper extends IOSinkWrapper implements HttpResponse {
   HttpConnectionInfo get connectionInfo => origin.connectionInfo;
 }
 
-/** A buffered HTTP response that stores the output in the given buffer
- * rather than the original `HttpResponse` instance.
+/** A skeletal implementation for buffered HTTP response
  */
-class BufferedResponse extends HttpResponseWrapper {
-  ///The buffer for holding the output (instead of [origin])
-  final StringBuffer buffer;
-  BufferedResponse(HttpResponse origin, this.buffer): super(origin);
+abstract class _BufferedResponse extends HttpResponseWrapper {
+  _BufferedResponse(HttpResponse origin): super(origin);
 
   @override
   Future<HttpResponse> addStream(Stream<List<int>> stream) {
@@ -106,14 +103,6 @@ class BufferedResponse extends HttpResponseWrapper {
     return completer.future;
   }
   @override
-  void add(List<int> data) {
-    buffer.write(decodeString(data, encoding: encoding));
-  }
-  @override
-  void write(Object obj) {
-    buffer.write(obj);
-  }
-  @override
   Future close() {
     _closer.complete(this);
     return done;
@@ -124,6 +113,48 @@ class BufferedResponse extends HttpResponseWrapper {
   //Used for implementing [close] and [done]//
   Completer get _closer => _$closer != null ? _$closer: (_$closer = new Completer());
   Completer _$closer;
+}
+
+/** A buffered HTTP response that stores the output in the given string buffer
+ * rather than the original `HttpResponse` instance.
+ */
+class StringBufferedResponse extends _BufferedResponse {
+  ///The buffer for holding the output (instead of [origin])
+  final StringBuffer buffer;
+  StringBufferedResponse(HttpResponse origin, this.buffer): super(origin);
+
+  @override
+  void add(List<int> data) {
+    buffer.write(decodeString(data, encoding: encoding));
+  }
+  @override
+  void write(Object obj) {
+    buffer.write(obj);
+  }
+}
+
+/** A buffered HTTP response that stores the output in the given list of bytes
+ * buffer rather than the original `HttpResponse` instance.
+ */
+class BufferedResponse extends _BufferedResponse {
+  ///The buffer for holding the output (instead of [origin]).
+  ///It is a list of bytes.
+  final List<int> buffer;
+  BufferedResponse(HttpResponse origin, this.buffer): super(origin);
+
+  @override
+  void add(List<int> data) {
+    buffer.addAll(data);
+  }
+  @override
+  void write(Object obj) {
+    if (obj is int)
+      buffer.add(obj);
+    else if (obj is String)
+      buffer.addAll(encodeString(obj, encoding: encoding));
+    else
+      throw new ArgumentError("Unsupported object: $obj");
+  }
 }
 
 /**
