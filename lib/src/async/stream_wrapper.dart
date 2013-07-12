@@ -12,7 +12,10 @@ class StreamWrapper<T> implements Stream<T> {
   @override
   bool get isBroadcast => origin.isBroadcast;
   @override
-  Stream<T> asBroadcastStream() => origin.asBroadcastStream();
+  Stream<T> asBroadcastStream({
+    void onListen(StreamSubscription<T> subscription),
+    void onCancel(StreamSubscription<T> subscription)})
+    => origin.asBroadcastStream(onListen: onListen, onCancel: onCancel);
   @override
   StreamSubscription<T> listen(void onData(T event),
   { void onError(error), void onDone(), bool cancelOnError})
