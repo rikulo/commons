@@ -84,6 +84,8 @@ class StreamWrapper<T> implements Stream<T> {
   => origin.singleWhere(test);
   @override
   Future<T> elementAt(int index) => origin.elementAt(index);
+  @override
+  Future<String> join([String separator = ""]) => origin.join(separator);
 }
 
 ///The StreamConsumer wrapper
