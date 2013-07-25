@@ -81,7 +81,7 @@ class ObjectUtil {
     final o3 = clz.newInstance(const Symbol(""), []).reflectee;
       //1. use getSetterType since it will be assigned through setField
       //2. assume there must be a default constructor. otherwise, it is caller's issue
-    reflect(o2).setField(new Symbol(field), o3);
+    reflect(o2).setField(new Symbol(field), o3); //setField takes o3 (not InstanceMirror)
     return o3;
   }
   static void _inject(Object instance, String name, value,
@@ -174,8 +174,9 @@ class ObjectUtil {
       var o2 = instance;
       return Future.forEach(fields, (String field) {
         field = field.trim();
-        final ret = reflect(o2).getFieldAsync(new Symbol(field)).then((inst) {
-          final o3 = inst.reflectee;
+        final ret = reflect(o2).getFieldAsync(new Symbol(field))
+        .then((InstanceMirror im) {
+          final o3 = im.reflectee;
           if (o3 == null) {
             final clz = ClassUtil.getSetterType(reflect(o2).type, field);
             if (clz == null) {
@@ -192,12 +193,11 @@ class ObjectUtil {
           o2 = o3;
           //no return to indicate no further processing
         })
-        .then((inst) {
-          if (inst != null) { //i.e., newInstance was called
-            final o3 = inst.reflectee;
-            return reflect(o2).setFieldAsync(new Symbol(field), ClassUtil._toAsyncParam(o3))
+        .then((InstanceMirror im) {
+          if (im != null) { //i.e., newInstance was called
+            return reflect(o2).setFieldAsync(new Symbol(field), im)
               .then((_) {
-                o2 = o3;
+                o2 = im.reflectee;
               });
           }
         });
@@ -238,7 +238,8 @@ class ObjectUtil {
     if (validate != null)
       validate(instance, name, value);
 
-    final ret = reflect(instance).setFieldAsync(new Symbol(name), ClassUtil._toAsyncParam(value))
+    final ret = reflect(instance)
+      .setFieldAsync(new Symbol(name), ClassUtil._toAsyncParam(value))
       .then((_) => instance);
     return onSetterError == null ? ret: ret.catchError((err) {
       onSetterError(instance, name, value, err);

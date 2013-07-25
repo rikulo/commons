@@ -193,6 +193,7 @@ void main() {
       }, onSetterError: (obj, field, value, error) {
         setterFailed.add(field);
       }).then((user) {
+        expect(user.manager, isNotNull);
         expect(user.manager.firstName, "John");
         expect(setterFailed, ["wrong", "whatever", "notFound", "getterOnly", "wrongUser"]);
       });
