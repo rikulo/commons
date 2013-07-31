@@ -10,10 +10,10 @@ final ClassMirror
   DATE_TIME_MIRROR = ClassUtil.forName("dart.core.DateTime"),
   QUEUE_MIRROR = ClassUtil.forName("dart.collection.Queue"),
   SET_MIRROR = ClassUtil.forName("dart.core.Set"),
-  NUM_MIRROR = ClassUtil.forName("dart.core.num"),
   STRING_MIRROR = reflect("").type,
   OBJECT_MIRROR = reflect(const Object()).type,
   INT_MIRROR = reflect(0).type,
+  NUM_MIRROR = INT_MIRROR.superclass,
   DOUBLE_MIRROR = reflect(0.0).type,
   BOOL_MIRROR = reflect(false).type;
 

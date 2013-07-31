@@ -74,6 +74,12 @@ class HttpResponseWrapper extends IOSinkWrapper implements HttpResponse {
   void set persistentConnection(bool persistentConnection) {
     origin.persistentConnection = persistentConnection;
   }
+  @override
+  Duration get deadline => origin.deadline;
+  @override
+  void set deadline(Duration deadline) {
+    origin.deadline = deadline;
+  }
 
   @override
   HttpHeaders get headers => origin.headers;

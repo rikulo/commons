@@ -28,9 +28,12 @@ class User {
 }
 
 void main() {
-  group("Class.forName", () {
+  test("Class.forName", () {
+    expect(INT_MIRROR, isNotNull);
+    expect(NUM_MIRROR, isNotNull);
     expect(reflect(new User()).type, ClassUtil.forName("test_inject.User"));
   });
+
   group("inject tests", () {
     test("inject one-level", () {
       User user = ObjectUtil.inject(new User(), {
