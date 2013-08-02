@@ -1,5 +1,9 @@
 #Rikulo Commons Changes
 
+##0.8.0
+
+* defer() in async.dart was introduced to run a costly operation smartly.
+
 ##0.7.8
 
 * gzip and gzipString were introduced.
