@@ -17,6 +17,7 @@ import 'browser_test.dart' as browser_test;
 main() {
 //  useCompactVMConfiguration();
 
+  group("async tests", async_test.main);
   group("io test", io_test.main);
   group("util test", util_test.main);
   group("http test", http_test.main);
