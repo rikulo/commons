@@ -1,7 +1,7 @@
 //Copyright (C) 2013 Potix Corporation. All Rights Reserved.
 //History: Wed, Mar 27, 2013  9:19:55 AM
 // Author: tomyeh
-library test_io;
+library test_async;
 
 import "dart:async";
 import 'package:unittest/unittest.dart';
