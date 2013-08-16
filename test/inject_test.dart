@@ -31,6 +31,7 @@ void main() {
   test("Class.forName", () {
     expect(INT_MIRROR, isNotNull);
     expect(NUM_MIRROR, isNotNull);
+    expect(BOOL_MIRROR, ClassUtil.forName("dart.core.bool"));
     expect(reflect(new User()).type, ClassUtil.forName("test_inject.User"));
   });
 
