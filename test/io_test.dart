@@ -4,7 +4,6 @@
 library test_io;
 
 import "dart:async";
-import "dart:json";
 import 'package:unittest/unittest.dart';
 import "package:rikulo_commons/io.dart";
 
