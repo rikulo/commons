@@ -4,6 +4,7 @@
 library test_http;
 
 import "dart:async";
+import "dart:convert" show UTF8;
 import 'package:unittest/unittest.dart';
 import "package:rikulo_commons/io.dart";
 
@@ -34,7 +35,7 @@ main() {
 
     test("posted parameters", () {
       final queryString = "first=123&second=%09";
-      final request = new Stream.fromIterable([encodeString(queryString)]);
+      final request = new Stream.fromIterable([UTF8.encode(queryString)]);
       return HttpUtil.decodePostedParameters(request).then((params) {
         expect(HttpUtil.encodeQuery(params), queryString);
       });

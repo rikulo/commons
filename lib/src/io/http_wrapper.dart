@@ -136,7 +136,7 @@ class StringBufferedResponse extends _BufferedResponse {
 
   @override
   void add(List<int> data) {
-    buffer.write(decodeString(data, encoding: encoding));
+    buffer.write(encoding.decode(data));
   }
   @override
   void write(Object obj) {
@@ -162,7 +162,7 @@ class BufferedResponse extends _BufferedResponse {
     if (obj is int)
       buffer.add(obj);
     else if (obj is String)
-      buffer.addAll(encodeString(obj, encoding: encoding));
+      buffer.addAll(encoding.encode(obj));
     else
       throw new ArgumentError("Unsupported object: $obj");
   }

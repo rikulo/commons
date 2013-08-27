@@ -10,7 +10,7 @@ List<int> gzip(List<int> bytes, {int level: 6}) {
   var error;
   var controller = new StreamController(sync: true);
   controller.stream
-    .transform(new ZLibDeflater(level: level))
+    .transform(new ZLibEncoder(level: level))
     .listen((data) => output.addAll(data),
       onError: (e) => error = e);
   controller.add(bytes);
@@ -21,9 +21,8 @@ List<int> gzip(List<int> bytes, {int level: 6}) {
 
 /** Deflates a String into a list of bytes with GZIP.
  */
-List<int> gzipString(String string, {Encoding encoding: Encoding.UTF_8, int level: 6}) {
-  return gzip(encodeString(string, encoding: encoding), level: level);
-}
+List<int> gzipString(String string, {Encoding encoding: UTF8, int level: 6})
+=> gzip(encoding.encode(string), level: level);
 
 /** Inflates a GZIP-ed list of bytes back to the original list of bytes.
  */
@@ -32,7 +31,7 @@ List<int> ungzip(List<int> bytes) {
   var error;
   var controller = new StreamController(sync: true);
   controller.stream
-    .transform(new ZLibInflater())
+    .transform(new ZLibDecoder())
     .listen((data) => output.addAll(data),
       onError: (e) => error = e);
   controller.add(bytes);
@@ -43,6 +42,5 @@ List<int> ungzip(List<int> bytes) {
 
 /** Inflates a GIZP-ed string back to the original string.
  */
-String ungzipString(List<int> bytes, {Encoding encoding: Encoding.UTF_8}) {
-  return decodeString(ungzip(bytes), encoding: encoding);
-}
+String ungzipString(List<int> bytes, {Encoding encoding: UTF8})
+=> encoding.decode(ungzip(bytes));

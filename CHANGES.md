@@ -1,5 +1,10 @@
 #Rikulo Commons Changes
 
+##0.8.2
+
+* encodeString and decodeString are removed. Please use dart:convert directly.
+* IOUtil is removed and replace with convert.dart.
+
 ##0.8.0
 
 * defer() in async.dart was introduced to run a costly operation smartly.

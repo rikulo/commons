@@ -18,7 +18,7 @@ class HttpUtil {
    */
   static Future<Map<String, String>> decodePostedParameters(
       Stream<List<int>> request, [Map<String, String> parameters])
-  => IOUtil.readAsString(request)
+  => readAsString(request)
       .then((String data) => decodeQuery(data, parameters));
 
   /** Decodes the query string into a map of name-value pairs (aka., parameters).
