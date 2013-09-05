@@ -76,7 +76,7 @@ class ObjectUtil {
   static Object _autoCreate(Object o2, String field) {
     final clz = ClassUtil.getSetterType(reflect(o2).type, field);
     if (clz == null)
-      throw new NoSuchMethodError(o2, "$field=", null, null);
+      throw new NoSuchMethodError(o2, new Symbol("$field="), null, null);
 
     final o3 = clz.newInstance(const Symbol(""), []).reflectee;
       //1. use getSetterType since it will be assigned through setField
@@ -93,7 +93,7 @@ class ObjectUtil {
     final clz = ClassUtil.getSetterType(reflect(instance).type, name);
     if (clz == null) { //not found
       if (!silent) {
-        final err = new NoSuchMethodError(instance, "$name=", null, null);
+        final err = new NoSuchMethodError(instance, new Symbol("$name="), null, null);
         if (onSetterError == null)
           throw err;
         onSetterError(instance, name, value, err);
@@ -184,7 +184,7 @@ class ObjectUtil {
                 o2 = null;
                 return; //no return to indicate no further processing
               }
-              throw new NoSuchMethodError(o2, "$field=", null, null);
+              throw new NoSuchMethodError(o2, new Symbol("$field="), null, null);
             }
             return clz.newInstanceAsync(const Symbol(""), []);
               //1. use getSetterType since it will be assigned through setField
@@ -217,7 +217,7 @@ class ObjectUtil {
     final clz = ClassUtil.getSetterType(reflect(instance).type, name);
     if (clz == null) { //not found
       if (!silent) {
-        final err = new NoSuchMethodError(instance, "$name=", null, null);
+        final err = new NoSuchMethodError(instance, new Symbol("$name="), null, null);
         if (onSetterError == null)
           throw err;
         onSetterError(instance, name, value, err);
