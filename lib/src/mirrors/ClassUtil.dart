@@ -92,7 +92,7 @@ class ClassUtil {
    * + [classMirror] - the class
    * + [instance] - the object
    */
-  static bool isInstance(ClassMirror classMirror, Object instance)
+  static bool isInstance(ClassMirror classMirror, instance)
     => isAssignableFrom(classMirror, reflect(instance).type);
 
   static Map<String, String> _splitQualifiedName(String qname) {
@@ -125,8 +125,8 @@ class ClassUtil {
    * + [params] - the positional + optional parameters.
    * + [namedArgs] - the optional named arguments. Ignored if the method is a getter or setter.
    */
-  static Object invoke(Object instance, MethodMirror method, List<Object> params,
-      [Map<String, Object> namedArgs])
+  static invoke(instance, MethodMirror method, List params,
+      [Map<String, dynamic> namedArgs])
     => invokeByMirror(reflect(instance), method, params, namedArgs);
   /**
    * Invoke a method of the specified ObjectMirror.
@@ -136,8 +136,8 @@ class ClassUtil {
    * + [params] - the positional + optional parameters.
    * + [namedArgs] - the optional named arguments. Ignored if the method is a getter or setter.
    */
-  static Object invokeByMirror(ObjectMirror instance, MethodMirror method,
-      List<Object> params, [Map<String, Object> namedArgs]) {
+  static invokeByMirror(ObjectMirror instance, MethodMirror method,
+      List params, [Map<String, dynamic> namedArgs]) {
     InstanceMirror result;
     if (method.isGetter) {
       result = instance.getField(method.simpleName);
@@ -156,8 +156,8 @@ class ClassUtil {
    * + [params] - the positional + optional parameters.
    * + [namedArgs] - the optional named arguments.
    */
-  static Object apply(Function function, List<Object> params,
-      [Map<String, Object> namedArgs])
+  static apply(Function function, List params,
+      [Map<String, dynamic> namedArgs])
     => applyByMirror(reflect(function), params, namedArgs);
   /**
    * apply a closure mirror.
@@ -166,8 +166,8 @@ class ClassUtil {
    * + [params] - the positional + optional parameters.
    * + [namedArgs] - the optional named arguments.
    */
-  static Object applyByMirror(ClosureMirror function, List<Object> params,
-      [Map<String, Object> namedArgs])
+  static applyByMirror(ClosureMirror function, List params,
+      [Map<String, dynamic> namedArgs])
     => function.apply(params, _toNamedParams(namedArgs)).reflectee;
 
   ///Converts a list of parameters to Mirror for asynchronous invocation
@@ -180,25 +180,25 @@ class ClassUtil {
     return null;
   }
   ///Converts a map of named parameters to Symbol and Mirror for asynchronous invocation
-  static Map<Symbol, Object> _toAsyncNamedParams(Map<String, Object> namedArgs) {
+  static Map<Symbol, dynamic> _toAsyncNamedParams(Map<String, dynamic> namedArgs) {
     if (namedArgs != null) {
-      Map<Symbol, Object> nargs = new HashMap();
+      Map<Symbol, dynamic> nargs = new HashMap();
       namedArgs.forEach((k,v) => nargs[new Symbol(k)] = _toAsyncParam(v));
       return nargs;
     }
     return null;
   }
   ///Converts a map of named parameters to Symbol for synchronous invocation
-  static Map<Symbol, Object> _toNamedParams(Map<String, Object> namedArgs) {
+  static Map<Symbol, dynamic> _toNamedParams(Map<String, dynamic> namedArgs) {
     if (namedArgs != null) {
-      Map<Symbol, Object> nargs = new HashMap();
+      Map<Symbol, dynamic> nargs = new HashMap();
       namedArgs.forEach((k,v) => nargs[new Symbol(k)] = v);
       return nargs;
     }
     return null;
   }
   ///Converts a parameter to Mirror for asynchronous invocation
-  static Object _toAsyncParam(var v) {
+  static _toAsyncParam(v) {
     if (v == null || v is num || v is bool || v is String || v is Mirror)
       return v;
     return reflect(v);
@@ -213,12 +213,12 @@ class ClassUtil {
   /**
    * Create a new instance of the specified class name.
    */
-  static Object newInstance(String className)
+  static newInstance(String className)
     => newInstanceByMirror(forName(className));
   /**
    * Create a new instance of the specified class mirror.
    */
-  static Object newInstanceByMirror(ClassMirror classMirror)
+  static newInstanceByMirror(ClassMirror classMirror)
     => classMirror.newInstance(const Symbol(""), []).reflectee; //unamed constructor
 
   /** Coerces the given object to the specified class ([targetClass]).
@@ -229,7 +229,7 @@ class ClassUtil {
    *
    * It throws [CoercionError] if failed to coerce.
    */
-  static coerce(Object instance, ClassMirror targetClass,
+  static coerce(instance, ClassMirror targetClass,
       {coerce(o, ClassMirror tClass)}) {
     if (coerce != null) {
       final o = coerce(instance, targetClass);

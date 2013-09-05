@@ -30,7 +30,7 @@ class ObjectUtil {
    *
    * * Returns [instance]
    */
-  static Object inject(Object instance, Map<String, dynamic> values,
+  static inject(instance, Map<String, dynamic> values,
       {coerce(value, ClassMirror targetClass),
       void onCoerceError(o, String field, value, ClassMirror targetClass, error),
       void onSetterError(o, String field, value, error),
@@ -73,7 +73,7 @@ class ObjectUtil {
     return instance;
   }
   ///Instantiates and injects automatically if a field is null.
-  static Object _autoCreate(Object o2, String field) {
+  static _autoCreate(o2, String field) {
     final clz = ClassUtil.getSetterType(reflect(o2).type, field);
     if (clz == null)
       throw new NoSuchMethodError(o2, new Symbol("$field="), null, null);
@@ -84,7 +84,7 @@ class ObjectUtil {
     reflect(o2).setField(new Symbol(field), o3); //setField takes o3 (not InstanceMirror)
     return o3;
   }
-  static void _inject(Object instance, String name, value,
+  static void _inject(instance, String name, value,
       coerce(o, ClassMirror tClass),
       void onCoerceError(o, String field, value, ClassMirror tClass, err),
       void onSetterError(o, String field, value, err),
@@ -152,7 +152,7 @@ class ObjectUtil {
    * values.
    * If false (default), an exception will be thrown.
    */
-  static Future injectAsync(Object instance, Map<String, dynamic> values,
+  static Future injectAsync(instance, Map<String, dynamic> values,
       {coerce(value, ClassMirror targetClass),
       void onCoerceError(o, String field, value, ClassMirror targetClass, error),
       void onSetterError(o, String field, value, error),
@@ -208,7 +208,7 @@ class ObjectUtil {
           coerce, onCoerceError, onSetterError, validate, silent));
     }).then((_) => instance);
 
-  static Future _injectAsync(Object instance, String name, value,
+  static Future _injectAsync(instance, String name, value,
       coerce(o, ClassMirror tClass),
       void onCoerceError(o, String field, value, ClassMirror tClass, err),
       void onSetterError(o, String field, value, err),
