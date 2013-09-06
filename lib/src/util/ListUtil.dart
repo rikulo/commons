@@ -40,19 +40,39 @@ class ListUtil {
 
   /** Compares if a list equals another
    *
-	 * Notice that it compares each item in the list with `identical()`.
+	 * * [equal] - the closure to compare elements in the given lists.
+   * If omitted, it compares each item in the list with `identical()`.
    */
-  static bool areEqual(List a, Object b) {
-    if (identical(a, b)) return true;
-    if (!(b is List)) return false;
+  static bool areEqual(List al, bl, [bool equal(a, b)]) {
+    if (identical(al, bl))
+      return true;
+    if (!(bl is List))
+      return false;
 
-    final bl = b as List,
-    	length = a.length;
-    if (length != bl.length) return false;
+    final bl2 = bl as List,
+    	length = al.length;
+    if (length != bl2.length)
+      return false;
 
+    if (equal == null)
+      equal = identical;
     for (int i = 0; i < length; i++) {
-      if (!identical(a[i], bl[i])) return false;
+      if (!equal(al[i], bl2[i]))
+        return false;
     }
     return true;
+  }
+
+  /** Returns the hash code of the given list
+   */
+  static int getHashCode(Iterable iterable) {
+    final int prime = 31;
+    int code = 0;
+    if (iterable != null) {
+      code = 1 + iterable.length;
+      for (final v in iterable)
+        code = code * prime + (v != null ? v.hashCode: 0);
+    }
+    return code;
   }
 }
