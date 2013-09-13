@@ -198,4 +198,15 @@ class DomUtil {
   static void hide(Element node) {
     node.style.display = "none";
   }
+
+  /** Sets the inner HTML without sanitization.
+   */
+  static void setUncheckedInnerHtml(Element node, String html) {
+    node.setInnerHtml(html, treeSanitizer: const _NullTreeSanitizer());
+  }
+}
+
+class _NullTreeSanitizer implements NodeTreeSanitizer {
+  const _NullTreeSanitizer();
+  void sanitizeTree(Node node) {}
 }
