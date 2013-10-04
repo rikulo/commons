@@ -15,9 +15,6 @@ part "src/util/MapUtil.dart";
 part "src/util/Color.dart";
 part "src/util/TreeLink.dart";
 
-/** A task that is a function taking no argument and returning nothing.
- */
-typedef void Task();
 /** A function that returns an integer.
  */
 typedef int AsInt();
