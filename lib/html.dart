@@ -31,4 +31,4 @@ typedef Size AsSize();
 typedef Size3D AsSize3D();
 /** A function that returns a [Rect].
  */
-typedef Rect AsRect();
+typedef Rectangle AsRectangle();

@@ -31,10 +31,10 @@ class Points {
   }
 
   ///Instantiate a poitn form a rectangle
-  static Point from(Rect rect) => new Point(rect.left, rect.top);
+  static Point from(Rectangle rect) => new Point(rect.left, rect.top);
 
   ///Return the closest dimension contained in a rectangle.
-  static Point snap(Rect rect, Point pt) => 
+  static Point snap(Rectangle rect, Point pt) => 
       new Point(min(max(pt.x, rect.left), rect.right), 
           min(max(pt.y, rect.top), rect.bottom));
 }
