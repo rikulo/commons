@@ -8,7 +8,6 @@ import "dart:io";
 import "dart:async";
 import "dart:collection" show LinkedHashMap;
 import "dart:convert";
-import "package:meta/meta.dart";
 
 import "async.dart";
 import "convert.dart";

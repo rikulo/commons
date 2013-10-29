@@ -99,12 +99,12 @@ abstract class _StreamSubscriptionBase<T> extends StreamSubscription<T> {
   }
 
   @override
-  void cancel() {
-    if (_canceled) return;
-
-    _unlisten();
-    // Clear out the target to indicate this is complete.
-    _onData = null;
+  Future cancel() {
+    if (!_canceled) {
+      _unlisten();
+      // Clear out the target to indicate this is complete.
+      _onData = null;
+    }
   }
 
   @override
@@ -178,8 +178,8 @@ class _StreamSubscription<T> extends _StreamSubscriptionBase<T> {
     super(type, onData);
 
   @override
-  void cancel() {
-    super.cancel();
+  Future cancel() {
+    super.cancel(); //always null
 
     // Clear out the target to indicate this is complete.
     _target = null;
@@ -202,8 +202,8 @@ class _CapturableStreamSubscription<T> extends _StreamSubscriptionBase<T> {
     super(type, onData);
 
   @override
-  void cancel() {
-    super.cancel();
+  Future cancel() {
+    super.cancel(); //always null
 
     // Clear out the target to indicate this is complete.
     _target = null;

@@ -6,7 +6,6 @@ library rikulo_util;
 //at both client and server
 import "dart:math";
 import "dart:collection";
-import "package:meta/meta.dart";
 
 part "src/util/StringUtil.dart";
 part "src/util/XmlUtil.dart";

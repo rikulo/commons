@@ -182,7 +182,7 @@ class ObjectUtil {
             if (clz == null) {
               if (silent) {
                 o2 = null;
-                return; //no return to indicate no further processing
+                return null; //to indicate no further processing
               }
               throw new NoSuchMethodError(o2, new Symbol("$field="), null, null);
             }
