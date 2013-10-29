@@ -7,7 +7,6 @@ authors:
 - Simon Pai <simonpai@rikulo.org>
 homepage: http://rikulo.org
 dependencies:
-  meta: any
   unittest: any
   logging: any
 environment:
