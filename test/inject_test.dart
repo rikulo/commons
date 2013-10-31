@@ -48,18 +48,6 @@ void main() {
       expect(user.age, 32);
     });
 
-    test("inject one-level (async)", () {
-      return ObjectUtil.injectAsync(new User(), {
-        "firstName": "Bill",
-        "lastName": "Gates",
-        "age": "32" //test coercion
-      }).then((user) {
-        expect(user.firstName, "Bill");
-        expect(user.lastName, "Gates");
-        expect(user.age, 32);
-      });
-    });
-
     test("inject three-level and auto-assign", () {
       User user = ObjectUtil.inject(new User(), {
         "firstName": "Bill",
@@ -79,25 +67,6 @@ void main() {
       expect(user.manager.manager.firstName, "Boss");
     });
 
-    test("inject three-level and auto-assign (async)", () {
-      return ObjectUtil.injectAsync(new User(), {
-        "firstName": "Bill",
-        "lastName": "Gates",
-        "age": "32", //test coercion
-        "manager.firstName": "John",
-        "manager.lastName": "Kyle",
-        "manager.manager.firstName": "Boss"
-      }).then((user) {
-        expect(user.firstName, "Bill");
-        expect(user.lastName, "Gates");
-        expect(user.age, 32);
-        expect(user.manager, isNotNull);
-        expect(user.manager.firstName, "John");
-        expect(user.manager.lastName, "Kyle");
-        expect(user.manager.manager.firstName, "Boss");
-      });
-    });
-
     test("inject non-existing", () {
       User user = ObjectUtil.inject(new User(), {
         "firstName": "Bill",
@@ -109,19 +78,6 @@ void main() {
       expect(user.firstName, "Bill");
       expect(user.lastName, isNull);
       expect(user.age, 32);
-    });
-
-    test("inject non-existing (async)", () {
-      return ObjectUtil.injectAsync(new User(), {
-        "firstName": "Bill",
-        "nonExisting": "Gates",
-        "level1.level2": 123,
-        "age": "32" //test coercion
-      }, silent: true).then((user) {
-        expect(user.firstName, "Bill");
-        expect(user.lastName, isNull);
-        expect(user.age, 32);
-      });
     });
 
     test("inject validate and onSetterError", () {
@@ -146,28 +102,6 @@ void main() {
       expect(setterFailed, ["wrong"]);
     });
 
-    test("inject validate and onSetterError (async)", () {
-      List<String> validated = [];
-      List<String> setterFailed = [];
-      return ObjectUtil.injectAsync(new User(), {
-        "firstName": "Bill",
-        "lastName": "Gates",
-        "age": "32", //test coercion
-        "notFound": false,
-        "wrong": true,
-      }, validate: (obj, field, value) {
-        validated.add(field);
-      }, onSetterError: (obj, field, value, error) {
-        setterFailed.add(field);
-      }, silent: true).then((user) {
-        expect(user.firstName, "Bill");
-        expect(user.lastName, "Gates");
-        expect(user.age, 32);
-        expect(validated, ["firstName", "lastName", "age", "wrong"]);
-        expect(setterFailed, ["wrong"]);
-      });
-    });
-
     test("inject two-level and onSetterError", () {
       List<String> setterFailed = [];
       User user = ObjectUtil.inject(new User(), {
@@ -183,24 +117,6 @@ void main() {
 
       expect(user.manager.firstName, "John");
       expect(setterFailed, ["wrong", "whatever", "notFound", "getterOnly", "wrongUser"]);
-    });
-
-    test("inject two-level and onSetterError (async)", () {
-      List<String> setterFailed = [];
-      return ObjectUtil.injectAsync(new User(), {
-        "manager.wrong": false,
-        "whatever": 123,
-        "manager.firstName": "John",
-        "manager.firstName.notFound": true,
-        "getterOnly.firstName": "Impossible",
-        "wrongUser.lastName": "Oops"
-      }, onSetterError: (obj, field, value, error) {
-        setterFailed.add(field);
-      }).then((user) {
-        expect(user.manager, isNotNull);
-        expect(user.manager.firstName, "John");
-        expect(setterFailed, ["wrong", "whatever", "notFound", "getterOnly", "wrongUser"]);
-      });
     });
   }); //group
 }

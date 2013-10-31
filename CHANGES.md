@@ -1,5 +1,9 @@
 #Rikulo Commons Changes
 
+##0.8.10
+
+* ObjectUtil.injectAsync() is removed since Dart removes asynchronous Mirrors API.
+
 ##0.8.2
 
 * encodeString and decodeString are removed. Please use dart:convert directly.
