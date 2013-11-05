@@ -21,7 +21,8 @@ Map<String, ContentType> get contentTypes {
  *
  * For example,
  *
- *     response.headers.contentType = parseContentType('text/html; charset=utf-8');
+ *     response.headers.contentType =
+ *       parseContentType('text/html; charset=utf-8');
  *
  * It is the same as [ContentType.parse], except it will look for [contentTypes]
  * first. If not found, forward to [ContentType.parse].
