@@ -6,7 +6,7 @@ library rikulo_io;
 
 import "dart:io";
 import "dart:async";
-import "dart:collection" show LinkedHashMap;
+import "dart:collection" show HashMap, LinkedHashMap;
 import "dart:convert";
 
 import "async.dart";
@@ -16,3 +16,5 @@ part "src/io/http_wrapper.dart";
 part "src/io/iosink_wrapper.dart";
 part "src/io/http_util.dart";
 part "src/io/gzip_util.dart";
+part "src/io/content_type.dart";
+part "src/io/http_status_message.dart";

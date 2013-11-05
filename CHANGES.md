@@ -2,6 +2,7 @@
 
 ##0.8.10
 
+* contentTypes and httpStatusMessages are added.
 * ObjectUtil.injectAsync() is removed since Dart removes asynchronous Mirrors API.
 
 ##0.8.2

@@ -6,7 +6,7 @@ part of rikulo_io;
 /**
  * The HTTP request wrapper.
  */
-class HttpRequestWrapper extends StreamWrapper implements HttpRequest {
+class HttpRequestWrapper extends StreamWrapper<List<int>> implements HttpRequest {
   HttpRequestWrapper(HttpRequest origin): super(origin);
 
   ///The original HTTP request
