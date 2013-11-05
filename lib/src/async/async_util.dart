@@ -55,7 +55,7 @@ class _Deferrer {
 
     if (di.isAfterMax) {
       _defers.remove(key);
-      runAsync(task);
+      scheduleMicrotask(task);
     } else {
       di.timer = _startTimer(key, task, min);
     }

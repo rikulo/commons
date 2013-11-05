@@ -30,12 +30,12 @@ class ClassUtil {
   static ClassMirror forName(String qname) {
     Map splited = _splitQualifiedName(qname);
     if (splited != null) {
-      String libName = splited["lib"];
-      String clsName = splited["class"];
-      for (final lib in currentMirrorSystem().findLibrary(new Symbol(libName))) {
-        final cm = lib.classes[new Symbol(clsName)];
-        if (cm != null)
-          return cm;
+      final LibraryMirror lib =
+        currentMirrorSystem().findLibrary(new Symbol(splited["lib"]));
+      if (lib != null) {
+        final klass = lib.declarations[new Symbol(splited["class"])];
+        if (klass is ClassMirror)
+          return klass;
       }
     }
     throw new NoSuchClassError(qname);
@@ -266,22 +266,19 @@ class ClassUtil {
    * if no such field nor setter.
    */
   static ClassMirror getSetterType(ClassMirror classMirror, String field) {
-    var mtd = classMirror.setters[new Symbol("$field=")];
-    if (mtd != null)
+    var mtd = classMirror.declarations[new Symbol("$field=")];
+    if (mtd is MethodMirror)
       return mtd.parameters[0].type;
 
-    mtd = classMirror.members[new Symbol(field)];
+    mtd = classMirror.declarations[new Symbol(field)];
     return mtd is VariableMirror ? mtd.type: null;
   }
   /** Returns the class mirror of the given field (including getter), or null
    * if no such field nor getter.
    */
   static ClassMirror getGetterType(ClassMirror classMirror, String field) {
-    var mtd = classMirror.getters[new Symbol(field)];
-    if (mtd != null)
-      return mtd.returnType;
-
-    mtd = classMirror.members[new Symbol(field)];
-    return mtd is VariableMirror ? mtd.type: null;
+    final mtd = classMirror.declarations[new Symbol(field)];
+    return mtd is MethodMirror ? mtd.returnType:
+        mtd is VariableMirror ? mtd.type: null;
   }
 }

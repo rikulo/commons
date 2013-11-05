@@ -10,4 +10,4 @@ dependencies:
   unittest: any
   logging: any
 environment:
-  sdk: ">=0.8.7"
+  sdk: ">=0.8.10"
