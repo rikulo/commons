@@ -4,21 +4,43 @@
 part of rikulo_io;
 
 /**
- * A map of content types.
- * For example, `contentTypes['js']` is `ContentType.parse("text/javascript;charset=utf-8")`.
+ * A map of content types. It is used to retrieve [ContentType] from the extension.
+ * For example, `contentTypes['js']` is
+ * `ContentType.parse("text/javascript; charset=utf-8")`.
  *
- * Notice: if the format is text (such as `"text/plain"` and '"text/css"`),
+ * Notice: if the format is text (such as `"text/plain"` and `"text/css"`),
  * the encoding is default to UTF8.
  */
 Map<String, ContentType> get contentTypes {
   if (_ctypes == null)
-    _ctypes = _initContentTypes();
+    _initContentTypes();
   return _ctypes;
 }
-Map<String, ContentType> _ctypes;
+/** Returns an instance of [ContentType] of the given value,
+ * such as `text/html; charset=utf-8`.
+ *
+ * For example,
+ *
+ *     response.headers.contentType = parseContentType('text/html; charset=utf-8');
+ *
+ * It is the same as [ContentType.parse], except it will look for [contentTypes]
+ * first. If not found, forward to [ContentType.parse].
+ * Thus, its performance is little better.
+ */
+ContentType parseContentType(String value) {
+  if (_rawCtypes == null)
+    _initContentTypes();
 
-Map<String, ContentType> _initContentTypes() {
-  final Map<String, ContentType> parsed = new HashMap(); //for reuse
+  final ContentType ctype = _rawCtypes[value];
+  return ctype != null ? ctype: ContentType.parse(value);
+}
+
+///extension => ContentType
+Map<String, ContentType> _ctypes;
+///value => ContentType
+Map<String, ContentType> _rawCtypes;
+
+void _initContentTypes() {
   final Map<String, String> rawmap = {
   'aac': 'audio/aac',
   'ai': 'application/postscript',
@@ -26,8 +48,8 @@ Map<String, ContentType> _initContentTypes() {
   'aiff': 'audio/aiff',
   'bin': 'application/octet-stream',
   'bmp': 'image/bmp',
-  'css': 'text/css;charset=utf-8',
-  'csv': 'text/csv;charset=utf-8',
+  'css': 'text/css; charset=utf-8',
+  'csv': 'text/csv; charset=utf-8',
   'cur': 'image/x-win-bitmap',
   'dart': 'application/dart',
   'doc': 'application/msword',
@@ -36,13 +58,13 @@ Map<String, ContentType> _initContentTypes() {
   'eot': 'application/vnd.ms-fontobject',
   'eps': 'application/postscript',
   'gif': 'image/gif',
-  'htm': 'text/html;charset=utf-8',
-  'html': 'text/html;charset=utf-8',
+  'htm': 'text/html; charset=utf-8',
+  'html': 'text/html; charset=utf-8',
   'ico': 'image/x-icon',
   'jpg': 'image/jpeg',
   'jpeg': 'image/jpeg',
-  'js': 'text/javascript;charset=utf-8',
-  'json': 'application/json;charset=utf-8',
+  'js': 'text/javascript; charset=utf-8',
+  'json': 'application/json; charset=utf-8',
   'm4a': 'audio/m4a',
   'm4v': 'video/m4v',
   'mid': 'audio/mid',
@@ -80,7 +102,7 @@ Map<String, ContentType> _initContentTypes() {
   'tiff': 'image/tiff',
   'ttc': 'application/x-font-ttf',
   'ttf': 'application/x-font-ttf',
-  'txt': 'text/plain;charset=utf-8',
+  'txt': 'text/plain; charset=utf-8',
   'wav': 'audio/wav',
   'webm': 'video/webm',
   'woff': 'application/x-font-woff',
@@ -91,17 +113,17 @@ Map<String, ContentType> _initContentTypes() {
   'xlt': 'application/vnd.ms-excel',
   'xlw': 'application/vnd.ms-excel',
   'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  'xml': 'text/xml;charset=utf-8',
+  'xml': 'text/xml; charset=utf-8',
   'zip': 'application/zip'
   };
 
-  final Map<String, ContentType> ctypes = new HashMap();
+  _rawCtypes = new HashMap(); //value => ContentType
+  _ctypes = new HashMap(); //extension => ContentType
   for (final String key in rawmap.keys) {
     final String value = rawmap[key];
-    ContentType ctype = parsed[value];
+    ContentType ctype = _rawCtypes[value];
     if (ctype == null)
-      parsed[value] = ctype = ContentType.parse(value);
-    ctypes[key] = ctype;
+      _rawCtypes[value] = ctype = ContentType.parse(value);
+    _ctypes[key] = ctype;
   }
-  return ctypes;
 }
