@@ -3,7 +3,6 @@
 // Author: tomyeh
 library test_io;
 
-import "dart:io" show ContentType;
 import 'package:unittest/unittest.dart';
 import "package:rikulo_commons/io.dart";
 
@@ -17,13 +16,6 @@ main() {
       final result = gzipString(source);
       expect(source.length / 10 > result.length, isTrue);
       expect(ungzipString(result), source);
-    });
-
-    test("contentType", () {
-      var ctype = contentTypes["html"];
-      expect(ctype, isNotNull);
-      expect(identical(ctype, parseContentType(ctype.toString())), isTrue);
-      expect(identical(ctype, ContentType.parse(ctype.toString())), isFalse);
     });
   });
 }

@@ -5,6 +5,7 @@ library test_http;
 
 import "dart:async";
 import "dart:convert" show UTF8;
+import "dart:io" show ContentType;
 import 'package:unittest/unittest.dart';
 import "package:rikulo_commons/io.dart";
 
@@ -39,6 +40,16 @@ main() {
       return HttpUtil.decodePostedParameters(request).then((params) {
         expect(HttpUtil.encodeQuery(params), queryString);
       });
+    });
+
+    test("contentType", () {
+      ContentType ctype = getContentType("html");
+      expect(ctype, isNotNull);
+      expect(ctype.charset, "utf-8");
+      expect(identical(ctype, parseContentType(ctype.toString())), isTrue);
+      expect(identical(ctype, ContentType.parse(ctype.toString())), isFalse);
+
+      expect(getContentType("jpg").charset, isNull);
     });
  });
 }
