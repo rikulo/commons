@@ -9,6 +9,9 @@ const List EMPTY_LIST = const [];
 /** A readonly and empty iterator.
  */
 const Iterator EMPTY_ITERATOR = const _EmptyIter();
+/** A readonly and empty set.
+ */
+final Set EMPTY_SET = EMPTY_LIST.toSet();
 
 class _EmptyIter<T> implements Iterator<T> {
   const _EmptyIter();

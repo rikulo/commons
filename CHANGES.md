@@ -1,5 +1,11 @@
 #Rikulo Commons Changes
 
+##1.0.0
+
+*November 20, 2013*
+
+* EMPTY_SET is added.
+
 ##0.8.10
 
 * contentTypes and httpStatusMessages are added.
