@@ -1,5 +1,9 @@
 #Rikulo Commons Changes
 
+##1.0.1
+
+* The multiline argument of XmlUtil.encode is renamed to multiLine.
+
 ##1.0.0
 
 *November 20, 2013*

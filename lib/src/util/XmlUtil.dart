@@ -15,34 +15,34 @@ class XmlUtil {
    *
    * + [txt] is the text to encode.
    * + [pre] - whether to replace whitespace with &nbsp;
-   * + [multiline] - whether to replace linefeed with <br/>
+   * + [multiLine] - whether to replace linefeed with <br/>
    * + [maxlength] - the maximal allowed length of the text
    */
   static String encode(String txt,
-  {bool multiline: false, int maxlength: 0, bool pre: false}) {
+  {bool multiLine: false, int maxlength: 0, bool pre: false}) {
     if (txt == null) return null; //as it is
 
     int tl = txt.length;
-    multiline = pre || multiline;
+    multiLine = pre || multiLine;
 
-    if (!multiline && maxlength > 0 && tl > maxlength) {
+    if (!multiLine && maxlength > 0 && tl > maxlength) {
       int j = maxlength;
       while (j > 0 && StringUtil.isChar(txt[j - 1], whitespace: true))
         --j;
-      return encode("${txt.substring(0, j)}...", pre:pre, multiline:multiline);
+      return encode("${txt.substring(0, j)}...", pre:pre, multiLine:multiLine);
     }
 
     final StringBuffer out = new StringBuffer();
     int k = 0;
     String enc;
-    if (multiline || pre) {
+    if (multiLine || pre) {
       for (int j = 0; j < tl; ++j) {
         String cc = txt[j];
         if ((enc = _encs[cc]) != null){
           out..write(txt.substring(k, j))
             ..write('&')..write(enc)..write(';');
           k = j + 1;
-        } else if (multiline && cc == '\n') {
+        } else if (multiLine && cc == '\n') {
           out..write(txt.substring(k, j))..write("<br/>\n");
           k = j + 1;
         } else if (pre && (cc == ' ' || cc == '\t')) {

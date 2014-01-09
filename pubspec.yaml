@@ -1,5 +1,5 @@
 name: rikulo_commons
-version: 1.0.0
+version: 1.0.1
 description: Common reusable Dart classes and utilities.
 authors:
 - Tom Yeh <tomyeh@rikulo.org>
