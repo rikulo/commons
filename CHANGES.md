@@ -1,8 +1,8 @@
 #Rikulo Commons Changes
 
-##1.0.1
+##1.0.1+1
 
-* The multiline argument of XmlUtil.encode is renamed to multiLine.
+* XmlUtil.encode() changed: multiline renamed to multiLine, and maxlength not supported.
 
 ##1.0.0
 

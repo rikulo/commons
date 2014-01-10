@@ -16,56 +16,34 @@ class XmlUtil {
    * + [txt] is the text to encode.
    * + [pre] - whether to replace whitespace with &nbsp;
    * + [multiLine] - whether to replace linefeed with <br/>
-   * + [maxlength] - the maximal allowed length of the text
    */
   static String encode(String txt,
-  {bool multiLine: false, int maxlength: 0, bool pre: false}) {
+  {bool multiLine: false, bool pre: false}) {
     if (txt == null) return null; //as it is
 
-    int tl = txt.length;
-    multiLine = pre || multiLine;
-
-    if (!multiLine && maxlength > 0 && tl > maxlength) {
-      int j = maxlength;
-      while (j > 0 && StringUtil.isChar(txt[j - 1], whitespace: true))
-        --j;
-      return encode("${txt.substring(0, j)}...", pre:pre, multiLine:multiLine);
-    }
-
     final StringBuffer out = new StringBuffer();
+    final int tl = txt.length;
     int k = 0;
-    String enc;
-    if (multiLine || pre) {
-      for (int j = 0; j < tl; ++j) {
-        String cc = txt[j];
-        if ((enc = _encs[cc]) != null){
-          out..write(txt.substring(k, j))
-            ..write('&')..write(enc)..write(';');
-          k = j + 1;
-        } else if (multiLine && cc == '\n') {
-          out..write(txt.substring(k, j))..write("<br/>\n");
-          k = j + 1;
-        } else if (pre && (cc == ' ' || cc == '\t')) {
-          out..write(txt.substring(k, j))..write("&nbsp;");
-          if (cc == '\t')
-            out.write("&nbsp;&nbsp;&nbsp;");
-          k = j + 1;
-        }
-      }
-    } else {
-      for (int j = 0; j < tl; ++j) {
-        if ((enc = _encs[txt[j]]) != null) {
-          out..write(txt.substring(k, j))
-            ..write('&')..write(enc)..write(';');
-          k = j + 1;
-        }
+    for (int j = 0; j < tl; ++j) {
+      String cc = txt[j],
+        enc = _encs[cc];
+      if (enc != null){
+        out..write(txt.substring(k, j))
+          ..write('&')..write(enc)..write(';');
+        k = j + 1;
+      } else if (multiLine && cc == '\n') {
+        out..write(txt.substring(k, j))..write("<br/>\n");
+        k = j + 1;
+      } else if (pre && (cc == ' ' || cc == '\t')) {
+        out..write(txt.substring(k, j))..write("&nbsp;");
+        if (cc == '\t')
+          out.write("&nbsp;&nbsp;&nbsp;");
+        k = j + 1;
       }
     }
 
-    if (k == 0) return txt;
-    if (k < tl)
-      out.write(txt.substring(k));
-    return out.toString();
+    return k == 0 ? txt:
+      (k < tl ? (out..write(txt.substring(k))): out).toString();
   }
 
   /** Decodes the XML string into a normal string.
@@ -77,7 +55,8 @@ class XmlUtil {
     if (txt == null) return null; //as it is
 
     final StringBuffer out = new StringBuffer();
-    int k = 0, tl = txt.length;
+    int k = 0;
+    final int tl = txt.length;
     for (int j = 0; j < tl; ++j) {
       if (txt[j] == '&') {
         int l = txt.indexOf(';', j + 1);
@@ -95,6 +74,8 @@ class XmlUtil {
         }
       }
     }
-    return k == 0 ? txt: k < tl ? _sb2s(out, txt.substring(k)): out.toString();
+
+    return k == 0 ? txt:
+      (k < tl ? (out..write(txt.substring(k))): out).toString();
   }
 }

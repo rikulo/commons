@@ -132,7 +132,7 @@ class StringUtil {
         k = i + 1;
       }
     }
-    return sb != null ? _sb2s(sb, name.substring(k)): name;
+    return sb != null ? (sb..write(name.substring(k))).toString(): name;
   }
   /** Uncamelizes the give string.
    * For example, `backgroundColor' => `background-color`.
@@ -148,13 +148,10 @@ class StringUtil {
         k = i + 1;
       }
     }
-    return sb != null ? _sb2s(sb, name.substring(k)): name;
+    return sb != null ? (sb..write(name.substring(k))).toString(): name;
   }
 }
 
 const int _CC_0 = 48, _CC_9 = _CC_0 + 9,
   _CC_A = 65, _CC_Z = _CC_A + 25,
   _CC_a = 97, _CC_z = _CC_a + 25;
-
-String _sb2s(StringBuffer sb, String add) //workaround Dart Issue 7883
-=> (sb..write(add)).toString();

@@ -23,4 +23,10 @@ void main() {
     expect(Color.parse("hsv(128, 50%, 25%)"), new HsvColor(128, 0.5, 0.25));
     expect(Color.parse("hsva(128, 50%, 25%, 20%)"), new HsvColor(128, 0.5, 0.25, 0.2));
   });
+  test("XmlUtil", () {
+    expect(XmlUtil.encode("<abc>"), "&lt;abc&gt;");
+    expect(XmlUtil.encode("<abc\nanother line", multiLine: true),
+      "&lt;abc<br/>\nanother line");
+    expect(XmlUtil.decode("&lt;abc&gt; and &quot;"), '<abc> and "');
+  });
 }
