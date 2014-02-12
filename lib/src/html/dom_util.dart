@@ -166,7 +166,7 @@ class DomUtil {
     document.body.nodes.add(txtdiv);
 
     final dst = txtdiv.style;
-    txtdiv.innerHtml = text;
+    txtdiv.nodes.add(new Text(text));
     if (node != null)
       CssUtil.copy(node.getComputedStyle(), dst, CssUtil.textNames);
     if (style != null)
