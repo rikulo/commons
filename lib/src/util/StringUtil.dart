@@ -54,7 +54,7 @@ class StringUtil {
     return (digit && v >= _CC_0 && v <= _CC_9)
     || (upper && v >= _CC_A && v <= _CC_Z)
     || (lower && v >= _CC_a && v <= _CC_z)
-    || (whitespace && (cc == ' ' || cc == '\t' || cc == '\n' || cc == '\r'))
+    || (whitespace && _WHITE_SPACES.indexOf(cc) >= 0)
     || (match != null && match.indexOf(cc) >= 0);
   }
 
@@ -155,3 +155,4 @@ class StringUtil {
 const int _CC_0 = 48, _CC_9 = _CC_0 + 9,
   _CC_A = 65, _CC_Z = _CC_A + 25,
   _CC_a = 97, _CC_z = _CC_a + 25;
+const String _WHITE_SPACES = " \t\n\r\u{0085}\u{00a0}";

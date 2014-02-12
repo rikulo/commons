@@ -37,7 +37,7 @@ class _DeferInfo {
 
   _DeferInfo(this.timer, this.max): _startedAt = new DateTime.now();
 
-  bool get isAfterMax
+  bool isAfterMax()
   => max != null && _startedAt.add(max).isBefore(new DateTime.now());
 }
 class _Deferrer {
@@ -53,7 +53,7 @@ class _Deferrer {
     di.timer.cancel();
     di.max = max;
 
-    if (di.isAfterMax) {
+    if (di.isAfterMax()) {
       _defers.remove(key);
       scheduleMicrotask(task);
     } else {
