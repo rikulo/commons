@@ -115,7 +115,7 @@ class DomUtil {
       return true;
 
     if (node is Element)
-      switch ((node as Element).tagName.toLowerCase()) {
+      switch (node.tagName.toLowerCase()) {
         case "input":
         case "option":
         case "textarea":
@@ -160,25 +160,22 @@ class DomUtil {
    *     DomUtil.measureText(null, s, style);
    */
   static Size measureText(Element node, String text, [CssStyleDeclaration style]) {
-    if (_txtdiv == null) {
-      _txtdiv = new DivElement();
-      _txtdiv.style.cssText =
-        "left:-1000px;position:absolute;visibility:hidden;border:none";
-      document.body.nodes.add(_txtdiv);
-    }
+    final DivElement txtdiv = new DivElement();
+    txtdiv.style.cssText =
+      "left:-1000px;position:absolute;visibility:hidden;border:none";
+    document.body.nodes.add(txtdiv);
 
-    final dst = _txtdiv.style;
-    _txtdiv.innerHtml = text;
+    final dst = txtdiv.style;
+    txtdiv.innerHtml = text;
     if (node != null)
       CssUtil.copy(node.getComputedStyle(), dst, CssUtil.textNames);
     if (style != null)
       CssUtil.copy(style, dst, CssUtil.textNames);
 
-    final Size sz = new Size(_txtdiv.offsetWidth, _txtdiv.offsetHeight);
-    _txtdiv.innerHtml = "";
+    final Size sz = new Size(txtdiv.offsetWidth, txtdiv.offsetHeight);
+    txtdiv.remove();
     return sz;
   }
-  static Element _txtdiv;
 
   /** Show the element.
    *
