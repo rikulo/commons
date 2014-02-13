@@ -86,6 +86,9 @@ class StreamWrapper<T> implements Stream<T> {
   Future<T> elementAt(int index) => origin.elementAt(index);
   @override
   Future<String> join([String separator = ""]) => origin.join(separator);
+  @override
+  Stream timeout(Duration timeLimit, {void onTimeout(EventSink sink)})
+  => origin.timeout(timeLimit, onTimeout: onTimeout);
 }
 
 ///The StreamConsumer wrapper
