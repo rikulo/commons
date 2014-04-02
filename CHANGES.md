@@ -1,6 +1,10 @@
 #Rikulo Commons Changes
 
-##1.0.1+1
+##1.0.3
+
+* AbstractBufferedResponse is added.
+
+##1.0.1
 
 * XmlUtil.encode() changed: multiline renamed to multiLine, and maxlength not supported.
 

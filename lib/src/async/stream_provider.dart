@@ -105,6 +105,7 @@ abstract class _StreamSubscriptionBase<T> extends StreamSubscription<T> {
       // Clear out the target to indicate this is complete.
       _onData = null;
     }
+    return new Future.value();
   }
 
   @override
@@ -183,6 +184,7 @@ class _StreamSubscription<T> extends _StreamSubscriptionBase<T> {
 
     // Clear out the target to indicate this is complete.
     _target = null;
+    return new Future.value();
   }
 
   bool get _canceled => _target == null;
@@ -207,6 +209,7 @@ class _CapturableStreamSubscription<T> extends _StreamSubscriptionBase<T> {
 
     // Clear out the target to indicate this is complete.
     _target = null;
+    return new Future.value();
   }
 
   bool get _canceled => _target == null;

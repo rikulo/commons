@@ -3,7 +3,12 @@
 // Author: tomyeh
 part of rikulo_io;
 
-///The IOSink wrapper
+/** The IOSink wrapper.
+ *
+ * Notice: it proxies every invocation to [origin]. Thus, if you'd like to
+ * override [write] to write some other place, you have to override all
+ * `add` and `write` methods (such as [writeln] and so on)
+ */
 class IOSinkWrapper extends StreamConsumerWrapper<List<int>> implements IOSink {
   IOSinkWrapper(IOSink origin) : super(origin);
 

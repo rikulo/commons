@@ -21,6 +21,8 @@ class HttpRequestWrapper extends StreamWrapper<List<int>> implements HttpRequest
   @override
   Uri get uri => origin.uri;
   @override
+  Uri get requestedUri => origin.requestedUri;
+  @override
   HttpHeaders get headers => origin.headers;
   @override
   List<Cookie> get cookies => origin.cookies;
@@ -96,10 +98,28 @@ class HttpResponseWrapper extends IOSinkWrapper implements HttpResponse {
   HttpConnectionInfo get connectionInfo => origin.connectionInfo;
 }
 
-/** A skeletal implementation for buffered HTTP response
+/** A skeletal implementation for buffered HTTP response,
+ * that is, the output will be buffered.
+ *
+ * Notice that, unlike [HttpResponseWrapper], to override the output
+ * target, you need to override only [add] and [write].
  */
-abstract class _BufferedResponse extends HttpResponseWrapper {
-  _BufferedResponse(HttpResponse origin): super(origin);
+abstract class AbstractBufferedResponse extends HttpResponseWrapper {
+  AbstractBufferedResponse(HttpResponse origin): super(origin);
+
+  @override
+  Future flush() => new Future.value(this);
+  @override
+  Future close() {
+    _closer.complete(this);
+    return done;
+  }
+  @override
+  Future<HttpResponse> get done => _closer.future.then((_) => this);
+
+  //Used for implementing [close] and [done]//
+  Completer get _closer => _$closer != null ? _$closer: (_$closer = new Completer());
+  Completer _$closer;
 
   @override
   Future<HttpResponse> addStream(Stream<List<int>> stream) {
@@ -114,22 +134,36 @@ abstract class _BufferedResponse extends HttpResponseWrapper {
     return completer.future;
   }
   @override
-  Future close() {
-    _closer.complete(this);
-    return done;
+  void writeAll(Iterable objects, [String separator = ""]) {
+    Iterator iterator = objects.iterator;
+    if (!iterator.moveNext()) return;
+    if (separator.isEmpty) {
+      do {
+        write(iterator.current);
+      } while (iterator.moveNext());
+    } else {
+      write(iterator.current);
+      while (iterator.moveNext()) {
+        write(separator);
+        write(iterator.current);
+      }
+    }
   }
   @override
-  Future<HttpResponse> get done => _closer.future.then((_) => this);
-
-  //Used for implementing [close] and [done]//
-  Completer get _closer => _$closer != null ? _$closer: (_$closer = new Completer());
-  Completer _$closer;
+  void writeln([Object obj = ""]) {
+    write(obj);
+    write("\n");
+  }
+  @override
+  void writeCharCode(int charCode) {
+    write(new String.fromCharCode(charCode));
+  }
 }
 
 /** A buffered HTTP response that stores the output in the given string buffer
  * rather than the original `HttpResponse` instance.
  */
-class StringBufferedResponse extends _BufferedResponse {
+class StringBufferedResponse extends AbstractBufferedResponse {
   ///The buffer for holding the output (instead of [origin])
   final StringBuffer buffer;
   StringBufferedResponse(HttpResponse origin, this.buffer): super(origin);
@@ -147,7 +181,7 @@ class StringBufferedResponse extends _BufferedResponse {
 /** A buffered HTTP response that stores the output in the given list of bytes
  * buffer rather than the original `HttpResponse` instance.
  */
-class BufferedResponse extends _BufferedResponse {
+class BufferedResponse extends AbstractBufferedResponse {
   ///The buffer for holding the output (instead of [origin]).
   ///It is a list of bytes.
   final List<int> buffer;
