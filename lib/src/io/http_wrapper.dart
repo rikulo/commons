@@ -193,12 +193,13 @@ class BufferedResponse extends AbstractBufferedResponse {
   }
   @override
   void write(Object obj) {
-    if (obj is int)
-      buffer.add(obj);
-    else if (obj is String)
-      buffer.addAll(encoding.encode(obj));
-    else
-      throw new ArgumentError("Unsupported object: $obj");
+    if (obj is num) {
+      buffer.add(obj.toInt());
+    } else {
+      final String str = obj is String ? obj: obj.toString();
+      if (str.isNotEmpty)
+        buffer.addAll(encoding.encode(str));
+    }
   }
 }
 
