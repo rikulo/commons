@@ -25,6 +25,12 @@ class StreamWrapper<T> implements Stream<T> {
   @override
   Stream map(convert(T event)) => origin.map(convert);
   @override
+  Stream asyncMap(convert(T event))
+  => origin.asyncMap(convert);
+  @override
+  Stream asyncExpand(Stream convert(T event))
+  => origin.asyncExpand(convert);
+  @override
   Stream<T> handleError(void handle(error), { bool test(error) })
   => origin.handleError(handle, test: test);
   @override
