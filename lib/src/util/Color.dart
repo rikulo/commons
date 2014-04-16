@@ -68,7 +68,7 @@ class Color {
           if (step == 1)
             rgb[j] = (rgb[j] * 255) ~/ 15;
         }
-        return new Color(rgb[0], rgb[1], rgb[1]);
+        return new Color(rgb[0], rgb[1], rgb[2]);
       } else {
         final k = colorCode.indexOf('(');
         if (k >= 0) {
