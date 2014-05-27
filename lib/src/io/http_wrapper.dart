@@ -86,6 +86,12 @@ class HttpResponseWrapper extends IOSinkWrapper implements HttpResponse {
   @override
   HttpHeaders get headers => origin.headers;
   @override
+  bool get bufferOutput => origin.bufferOutput;
+  @override
+  void set bufferOutput(bool bufferOutput) {
+    origin.bufferOutput = bufferOutput;
+  }
+  @override
   List<Cookie> get cookies => origin.cookies;
 
   @override
@@ -93,7 +99,8 @@ class HttpResponseWrapper extends IOSinkWrapper implements HttpResponse {
   => origin.redirect(location, status: status);
 
   @override
-  Future<Socket> detachSocket() => origin.detachSocket();
+  Future<Socket> detachSocket({bool writeHeaders: true})
+  => origin.detachSocket(writeHeaders: writeHeaders);
   @override
   HttpConnectionInfo get connectionInfo => origin.connectionInfo;
 }
