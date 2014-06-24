@@ -17,6 +17,8 @@ void simpleLoggerHandler(LogRecord record) {
   new Future(() {
     print("${record.time}:${record.loggerName}:${record.sequenceNumber}\n"
       "${record.level}: ${record.message}");
+    if (record.error != null)
+      print("Cause: ${record.error}");
     if (record.stackTrace != null)
       print("${record.stackTrace}");
   });
