@@ -4,6 +4,7 @@
 [Rikulo Commons](http://rikulo.org) is a collection of common reusable Dart classes and utilities.
 
 * [Home](http://rikulo.org)
+* [Repository](https://github.com/rikulo/commons)
 * [Documentation](http://docs.rikulo.org)
 * [API Reference](http://api.rikulo.org/commons/latest)
 * [Discussion](http://stackoverflow.com/questions/tagged/rikulo)
