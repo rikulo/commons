@@ -127,13 +127,13 @@ abstract class Browser {
     dart = _rdart.hasMatch(ua);
   }
   static double _versionOf(String version, [String separator='.']) {
-    int j = version.indexOf(separator);
-    if (j >= 0) {
-      j = version.indexOf(separator, j + 1);
-      if (j >= 0)
-        version = version.substring(0, j);
-    }
     try {
+      int j = version.indexOf(separator);
+      if (j >= 0) {
+        j = version.indexOf(separator, j + 1);
+        if (j >= 0)
+          version = version.substring(0, j);
+      }
       return double.parse(version);
     } catch (e) {
       return 1.0; //ignore it
