@@ -133,6 +133,8 @@ abstract class Browser {
         j = version.indexOf(separator, j + 1);
         if (j >= 0)
           version = version.substring(0, j);
+        if (separator != '.')
+          version = version.replaceAll(separator, '.');
       }
       return double.parse(version);
     } catch (e) {
