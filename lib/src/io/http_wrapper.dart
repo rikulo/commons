@@ -283,4 +283,8 @@ class HttpHeadersWrapper extends HttpHeaders {
   void set contentType(ContentType contentType) {
     origin.contentType = contentType;
   }
+  @override
+  void clear() {
+    origin.clear();
+  }
 }
