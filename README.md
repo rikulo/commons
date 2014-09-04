@@ -21,10 +21,6 @@ Add this to your `pubspec.yaml` (or create it):
     dependencies:
       rikulo_commmons:
 
-Then run the [Pub Package Manager](http://pub.dartlang.org/doc) (comes with the Dart SDK):
-
-    pub install
-
 ##Run on Client and/or Server
 
 <table border="1" width="100%">
