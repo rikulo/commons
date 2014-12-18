@@ -10,7 +10,7 @@ class Points {
   static num norm(Point pt) {
     num val = pt.x * pt.x + pt.y * pt.y;
     if (pt is Point3D) {
-      final z = (pt as Point3D).z;
+      final z = pt.z;
       val += z * z;
     }
     return sqrt(val);
@@ -27,7 +27,7 @@ class Points {
   static Point divide(Point pt, num factor) {
     final x = pt.x / factor,
           y = pt.y / factor;
-    return pt is Point3D ? new Point3D(x, y, (pt as Point3D).z / factor): new Point(x, y);
+    return pt is Point3D ? new Point3D(x, y, pt.z / factor): new Point(x, y);
   }
 
   ///Instantiate a poitn form a rectangle
@@ -42,11 +42,11 @@ class Points {
 /**
  * The 3D point.
  */
-class Point3D extends Point {
+class Point3D<T extends num> extends Point<T> {
   /** The Z index. */
-  final num z;
+  final T z;
 
-  const Point3D(num x, num y, num z) : this.z = z, super(x, y);
+  const Point3D(T x, T y, T z) : this.z = z, super(x, y);
   Point3D.from(Point3D other) : this(other.x, other.y, other.z);
 
   @override
@@ -55,11 +55,11 @@ class Point3D extends Point {
   @override
   Point3D operator -(Point other)
   => new Point3D(x - other.x, y - other.y,
-      other is Point3D ? z - (other as Point3D).z: z);
+      other is Point3D ? z - other.z: z);
   @override
   Point3D operator +(Point other)
   => new Point3D(x + other.x, y + other.y,
-      other is Point3D ? z + (other as Point3D).z: z);
+      other is Point3D ? z + other.z: z);
   @override
   Point3D operator *(num scalar)
   => new Point3D(x * scalar, y * scalar, z * scalar);
@@ -73,14 +73,14 @@ class Point3D extends Point {
     var dz = other is Point3D ? z - other.z: z;
     return sqrt(dx * dx + dy * dy + dz * dz);
   }
-  @override  
+  ///Applies [ceil] to each element
   Point3D ceil() => new Point3D(x.ceil(), y.ceil(), z.ceil());
-  @override  
+  ///Applies [floor] to each element
   Point3D floor() => new Point3D(x.floor(), y.floor(), z.floor());
-  @override  
+  ///Applies [round] to each element
   Point3D round() => new Point3D(x.round(), y.round(), z.round());
-  @override  
-  Point3D toInt() => new Point3D(x.toInt(), y.toInt(), z.toInt());
+  ///Applies [toInt] to each element
+  Point3D<int> toInt() => new Point3D(x.toInt(), y.toInt(), z.toInt());
 
   @override  
   int get hashCode => (x + y + z).toInt();

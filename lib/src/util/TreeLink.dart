@@ -91,13 +91,13 @@ abstract class TreeLink<T> {
    *
    * It return false if nothing is changed, i.e., the given child is already at
    * the right position.
+   * 
+   * > Note: it doesn't check if [child] is a parent of this node.
+   * > The caller can use [isDescendantOf] to check if there is a concern.
    */
   bool addChild(T child, [T beforeChild]) {
-    if (child == null)
-      throw new ArgumentError();
     final link = getLink_(child);
-    if (_descendantLinkOf(link))
-      throw new ArgumentError("$child is an ancestor of $_owner");
+    assert(!_descendantLinkOf(link));
 
     return _addLink(link, beforeChild != null ? getLink_(beforeChild): null);
   }
