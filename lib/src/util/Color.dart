@@ -115,7 +115,7 @@ class Color {
             return color;
         }
       }
-    } catch (e, st) {
+    } catch (e) {
       throw new FormatException(colorCode);
     }
     throw new FormatException(colorCode);
