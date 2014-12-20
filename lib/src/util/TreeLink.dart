@@ -26,6 +26,7 @@ part of rikulo_util;
  *
  * + `T` - the type of each node.
  */
+@deprecated
 abstract class TreeLink<T> {
   final T _owner;
   TreeLink _parent;
@@ -105,16 +106,18 @@ abstract class TreeLink<T> {
     if (beforeLink != null) {
       if (!identical(beforeLink._parent, this))
         beforeLink = null;
-      else if (identical(link, beforeLink))
+      else if (identical(link, beforeLink)) //note: link._parent === this
         return false; //nothing to change
     }
 
     final oldParent = link._parent;
-    if (identical(oldParent, this) && identical(beforeLink, link._nextLink))
-      return false; //nothing to change
+    if (oldParent != null) {
+      if (identical(oldParent, this) && identical(beforeLink, link._nextLink))
+        return false; //nothing to change
 
-    if (oldParent != null)
       _unlink(oldParent, link);
+    }
+
     _link(this, link, beforeLink);
     return true;
   }

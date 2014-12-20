@@ -1,5 +1,9 @@
 #Rikulo Commons Changes
 
+##1.1.4
+
+* TreeLink is deprecated and will be removed soon.
+
 ##1.0.3
 
 * AbstractBufferedResponse is added.
