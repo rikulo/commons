@@ -12,7 +12,6 @@ part "src/util/XmlUtil.dart";
 part "src/util/ListUtil.dart";
 part "src/util/MapUtil.dart";
 part "src/util/Color.dart";
-part "src/util/TreeLink.dart";
 
 /** A function that returns an integer.
  */

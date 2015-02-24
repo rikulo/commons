@@ -1,5 +1,10 @@
 #Rikulo Commons Changes
 
+##1.1.5
+
+* addContentType() is introduced to add extra content types that the mime package might not support yet.
+* TreeLink is removed.
+
 ##1.1.4
 
 * TreeLink is deprecated and will be removed soon.

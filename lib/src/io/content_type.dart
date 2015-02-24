@@ -16,6 +16,7 @@ part of rikulo_io;
  * the encoding is default to UTF8 (i.e., `charset=utf-8` will be appended).
  */
 ContentType getContentType(String extension) {
+  assert(!extension.startsWith('.'));
   ContentType ctype = _ctypes[extension];
   if (ctype != null)
     return ctype;
@@ -27,6 +28,20 @@ ContentType getContentType(String extension) {
   if (_isTextType(mime))
     mime = "$mime; charset=utf-8";
   return _ctypes[extension] = _rawCtypes[mime] = ContentType.parse(mime);
+}
+
+/**
+ * Adds additonal content type for the given extension.
+ * Note: it overrides the system default if any.
+ * 
+ * Example:
+ * 
+ *     addContentType("woff2", "application/font-woff2");
+ */
+void addContentType(String extension, String contentType) {
+  assert(!extension.startsWith('.'));
+  assert(contentType.isNotEmpty);
+  _ctypes[extension] = parseContentType(contentType);
 }
 
 /** Returns an instance of [ContentType] of the given value,
