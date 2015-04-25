@@ -7,9 +7,17 @@ part of rikulo_util;
  * XML Utilities.
  */
 class XmlUtil {
-  static const Map<String, String>
-    _decs = const {'lt': '<', 'gt': '>', 'amp': '&', 'quot': '"'},
-    _encs = const {'<': 'lt', '>': 'gt', '&': 'amp', '"': 'quot'};
+  static final RegExp
+    _reEncode0 = new RegExp(r"[<>&]"),
+    _reEncode1 = new RegExp(r"[<>& \t]"),
+    _reEncode2 = new RegExp(r"[<>&\r\n]"),
+    _reEncode3 = new RegExp(r"[<>& \t\r\n]");
+  static const Map<String, String> _encs =
+    const {'<': '&lt;', '>': '&gt;', '&': '&amp;',
+      '\n': '<br/>\n', '\r': '',
+      ' ' : "&nbsp;", '\t': '&nbsp;&nbsp;&nbsp;&nbsp;'};
+
+  static String _encMapper(Match m) => _encs[m.group(0)];
 
   /** Encodes the string to a valid XML string.
    *
@@ -21,29 +29,28 @@ class XmlUtil {
   {bool multiLine: false, bool pre: false}) {
     if (txt == null) return null; //as it is
 
-    final StringBuffer out = new StringBuffer();
-    final int tl = txt.length;
-    int k = 0;
-    for (int j = 0; j < tl; ++j) {
-      String cc = txt[j],
-        enc = _encs[cc];
-      if (enc != null){
-        out..write(txt.substring(k, j))
-          ..write('&')..write(enc)..write(';');
-        k = j + 1;
-      } else if (multiLine && cc == '\n') {
-        out..write(txt.substring(k, j))..write("<br/>\n");
-        k = j + 1;
-      } else if (pre && (cc == ' ' || cc == '\t')) {
-        out..write(txt.substring(k, j))..write("&nbsp;");
-        if (cc == '\t')
-          out.write("&nbsp;&nbsp;&nbsp;");
-        k = j + 1;
-      }
-    }
+    return txt.replaceAllMapped(
+      multiLine ? pre ? _reEncode3: _reEncode2:
+        pre ? _reEncode1: _reEncode0, _encMapper);
+  }
 
-    return k == 0 ? txt:
-      (k < tl ? (out..write(txt.substring(k))): out).toString();
+  static final RegExp _reDecode = new RegExp(r"&([0-9a-z]*);");
+  static const Map<String, String>
+    _decs = const {'lt': '<', 'gt': '>', 'amp': '&'};
+
+  static String _decMapper(Match m) {
+    final String key = m.group(1);
+    final String mapped = _decs[key];
+    if (mapped != null)
+      return mapped;
+
+    if (key.length >= 3 && key[0] == '#')
+      return new String.fromCharCodes(
+          [int.parse(
+            key[1].toLowerCase() == 'x' ?
+              "0x${key.substring(2)}": key.substring(1))]);
+
+    return m.group(0);
   }
 
   /** Decodes the XML string into a normal string.
@@ -54,28 +61,6 @@ class XmlUtil {
   static String decode(String txt) {
     if (txt == null) return null; //as it is
 
-    final StringBuffer out = new StringBuffer();
-    int k = 0;
-    final int tl = txt.length;
-    for (int j = 0; j < tl; ++j) {
-      if (txt[j] == '&') {
-        int l = txt.indexOf(';', j + 1);
-        if (l >= 0) {
-          String dec = txt[j + 1] == '#' ?
-            new String.fromCharCodes(
-              [int.parse(
-                txt[j + 2].toLowerCase() == 'x' ? "0x${txt.substring(j + 3, l)}":
-                  txt.substring(j + 2, l))]):
-            _decs[txt.substring(j + 1, l)];
-          if (dec != null) {
-            out..write(txt.substring(k, j))..write(dec);
-            k = (j = l) + 1;
-          }
-        }
-      }
-    }
-
-    return k == 0 ? txt:
-      (k < tl ? (out..write(txt.substring(k))): out).toString();
+    return txt.replaceAllMapped(_reDecode, _decMapper);
   }
 }

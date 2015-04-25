@@ -12,6 +12,7 @@ void main() {
     expect(map["abc"], "first");
     expect(map["xyz"], "second item");
   });
+
   test("Color.parse", () {
     expect(Color.parse("#ffffff"), equals(WHITE));
     expect(Color.parse("#fff"), WHITE);
@@ -23,10 +24,13 @@ void main() {
     expect(Color.parse("hsv(128, 50%, 25%)"), new HsvColor(128, 0.5, 0.25));
     expect(Color.parse("hsva(128, 50%, 25%, 20%)"), new HsvColor(128, 0.5, 0.25, 0.2));
   });
+
   test("XmlUtil", () {
     expect(XmlUtil.encode("<abc>"), "&lt;abc&gt;");
     expect(XmlUtil.encode("<abc\nanother line", multiLine: true),
       "&lt;abc<br/>\nanother line");
-    expect(XmlUtil.decode("&lt;abc&gt; and &quot;"), '<abc> and "');
+    expect(XmlUtil.encode("<abc> </abc>\ta", pre: true),
+      "&lt;abc&gt;&nbsp;&lt;/abc&gt;&nbsp;&nbsp;&nbsp;&nbsp;a");
+    expect(XmlUtil.decode("&lt;abc&gt; and &amp;"), '<abc> and &');
   });
 }

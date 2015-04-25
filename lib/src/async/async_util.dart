@@ -41,7 +41,7 @@ class _DeferInfo {
   => max != null && _startedAt.add(max).isBefore(new DateTime.now());
 }
 class _Deferrer {
-  Map<dynamic, _DeferInfo> _defers = new HashMap();
+  final Map<dynamic, _DeferInfo> _defers = new HashMap();
 
   void run(key, void task(), Duration min, Duration max) {
     final _DeferInfo di = _defers[key];

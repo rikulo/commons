@@ -1,5 +1,11 @@
 #Rikulo Commons Changes
 
+##2.0.0
+
+* StringUtil's toHexString, addCharCodes, encodeId, filterIn and filterOut have been removed.
+* MapUtil.onDeman has been renamed to MapUtil.auto
+* The html library has been removed.
+
 ##1.1.5
 
 * addContentType() is introduced to add extra content types that the mime package might not support yet.

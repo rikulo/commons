@@ -6,7 +6,7 @@
 * [Home](http://rikulo.org)
 * [Repository](https://github.com/rikulo/commons)
 * [Documentation](http://docs.rikulo.org)
-* [API Reference](http://www.dartdocs.org/documentation/rikulo_commons/1.1.5)
+* [API Reference](http://www.dartdocs.org/documentation/rikulo_commons/2.0.0)
 * [Discussion](http://stackoverflow.com/questions/tagged/rikulo)
 * [Issues](https://github.com/rikulo/commons/issues)
 
@@ -37,11 +37,6 @@ Add this to your `pubspec.yaml` (or create it):
   <tr>
     <td><code>browser.dart</code></td>
     <td>Yes</td>
-    <td>Yes</td>
-  </tr>
-  <tr>
-    <td><code>html.dart</code></td>
-    <td>No</td>
     <td>Yes</td>
   </tr>
   <tr>

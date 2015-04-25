@@ -24,7 +24,7 @@ class MapUtil {
    * since it is just a proxy to the real map.
    * Refer to Rikulo UI's `View.dataset` for a sample implementation.
    */
-  static Map onDemand(AsMap creator) => new _OnDemandMap(creator);
+  static Map auto(Map creator()) => new _OnDemandMap(creator);
 
   /** Copies the given map ([source]) to the destination ([dest]).
    */
