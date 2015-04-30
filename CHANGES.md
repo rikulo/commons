@@ -1,5 +1,9 @@
 #Rikulo Commons Changes
 
+##2.0.1
+
+* XmlUtil.encode() supports the space argument to preserve the right space also able to break lines
+
 ##2.0.0
 
 * StringUtil's toHexString, addCharCodes, encodeId, filterIn and filterOut have been removed.

@@ -8,30 +8,59 @@ part of rikulo_util;
  */
 class XmlUtil {
   static final RegExp
-    _reEncode0 = new RegExp(r"[<>&]"),
-    _reEncode1 = new RegExp(r"[<>& \t]"),
-    _reEncode2 = new RegExp(r"[<>&\r\n]"),
-    _reEncode3 = new RegExp(r"[<>& \t\r\n]");
+    _reEncode   = new RegExp(r"[<>&]"),
+    _reEncodeP  = new RegExp(r"[<>& \t]"),
+    _reEncodeL  = new RegExp(r"[<>&\r\n]"),
+    _reEncodePL = new RegExp(r"[<>& \t\r\n]"),
+    _reEncodeS  = new RegExp(r"([ \t])+|[<>&]"),
+    _reEncodeSL = new RegExp(r"([ \t])+|[<>&\r\n]");
   static const Map<String, String> _encs =
     const {'<': '&lt;', '>': '&gt;', '&': '&amp;',
       '\n': '<br/>\n', '\r': '',
       ' ' : "&nbsp;", '\t': '&nbsp;&nbsp;&nbsp;&nbsp;'};
 
   static String _encMapper(Match m) => _encs[m.group(0)];
+  static String _encMapperS(Match m) {
+    final String val = m.group(0);
+    int count = 0;
+    for (int i = val.length; --i >= 0;)
+      switch (val[i]) {
+        case ' ':
+          ++count;
+          break;
+        case '\t':
+          count += 4;
+          break;
+      }
+    if (count == 0)
+      return _encMapper(m);
+    if (count == 1)
+      return ' ';
+
+    final StringBuffer buf = new StringBuffer();
+    while (--count > 0)
+      buf.write('&nbsp;');
+    buf.write(' '); //better to line-break here if any
+    return buf.toString();
+  }
 
   /** Encodes the string to a valid XML string.
    *
    * + [txt] is the text to encode.
    * + [pre] - whether to replace whitespace with &nbsp;
+   * + [space] - whether to keep the space but still able to break
+   * lines. If [pre] is true, [space] is ignored.
    * + [multiLine] - whether to replace linefeed with <br/>
    */
   static String encode(String txt,
-  {bool multiLine: false, bool pre: false}) {
+  {bool multiLine: false, bool pre: false, bool space: false}) {
     if (txt == null) return null; //as it is
 
     return txt.replaceAllMapped(
-      multiLine ? pre ? _reEncode3: _reEncode2:
-        pre ? _reEncode1: _reEncode0, _encMapper);
+      multiLine ?
+        pre ? _reEncodePL: space ? _reEncodeSL:_reEncodeL:
+        pre ? _reEncodeP: space ? _reEncodeS: _reEncode,
+      space ? _encMapperS: _encMapper);
   }
 
   static final RegExp _reDecode = new RegExp(r"&([0-9a-z]*);");
