@@ -3,7 +3,7 @@
 // Author: tomyeh
 library test_run_all;
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 
 import 'async_test.dart' as async_test;
 import 'inject_test.dart' as inject_test;

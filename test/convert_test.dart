@@ -5,7 +5,7 @@ library test_convert;
 
 import "dart:async";
 import "dart:convert";
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import "package:rikulo_commons/convert.dart";
 
 main() {

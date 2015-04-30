@@ -3,7 +3,7 @@
 // Author: tomyeh
 library test_io;
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import "package:rikulo_commons/io.dart";
 
 main() {

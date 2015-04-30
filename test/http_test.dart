@@ -6,7 +6,7 @@ library test_http;
 import "dart:async";
 import "dart:convert" show UTF8;
 import "dart:io" show ContentType;
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import "package:rikulo_commons/io.dart";
 
 main() {
