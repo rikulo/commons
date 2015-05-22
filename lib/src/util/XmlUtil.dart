@@ -8,14 +8,14 @@ part of rikulo_util;
  */
 class XmlUtil {
   static final RegExp
-    _reEncode   = new RegExp(r"[<>&]"),
-    _reEncodeP  = new RegExp(r"[<>& \t]"),
-    _reEncodeL  = new RegExp(r"[<>&\r\n]"),
-    _reEncodePL = new RegExp(r"[<>& \t\r\n]"),
-    _reEncodeS  = new RegExp(r"([ \t])+|[<>&]"),
-    _reEncodeSL = new RegExp(r"([ \t])+|[<>&\r\n]");
+    _reEncode   = new RegExp(r'[<>&"]'),
+    _reEncodeP  = new RegExp(r'[<>&" \t]'),
+    _reEncodeL  = new RegExp(r'[<>&"\r\n]'),
+    _reEncodePL = new RegExp(r'[<>&" \t\r\n]'),
+    _reEncodeS  = new RegExp(r'([ \t])+|[<>&"]'),
+    _reEncodeSL = new RegExp(r'([ \t])+|[<>&"\r\n]');
   static const Map<String, String> _encs =
-    const {'<': '&lt;', '>': '&gt;', '&': '&amp;',
+    const {'<': '&lt;', '>': '&gt;', '&': '&amp;', '"': "&quot;",
       '\n': '<br/>\n', '\r': '',
       ' ' : "&nbsp;", '\t': '&nbsp;&nbsp;&nbsp;&nbsp;'};
 

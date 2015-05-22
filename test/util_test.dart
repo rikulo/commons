@@ -27,6 +27,7 @@ void main() {
 
   test("XmlUtil", () {
     expect(XmlUtil.encode("<abc>"), "&lt;abc&gt;");
+    expect(XmlUtil.encode('<abc>&\'"'), "&lt;abc&gt;&amp;'&quot;");
     expect(XmlUtil.encode("<abc\nanother line", multiLine: true),
       "&lt;abc<br/>\nanother line");
     expect(XmlUtil.encode("<abc> </abc>\ta", pre: true),
