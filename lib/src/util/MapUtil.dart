@@ -113,51 +113,51 @@ class MapUtil {
 /** A map wrapper for proxying another map.
  */
 class MapWrapper<K, V> implements Map<K,V> {
-  final Map<K, V> _origin;
+  final Map<K, V> origin;
 
-  MapWrapper(Map<K, V> origin): _origin = origin;
+  MapWrapper(Map<K, V> this.origin);
 
   @override
-  V  operator[](K key) => _origin[key];
+  V  operator[](K key) => origin[key];
   @override
   void operator[]=(K key, V value) {
-    _origin[key] = value;
+    origin[key] = value;
   }
   @override
   void addAll(Map<K, V> other) {
-    _origin.addAll(other);
+    origin.addAll(other);
   }
   @override
   void clear() {
-    _origin.clear();
+    origin.clear();
   }
   @override
-  bool containsKey(K key) => _origin.containsKey(key);
+  bool containsKey(K key) => origin.containsKey(key);
   @override
-  bool containsValue(V value) => _origin.containsValue(value);
+  bool containsValue(V value) => origin.containsValue(value);
   @override
   void forEach(void f(key, value)) {
-    _origin.forEach(f);
+    origin.forEach(f);
   }
   @override
-  Iterable<K> get keys => _origin.keys;
+  Iterable<K> get keys => origin.keys;
   @override
-  Iterable<V> get values => _origin.values;
+  Iterable<V> get values => origin.values;
   @override
-  bool get isEmpty => _origin.isEmpty;
+  bool get isEmpty => origin.isEmpty;
   @override
-  bool get isNotEmpty => _origin.isNotEmpty;
+  bool get isNotEmpty => origin.isNotEmpty;
   @override
-  int get length => _origin.length;
+  int get length => origin.length;
   @override
-  V putIfAbsent(K key, V ifAbsent()) => _origin.putIfAbsent(key, ifAbsent);
+  V putIfAbsent(K key, V ifAbsent()) => origin.putIfAbsent(key, ifAbsent);
   @override
-  V remove(K key) => _origin.remove(key);
+  V remove(K key) => origin.remove(key);
   @override
-  String toString() => _origin.toString();
+  String toString() => origin.toString();
   @override
   bool operator==(o)
-  => this == o || _origin == o || (o is MapWrapper && o._origin == _origin);
+  => this == o || origin == o || (o is MapWrapper && o.origin == origin);
 }
 
 class _OnDemandMap<K, V> implements Map<K,V> {
