@@ -1,5 +1,9 @@
 #Rikulo Commons Changes
 
+##2.0.3
+
+# MapWrapper is introduced to simplify the extension of a map instance.
+
 ##2.0.1
 
 * XmlUtil.encode() supports the space argument to preserve the right space also able to break lines

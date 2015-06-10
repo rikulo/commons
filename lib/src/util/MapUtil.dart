@@ -110,6 +110,56 @@ class MapUtil {
   }
 }
 
+/** A map wrapper for proxying another map.
+ */
+class MapWrapper<K, V> implements Map<K,V> {
+  final Map<K, V> _origin;
+
+  MapWrapper(Map<K, V> origin): _origin = origin;
+
+  @override
+  V  operator[](K key) => _origin[key];
+  @override
+  void operator[]=(K key, V value) {
+    _origin[key] = value;
+  }
+  @override
+  void addAll(Map<K, V> other) {
+    _origin.addAll(other);
+  }
+  @override
+  void clear() {
+    _origin.clear();
+  }
+  @override
+  bool containsKey(K key) => _origin.containsKey(key);
+  @override
+  bool containsValue(V value) => _origin.containsValue(value);
+  @override
+  void forEach(void f(key, value)) {
+    _origin.forEach(f);
+  }
+  @override
+  Iterable<K> get keys => _origin.keys;
+  @override
+  Iterable<V> get values => _origin.values;
+  @override
+  bool get isEmpty => _origin.isEmpty;
+  @override
+  bool get isNotEmpty => _origin.isNotEmpty;
+  @override
+  int get length => _origin.length;
+  @override
+  V putIfAbsent(K key, V ifAbsent()) => _origin.putIfAbsent(key, ifAbsent);
+  @override
+  V remove(K key) => _origin.remove(key);
+  @override
+  String toString() => _origin.toString();
+  @override
+  bool operator==(o)
+  => this == o || _origin == o || (o is MapWrapper && o._origin == _origin);
+}
+
 class _OnDemandMap<K, V> implements Map<K,V> {
   final AsMap _creator;
   Map<K, V> _map;
