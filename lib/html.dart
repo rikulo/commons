@@ -7,18 +7,58 @@ import "dart:html";
 
 import "util.dart" show XmlUtil;
 
-///An allow-anything [TreeSanitizer], i.e., it doesn't sanitize anything.
+///An allow-everything [TreeSanitizer], i.e., it doesn't sanitize anything.
 class NullTreeSanitizer implements NodeTreeSanitizer {
   const NullTreeSanitizer();
+  @override
   void sanitizeTree(Node node) {}
 }
 
-///An allow-anyting [NodeValidator].
+///An allow-everyting [NodeValidator].
 class NullNodeValidator implements NodeValidator {
   const NullNodeValidator();
 
+  @override
   bool allowsElement(Element element) => true;
+  @override
   bool allowsAttribute(Element element, String attributeName, String value) => true;
+}
+
+///An allow-everyting [NodeValidatorBuilder].
+class NullNodeValidatorBuilder extends NullNodeValidator
+    implements NodeValidatorBuilder {
+  const NullNodeValidatorBuilder();
+
+  @override
+  void allowNavigation([UriPolicy uriPolicy]) {}
+  @override
+  void allowImages([UriPolicy uriPolicy]) {}
+  @override
+  void allowTextElements() {}
+  @override
+  void allowInlineStyles({String tagName}) {}
+  @override
+  void allowHtml5({UriPolicy uriPolicy}) {}
+  @override
+  void allowSvg() {}
+  @override
+  void allowCustomElement(String tagName,
+      {UriPolicy uriPolicy,
+      Iterable<String> attributes,
+      Iterable<String> uriAttributes}) {}
+  @override
+  void allowTagExtension(String tagName, String baseName,
+      {UriPolicy uriPolicy,
+      Iterable<String> attributes,
+      Iterable<String> uriAttributes}) {}
+  @override
+  void allowElement(String tagName, {UriPolicy uriPolicy,
+    Iterable<String> attributes,
+    Iterable<String> uriAttributes}) {}
+  @override
+  void allowTemplating() {}
+  @override
+  void add(NodeValidator validator) {}
 }
 
 /// Set inner html with an empty tree sanitizer
