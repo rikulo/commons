@@ -1,5 +1,9 @@
 #Rikulo Commons Changes
 
+##2.0.5
+
+# NullTreeSanitizer, NullNodeValidator, setUncheckedInnerHtml and createUncheckedHtml are added.
+
 ##2.0.3
 
 # MapWrapper is introduced to simplify the extension of a map instance.
