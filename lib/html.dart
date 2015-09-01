@@ -7,13 +7,6 @@ import "dart:html";
 
 import "util.dart" show XmlUtil;
 
-///An allow-everything [TreeSanitizer], i.e., it doesn't sanitize anything.
-class NullTreeSanitizer implements NodeTreeSanitizer {
-  const NullTreeSanitizer();
-  @override
-  void sanitizeTree(Node node) {}
-}
-
 ///An allow-everyting [NodeValidator].
 class NullNodeValidator implements NodeValidator {
   const NullNodeValidator();
@@ -68,7 +61,7 @@ void setUncheckedInnerHtml(Element element, String html,
   if (encode)
     html = XmlUtil.encode(html);
   
-  element.setInnerHtml(html, treeSanitizer: const NullTreeSanitizer());
+  element.setInnerHtml(html, treeSanitizer: NodeTreeSanitizer.trusted);
 }
 
 /// Creates an element with an empty tree sanitizer.
@@ -77,5 +70,5 @@ Element createUncheckedHtml(String html, {bool encode: false}) {
   if (encode)
     html = XmlUtil.encode(html);
   
-  return new Element.html(html, treeSanitizer: const NullTreeSanitizer());
+  return new Element.html(html, treeSanitizer: NodeTreeSanitizer.trusted);
 }

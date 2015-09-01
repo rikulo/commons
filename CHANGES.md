@@ -1,5 +1,9 @@
 #Rikulo Commons Changes
 
+##2.0.6
+
+* NullTreeSanitizer is removed. Please use NodeTreeSanitizer.trusted instead which was introduced in Dart 1.12.
+
 ##2.0.5
 
 # NullTreeSanitizer, NullNodeValidator, setUncheckedInnerHtml and createUncheckedHtml are added.
