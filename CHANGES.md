@@ -6,11 +6,11 @@
 
 ##2.0.5
 
-# NullTreeSanitizer, NullNodeValidator, setUncheckedInnerHtml and createUncheckedHtml are added.
+* NullTreeSanitizer, NullNodeValidator, setUncheckedInnerHtml and createUncheckedHtml are added.
 
 ##2.0.3
 
-# MapWrapper is introduced to simplify the extension of a map instance.
+* MapWrapper is introduced to simplify the extension of a map instance.
 
 ##2.0.1
 
