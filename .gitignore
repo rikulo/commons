@@ -1,3 +1,5 @@
+.packages
+.idea/
 debug
 codegen
 *.local

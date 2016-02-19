@@ -3,8 +3,6 @@
 // Author: tomyeh
 library rikulo_browser;
 
-typedef bool _BrowserMatch(RegExp regex);
-
 /**
  * The browser.
  */
@@ -13,6 +11,7 @@ abstract class Browser {
   static final RegExp _rwebkit = new RegExp(r"(webkit)[ /]([\w.]+)"),
     _rsafari = new RegExp(r"(safari)[ /]([\w.]+)"),
     _rchrome = new RegExp(r"(chrome)[ /]([\w.]+)"),
+    _redge = new RegExp(r"(edge)/([\w.]+)"),
     _rmsie = new RegExp(r"(msie) ([\w.]+)"),
     _rmozilla = new RegExp(r"(mozilla)(?:.*? rv:([\w.]+))?"),
     _ropera = new RegExp(r"(opera)(?:.*version)?[ /]([\w.]+)"),
@@ -29,6 +28,8 @@ abstract class Browser {
   bool safari = false;
   /** Whether it is Chrome. */
   bool chrome = false;
+  /** Whether it is Edge. */
+  bool edge = false;
   /** Whether it is Internet Explorer. */
   bool msie = false;
   /** Whether it is Firefox. */
@@ -80,7 +81,7 @@ abstract class Browser {
   }
   void _initBrowserInfo() {
     final String ua = userAgent.toLowerCase();
-    final _BrowserMatch bm = (RegExp regex) {
+    bool bm(RegExp regex) {
       Match m = regex.firstMatch(ua);
       if (m != null) {
         name = m.group(1);
@@ -88,7 +89,7 @@ abstract class Browser {
         return true;
       }
       return false;
-    };
+    }
 
     // os detection
     Match m2;
@@ -104,12 +105,12 @@ abstract class Browser {
       webkit = true;
       webkitVersion = version;
 
-      if (bm(_rchrome)) {
+      if (bm(_redge)) {
+        edge = true;
+      } else if (bm(_rchrome)) {
         chrome = true;
-
       } else if (bm(_rsafari)) {
         safari = true;
-
       }
     } else if (bm(_rmsie)) {
       msie = true;

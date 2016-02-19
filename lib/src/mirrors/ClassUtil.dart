@@ -170,24 +170,6 @@ class ClassUtil {
       [Map<String, dynamic> namedArgs])
     => function.apply(params, _toNamedParams(namedArgs)).reflectee;
 
-  ///Converts a list of parameters to Mirror for asynchronous invocation
-  static List _toAsyncParams(List params) {
-    if (params != null) {
-      List ps = new List();
-      params.forEach((v) => ps.add(_toAsyncParam(v)));
-      return ps;
-    }
-    return null;
-  }
-  ///Converts a map of named parameters to Symbol and Mirror for asynchronous invocation
-  static Map<Symbol, dynamic> _toAsyncNamedParams(Map<String, dynamic> namedArgs) {
-    if (namedArgs != null) {
-      Map<Symbol, dynamic> nargs = new HashMap();
-      namedArgs.forEach((k,v) => nargs[new Symbol(k)] = _toAsyncParam(v));
-      return nargs;
-    }
-    return null;
-  }
   ///Converts a map of named parameters to Symbol for synchronous invocation
   static Map<Symbol, dynamic> _toNamedParams(Map<String, dynamic> namedArgs) {
     if (namedArgs != null) {
@@ -196,12 +178,6 @@ class ClassUtil {
       return nargs;
     }
     return null;
-  }
-  ///Converts a parameter to Mirror for asynchronous invocation
-  static _toAsyncParam(v) {
-    if (v == null || v is num || v is bool || v is String || v is Mirror)
-      return v;
-    return reflect(v);
   }
 
   /**
