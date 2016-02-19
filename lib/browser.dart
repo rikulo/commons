@@ -13,10 +13,10 @@ abstract class Browser {
     _rchrome = new RegExp(r"(chrome|crios)[ /]([\w.]+)"),
     _redge = new RegExp(r"(edge)/([\w.]+)"),
     _rmsie = new RegExp(r"(msie) ([\w.]+)"),
-    _rmozilla = new RegExp(r"(mozilla)(?:.*? rv:([\w.]+))?"),
+    _rfirefox = new RegExp(r"(firefox)/([\w.]+)"),
     _ropera = new RegExp(r"(opera)(?:.*version)?[ /]([\w.]+)"),
-    _rios = new RegExp(r"os[ /]([\w_]+) like mac os"),
-    _rmacos = new RegExp(r"mac os "),
+    _riOS = new RegExp(r"os[ /]([\w_]+) like mac os"),
+    _rmacOS = new RegExp(r"mac os "),
     _randroid = new RegExp(r"android[ /]([\w.]+)"),
     _rdart = new RegExp(r"[^a-z]dart[^a-z]");
 
@@ -32,7 +32,7 @@ abstract class Browser {
   /** Whether it is Edge. */
   bool edge = false;
   /** Whether it is Internet Explorer. */
-  bool msie = false;
+  bool ie = false;
   /** Whether it is Firefox. */
   bool firefox = false;
   /** Whether it is WebKit-based. */
@@ -41,11 +41,11 @@ abstract class Browser {
   bool opera = false;
 
   /** Whether it is running on iOS. */
-  bool ios = false;
+  bool iOS = false;
   /** Whether it is running on Android. */
   bool android = false;
   /** Whether it is running on MacOS. */
-  bool macos = false;
+  bool macOS = false;
 
   /** Whehter it is running on a mobile device.
    * By mobile we mean the browser takes the full screen and non-sizable.
@@ -64,7 +64,7 @@ abstract class Browser {
   double webkitVersion;
   /** The version of iOS if it is running on iOS, or null if not.
    */
-  double iosVersion;
+  double iOSVersion;
   /** The version of Android if it is running on Android, or null if not.
    */
   double androidVersion;
@@ -93,11 +93,11 @@ abstract class Browser {
     if ((m2 = _randroid.firstMatch(ua)) != null) {
       mobile = android = true;
       androidVersion = _versionOf(m2.group(1));
-    } else if ((m2 = _rios.firstMatch(ua)) != null) {
-      mobile = ios = true;
-      iosVersion = _versionOf(m2.group(1), '_');
+    } else if ((m2 = _riOS.firstMatch(ua)) != null) {
+      mobile = iOS = true;
+      iOSVersion = _versionOf(m2.group(1), '_');
     } else {
-      macos = _rmacos.hasMatch(ua);
+      macOS = _rmacOS.hasMatch(ua);
     }
     
     if (bm(_rwebkit)) {
@@ -106,21 +106,20 @@ abstract class Browser {
 
       if (bm(_redge)) {
         edge = true;
-      } else if (bm(_rchrome)) {
+      } else if (bm(_rchrome)) { //after edge
         chrome = true;
-      } else if (bm(_rsafari)) {
+      } else if (bm(_rsafari)) { //after chrome
         safari = true;
       }
     } else if (bm(_rmsie)) {
-      msie = true;
+      ie = true;
       mobile = ua.indexOf("iemobile") >= 0;
     } else if (bm(_ropera)) {
       opera = true;
-    } else if (ua.indexOf("compatible") < 0 && bm(_rmozilla)) {
-      name = "firefox"; //rename it
+    } else if (bm(_rfirefox)) { //after opera
       firefox = true;
     } else {
-      name = "unknown";
+      name = "";
       version = 1.0;
     }
 
