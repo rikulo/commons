@@ -76,9 +76,6 @@ abstract class Browser {
   ///Returns the user agent.
   String get userAgent;
 
-  String toString() {
-    return "$name(v$version)";
-  }
   void _initBrowserInfo() {
     final String ua = userAgent.toLowerCase();
     bool bm(RegExp regex) {
