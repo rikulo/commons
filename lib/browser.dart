@@ -10,12 +10,13 @@ abstract class Browser {
   // all RegExp shall be lower case here
   static final RegExp _rwebkit = new RegExp(r"(webkit)[ /]([\w.]+)"),
     _rsafari = new RegExp(r"(safari)[ /]([\w.]+)"),
-    _rchrome = new RegExp(r"(chrome)[ /]([\w.]+)"),
+    _rchrome = new RegExp(r"(chrome|crios)[ /]([\w.]+)"),
     _redge = new RegExp(r"(edge)/([\w.]+)"),
     _rmsie = new RegExp(r"(msie) ([\w.]+)"),
     _rmozilla = new RegExp(r"(mozilla)(?:.*? rv:([\w.]+))?"),
     _ropera = new RegExp(r"(opera)(?:.*version)?[ /]([\w.]+)"),
     _rios = new RegExp(r"os[ /]([\w_]+) like mac os"),
+    _rmacos = new RegExp(r"mac os "),
     _randroid = new RegExp(r"android[ /]([\w.]+)"),
     _rdart = new RegExp(r"[^a-z]dart[^a-z]");
 
@@ -43,6 +44,8 @@ abstract class Browser {
   bool ios = false;
   /** Whether it is running on Android. */
   bool android = false;
+  /** Whether it is running on MacOS. */
+  bool macos = false;
 
   /** Whehter it is running on a mobile device.
    * By mobile we mean the browser takes the full screen and non-sizable.
@@ -50,9 +53,6 @@ abstract class Browser {
    * it can be resized by the user.
    */
   bool mobile = false;
-  /** Whether it supports the touch gestures.
-   */
-  bool touch = false;
 
   /** Whether Dart is supported.
    */
@@ -94,11 +94,13 @@ abstract class Browser {
     // os detection
     Match m2;
     if ((m2 = _randroid.firstMatch(ua)) != null) {
-      touch = mobile = android = true;
+      mobile = android = true;
       androidVersion = _versionOf(m2.group(1));
     } else if ((m2 = _rios.firstMatch(ua)) != null) {
-      touch = mobile = ios = true;
+      mobile = ios = true;
       iosVersion = _versionOf(m2.group(1), '_');
+    } else {
+      macos = _rmacos.hasMatch(ua);
     }
     
     if (bm(_rwebkit)) {
@@ -114,7 +116,7 @@ abstract class Browser {
       }
     } else if (bm(_rmsie)) {
       msie = true;
-      touch = mobile = ua.indexOf("iemobile") >= 0;
+      mobile = ua.indexOf("iemobile") >= 0;
     } else if (bm(_ropera)) {
       opera = true;
     } else if (ua.indexOf("compatible") < 0 && bm(_rmozilla)) {
