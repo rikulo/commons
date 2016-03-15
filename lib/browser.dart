@@ -59,9 +59,13 @@ abstract class Browser {
   bool dart = false;
 
   /** The webkit's version if this is a webkit-based browser, or null
-   * if it is not webkit-based.
+   * if it is not webkit-based. Note: Safari, Chrome and Edge are all
+   * Webkit-based.
    */
   double webkitVersion;
+  /** The browser's version.
+   */
+  double browserVersion;
   /** The version of iOS if it is running on iOS, or null if not.
    */
   double iOSVersion;
@@ -79,10 +83,10 @@ abstract class Browser {
   void _initBrowserInfo() {
     final String ua = userAgent.toLowerCase();
     bool bm(RegExp regex) {
-      Match m = regex.firstMatch(ua);
+      final m = regex.firstMatch(ua);
       if (m != null) {
         name = m.group(1);
-        version = _versionOf(m.group(2));
+        version = parseVersion(m.group(2));
         return true;
       }
       return false;
@@ -92,10 +96,10 @@ abstract class Browser {
     Match m2;
     if ((m2 = _randroid.firstMatch(ua)) != null) {
       mobile = android = true;
-      androidVersion = _versionOf(m2.group(1));
+      androidVersion = parseVersion(m2.group(1));
     } else if ((m2 = _riOS.firstMatch(ua)) != null) {
       mobile = iOS = true;
-      iOSVersion = _versionOf(m2.group(1), '_');
+      iOSVersion = parseVersion(m2.group(1), '_');
     } else {
       macOS = _rmacOS.hasMatch(ua);
     }
@@ -106,18 +110,24 @@ abstract class Browser {
 
       if (bm(_redge)) {
         edge = true;
+        browserVersion = version;
       } else if (bm(_rchrome)) { //after edge
         chrome = true;
+        browserVersion = version;
       } else if (bm(_rsafari)) { //after chrome
         safari = true;
+        browserVersion = version;
       }
     } else if (bm(_rmsie)) {
       ie = true;
+      browserVersion = version;
       mobile = ua.indexOf("iemobile") >= 0;
     } else if (bm(_ropera)) {
       opera = true;
+      browserVersion = version;
     } else if (bm(_rfirefox)) { //after opera
       firefox = true;
+      browserVersion = version;
     } else {
       name = "";
       version = 1.0;
@@ -125,7 +135,10 @@ abstract class Browser {
 
     dart = _rdart.hasMatch(ua);
   }
-  static double _versionOf(String version, [String separator='.']) {
+
+  /** Parses the given [version] into a double.
+   */
+  static double parseVersion(String version, [String separator='.']) {
     try {
       int j = version.indexOf(separator);
       if (j >= 0) {
