@@ -118,9 +118,9 @@ abstract class Browser {
         safari = true;
         browserVersion = version;
       }
-    } else if (bm(_rmsie)) {
+    } else if (bm(_rmsie) || ua.indexOf('trident') >= 0) {
       ie = true;
-      browserVersion = version;
+      browserVersion = version ?? 11;
       mobile = ua.indexOf("iemobile") >= 0;
     } else if (bm(_ropera)) {
       opera = true;
