@@ -120,7 +120,7 @@ abstract class Browser {
       }
     } else if (bm(_rmsie) || ua.indexOf('trident') >= 0) {
       ie = true;
-      browserVersion = version ?? 11;
+      browserVersion = version ?? 11.0;
       mobile = ua.indexOf("iemobile") >= 0;
     } else if (bm(_ropera)) {
       opera = true;
