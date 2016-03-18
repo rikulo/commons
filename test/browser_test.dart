@@ -18,6 +18,14 @@ main() {
     isChrome(browser, version);
     expect(browser.dart, isTrue);
   }
+  void isEdge(Browser browser, num version) {
+    expect(browser.webkit, isTrue);
+    expect(browser.edge, isTrue);
+    expect(browser.chrome, isFalse);
+    expect(browser.firefox, isFalse);
+    expect(browser.name, "edge");
+    expect(browser.version, version);
+  }
   void isIE(Browser browser, num version) {
     expect(browser.ie, isTrue);
     expect(browser.webkit, isFalse);
@@ -77,6 +85,9 @@ main() {
   [isIE, 11.0],
 "Mozilla/5.0 (compatible; MSIE 10.6; Windows NT 6.1; Trident/5.0; InfoPath.2; SLCC1; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET CLR 2.0.50727) 3gpp-gba UNTRUSTED/1.0":
   [isIE, 10.6],
+
+"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246":
+  [isEdge, 12.246],
 
 "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1":
   [isFirefox, 40.1],
