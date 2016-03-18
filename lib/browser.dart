@@ -9,10 +9,11 @@ library rikulo_browser;
 abstract class Browser {
   // all RegExp shall be lower case here
   static final RegExp _rwebkit = new RegExp(r"(webkit)[ /]([\w.]+)"),
-    _rsafari = new RegExp(r"(safari)[ /]([\w.]+)"),
+    _rsafari = new RegExp(r"(version)/([\w.]+).*safari"),
     _rchrome = new RegExp(r"(chrome|crios)[ /]([\w.]+)"),
     _redge = new RegExp(r"(edge)/([\w.]+)"),
-    _rmsie = new RegExp(r"(msie) ([\w.]+)"),
+    _rie = new RegExp(r"(msie) ([\w.]+)"),
+    _rie2 = new RegExp(r"trident/.+(rv:)([\w.]+)"),
     _rfirefox = new RegExp(r"(firefox)/([\w.]+)"),
     _ropera = new RegExp(r"(opera)(?:.*version)?[ /]([\w.]+)"),
     _riOS = new RegExp(r"os[ /]([\w_]+) like mac os"),
@@ -63,9 +64,7 @@ abstract class Browser {
    * Webkit-based.
    */
   double webkitVersion;
-  /** The browser's version.
-   */
-  double browserVersion;
+
   /** The version of iOS if it is running on iOS, or null if not.
    */
   double iOSVersion;
@@ -110,24 +109,20 @@ abstract class Browser {
 
       if (bm(_redge)) {
         edge = true;
-        browserVersion = version;
       } else if (bm(_rchrome)) { //after edge
         chrome = true;
-        browserVersion = version;
       } else if (bm(_rsafari)) { //after chrome
         safari = true;
-        browserVersion = version;
+        name = "safari";
       }
-    } else if (bm(_rmsie) || ua.indexOf('trident') >= 0) {
+    } else if (bm(_rie) || bm(_rie2)) {
       ie = true;
-      browserVersion = version ?? 11.0;
+      name = "ie";
       mobile = ua.indexOf("iemobile") >= 0;
     } else if (bm(_ropera)) {
       opera = true;
-      browserVersion = version;
     } else if (bm(_rfirefox)) { //after opera
       firefox = true;
-      browserVersion = version;
     } else {
       name = "";
       version = 1.0;
