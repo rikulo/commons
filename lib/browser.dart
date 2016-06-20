@@ -23,7 +23,14 @@ abstract class Browser {
 
   /** The browser's name. */
   String name;
-  /** The browser's version. */
+  /** The browser's version.
+   * 
+   * Note: if the subversion is a single digit, it will be considered
+   * as one hundredth (not tenth).
+   * For example, version *12.1* will be parsed to a value as `12.01`
+   * (not `12.1`). Thus, [version] of *12.10* is larger than that of *12.2*
+   * as expected.
+   */
   double version;
 
   /** Whether it is Safari. */
@@ -137,9 +144,11 @@ abstract class Browser {
     try {
       int j = version.indexOf(separator);
       if (j >= 0) {
-        j = version.indexOf(separator, j + 1);
-        if (j >= 0)
-          version = version.substring(0, j);
+        final k = version.indexOf(separator, ++j);
+        if (k >= 0)
+          version = version.substring(0, k);
+        if (version.length == j + 1) //only one decimal, e.g., 12.3
+          version = version.substring(0, j) + "0" + version.substring(j);
         if (separator != '.')
           version = version.replaceAll(separator, '.');
       }

@@ -1,5 +1,9 @@
 #Rikulo Commons Changes
 
+##2.2.0
+
+* Browser.version considers, say, `12.1` as a double, `12.01`. Thus, `12.10` is larger than `12.1`.
+
 ##2.0.6
 
 * NullTreeSanitizer is removed. Please use NodeTreeSanitizer.trusted instead which was introduced in Dart 1.12.
