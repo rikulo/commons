@@ -1,5 +1,9 @@
 #Rikulo Commons Changes
 
+##2.2.1
+
+* flushDefers() introduced to flush all deferred tasks.
+
 ##2.2.0
 
 * Browser.version considers, say, `12.1` as a double, `12.01`. Thus, `12.10` is larger than `12.1`.

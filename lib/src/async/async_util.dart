@@ -30,12 +30,19 @@ part of rikulo_async;
 void defer(key, void task(), {Duration min: const Duration(seconds: 1), Duration max}) {
   _deferrer.run(key, task, min, max);
 }
+/** Force all deferred task (queued by [defer]) to execute
+ */
+void flushDefers() => _deferrer.flush();
+
+typedef void _Task();
+
 class _DeferInfo {
   Timer timer;
   Duration max;
   final DateTime _startedAt;
+  _Task task;
 
-  _DeferInfo(this.timer, this.max): _startedAt = new DateTime.now();
+  _DeferInfo(this.timer, this.max, this.task): _startedAt = new DateTime.now();
 
   bool isAfterMax()
   => max != null && _startedAt.add(max).isBefore(new DateTime.now());
@@ -46,7 +53,7 @@ class _Deferrer {
   void run(key, void task(), Duration min, Duration max) {
     final _DeferInfo di = _defers[key];
     if (di == null) {
-      _defers[key] = new _DeferInfo(_startTimer(key, task, min), max);
+      _defers[key] = new _DeferInfo(_startTimer(key, min), max, task);
       return;
     }
 
@@ -57,14 +64,22 @@ class _Deferrer {
       _defers.remove(key);
       scheduleMicrotask(task);
     } else {
-      di.timer = _startTimer(key, task, min);
+      di..task = task
+        ..timer = _startTimer(key, min);
     }
   }
 
-  Timer _startTimer(key, void task(), Duration min)
-  =>  new Timer(min, () {
-    _defers.remove(key);
-    task();
-  });
+  void flush() {
+    for (final key in new List.from(_defers.keys)) {
+      final di = _defers.remove(key);
+      if (di != null) {
+        di.timer.cancel();
+        di.task();
+      }
+    }
+  }
+
+  Timer _startTimer(key, Duration min)
+  => new Timer(min, () => (_defers.remove(key))?.task());
 }
 final _Deferrer _deferrer = new _Deferrer();
