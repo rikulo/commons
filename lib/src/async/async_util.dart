@@ -38,13 +38,12 @@ typedef void _Task();
 
 class _DeferInfo {
   Timer timer;
-  Duration max;
   final DateTime _startedAt;
   _Task task;
 
-  _DeferInfo(this.timer, this.max, this.task): _startedAt = new DateTime.now();
+  _DeferInfo(this.timer, this.task): _startedAt = new DateTime.now();
 
-  bool isAfterMax()
+  bool isAfter(Duration max)
   => max != null && _startedAt.add(max).isBefore(new DateTime.now());
 }
 class _Deferrer {
@@ -53,14 +52,13 @@ class _Deferrer {
   void run(key, void task(), Duration min, Duration max) {
     final _DeferInfo di = _defers[key];
     if (di == null) {
-      _defers[key] = new _DeferInfo(_startTimer(key, min), max, task);
+      _defers[key] = new _DeferInfo(_startTimer(key, min), task);
       return;
     }
 
     di.timer.cancel();
-    di.max = max;
 
-    if (di.isAfterMax()) {
+    if (di.isAfter(max)) {
       _defers.remove(key);
       scheduleMicrotask(task);
     } else {
