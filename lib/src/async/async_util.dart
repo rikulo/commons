@@ -19,6 +19,7 @@ part of rikulo_async;
  *
  * * [key] - used to identify [task]. If [key] is the same, we consider
  * the task is the same. If different, they are handled separately.
+ * * [task] - the task. It can return `void`, `null` or an instance of [Future]
  * * [min] - specifies the minimal duration that the
  * given task will be executed. In short, the task will be invoked
  * [min] milliseconds later if no following invocation with the same key.
@@ -27,14 +28,17 @@ part of rikulo_async;
  * will be execute at least [max] milliseconds later even if there are
  * following invocations with the same key.
  */
-void defer(key, void task(), {Duration min: const Duration(seconds: 1), Duration max}) {
+void defer(key, task(), {Duration min: const Duration(seconds: 1), Duration max}) {
   _deferrer.run(key, task, min, max);
 }
-/** Force all deferred task (queued by [defer]) to execute
- */
-void flushDefers() => _deferrer.flush();
 
-typedef void _Task();
+/** Force all deferred task (queued by [defer]) to execute.
+ * If the task given in [defer] returns an instance of Future, this method
+ * will wait until it completes.
+ */
+Future flushDefers() => _deferrer.flush();
+
+typedef _Task();
 
 class _DeferInfo {
   Timer timer;
@@ -46,10 +50,11 @@ class _DeferInfo {
   bool isAfter(Duration max)
   => max != null && _startedAt.add(max).isBefore(new DateTime.now());
 }
+
 class _Deferrer {
   final Map<dynamic, _DeferInfo> _defers = new HashMap();
 
-  void run(key, void task(), Duration min, Duration max) {
+  void run(key, task(), Duration min, Duration max) {
     final _DeferInfo di = _defers[key];
     if (di == null) {
       _defers[key] = new _DeferInfo(_startTimer(key, min), task);
@@ -67,12 +72,12 @@ class _Deferrer {
     }
   }
 
-  void flush() {
+  Future flush() async {
     for (final key in new List.from(_defers.keys)) {
       final di = _defers.remove(key);
       if (di != null) {
         di.timer.cancel();
-        di.task();
+        await di.task();
       }
     }
   }
