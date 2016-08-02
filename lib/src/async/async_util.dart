@@ -35,8 +35,12 @@ void defer(key, task(), {Duration min: const Duration(seconds: 1), Duration max}
 /** Force all deferred task (queued by [defer]) to execute.
  * If the task given in [defer] returns an instance of Future, this method
  * will wait until it completes.
+ * 
+ * * [onError] - used to process the error thrown by a deferred task.
+ * If not specified, the exception won't be caught and will terminate
+ * this method.
  */
-Future flushDefers() => _deferrer.flush();
+Future flushDefers([void onError(ex, st)]) => _deferrer.flush(onError);
 
 typedef _Task();
 
@@ -72,14 +76,21 @@ class _Deferrer {
     }
   }
 
-  Future flush() async {
-    for (final key in new List.from(_defers.keys)) {
-      final di = _defers.remove(key);
-      if (di != null) {
-        di.timer.cancel();
-        await di.task();
-      }
+  Future flush(void onError(ex, st)) async {
+    final List<_Task> tasks = [];
+    for (final di in _defers.values) {
+      di.timer.cancel();
+      tasks.add(di.task);
     }
+    _defers.clear();
+
+    for (final task in tasks)
+      try {
+        await task();
+      } catch (ex, st) {
+        if (onError != null) onError(ex, st);
+        else rethrow;
+      }
   }
 
   Timer _startTimer(key, Duration min)
