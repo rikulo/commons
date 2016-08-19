@@ -76,7 +76,7 @@ class _Deferrer {
     }
   }
 
-  Future flush(void onError(ex, st)) async {
+  Future flush(void onError(ex, st)) {
     final List<_Task> tasks = [];
     for (final di in _defers.values) {
       di.timer.cancel();
@@ -84,13 +84,18 @@ class _Deferrer {
     }
     _defers.clear();
 
+    final List<Future> ops = [];
     for (final task in tasks)
       try {
-        await task();
+        final op = task();
+        if (op is Future) ops.add(op);
       } catch (ex, st) {
         if (onError != null) onError(ex, st);
         else rethrow;
       }
+
+    return Future.wait(ops);
+      //Let them run in parallel to avoid one blocks the other
   }
 
   Timer _startTimer(key, Duration min)
