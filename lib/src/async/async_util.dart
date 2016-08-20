@@ -36,11 +36,14 @@ void defer(key, task(), {Duration min: const Duration(seconds: 1), Duration max}
  * If the task given in [defer] returns an instance of Future, this method
  * will wait until it completes.
  * 
- * * [onError] - used to process the error thrown by a deferred task.
+ * * [onAction] - (optional) If specified, it is called when
+ * an action starts or finishes (end=true).
+ * * [onError] - (optional) used to process the error thrown by a deferred task.
  * If not specified, the exception won't be caught and will terminate
  * this method.
  */
-Future flushDefers([void onError(ex, st)]) => _deferrer.flush(onError);
+Future flushDefers({void onAction(key, bool end),
+    void onError(ex, st)}) => _deferrer.flush(onAction, onError);
 
 typedef _Task();
 
@@ -56,7 +59,7 @@ class _DeferInfo {
 }
 
 class _Deferrer {
-  final Map<dynamic, _DeferInfo> _defers = new HashMap();
+  Map<dynamic, _DeferInfo> _defers = new HashMap();
 
   void run(key, task(), Duration min, Duration max) {
     final _DeferInfo di = _defers[key];
@@ -76,23 +79,34 @@ class _Deferrer {
     }
   }
 
-  Future flush(void onError(ex, st)) {
-    final List<_Task> tasks = [];
-    for (final di in _defers.values) {
-      di.timer.cancel();
-      tasks.add(di.task);
-    }
-    _defers.clear();
-
+  Future flush(void onAction(key, bool end), void onError(ex, st)) {
     final List<Future> ops = [];
-    for (final task in tasks)
+    final defers = _defers;
+    _defers = new HashMap();
+
+    for (final key in defers.keys) {
       try {
-        final op = task();
-        if (op is Future) ops.add(op);
+        final di = defers[key];
+        di.timer.cancel();
+
+        onAction?.call(key, false);
+ 
+        var op = di.task();
+ 
+        if (op is Future) {
+          if (onAction != null)
+            op = op.then((_) => onAction(key, true));
+          if (onError != null)
+            op = op.catchError(onError);
+          ops.add(op);
+        } else {
+          onAction?.call(key, true);
+        }
       } catch (ex, st) {
         if (onError != null) onError(ex, st);
         else rethrow;
       }
+    }
 
     return Future.wait(ops);
       //Let them run in parallel to avoid one blocks the other

@@ -1,5 +1,9 @@
 #Rikulo Commons Changes
 
+##2.3.0
+
+* The signature of flushDefers() was changed.
+
 ##2.2.1
 
 * flushDefers() introduced to flush all deferred tasks.
