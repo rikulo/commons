@@ -49,13 +49,19 @@ typedef _Task();
 
 class _DeferInfo {
   Timer timer;
-  final DateTime _startedAt;
+  final DateTime _startAt;
   _Task task;
 
-  _DeferInfo(this.timer, this.task): _startedAt = new DateTime.now();
+  _DeferInfo(this.timer, this.task): _startAt = new DateTime.now();
 
-  bool isAfter(Duration max)
-  => max != null && _startedAt.add(max).isBefore(new DateTime.now());
+  Duration getDelay(Duration min, Duration max) {
+    if (max != null) {
+      final remaining = max - new DateTime.now().difference(_startAt);
+      if (remaining < min)
+        return remaining > Duration.ZERO ? remaining: Duration.ZERO;
+    }
+    return min;
+  }
 }
 
 class _Deferrer {
@@ -68,15 +74,9 @@ class _Deferrer {
       return;
     }
 
-    di.timer.cancel();
-
-    if (di.isAfter(max)) {
-      _defers.remove(key);
-      scheduleMicrotask(task);
-    } else {
-      di..task = task
-        ..timer = _startTimer(key, min);
-    }
+    di..timer.cancel()
+      ..task = task
+      ..timer = _startTimer(key, di.getDelay(min, max));
   }
 
   Future flush(void onAction(key, bool end), void onError(ex, st)) {
