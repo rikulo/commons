@@ -58,7 +58,7 @@ class _DeferInfo {
     if (max != null) {
       final remaining = max - new DateTime.now().difference(_startAt);
       if (remaining < min)
-        return remaining > Duration.ZERO ? remaining: Duration.ZERO;
+        return remaining > Duration.ZERO ? remaining: null;
     }
     return min;
   }
@@ -74,9 +74,17 @@ class _Deferrer {
       return;
     }
 
-    di..timer.cancel()
-      ..task = task
-      ..timer = _startTimer(key, di.getDelay(min, max));
+    di.timer.cancel();
+
+    final delay = di.getDelay(min, max);
+    if (delay != null) {
+      di..task = task
+        ..timer = _startTimer(key, delay);
+    } else {
+      //force to run (even in a very busy environment)
+      _defers.remove(key);
+      Timer.run(task);
+    }
   }
 
   Future flush(void onAction(key, bool end), void onError(ex, st)) {
