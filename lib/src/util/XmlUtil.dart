@@ -63,12 +63,13 @@ class XmlUtil {
       space ? _encMapperS: _encMapper);
   }
 
-  static final RegExp _reDecode = new RegExp(r"&([0-9a-z]*);");
+  static final RegExp _reDecode = new RegExp(r"&([a-z]+|#x?[0-9a-f]+);",
+    caseSensitive: false);
   static const Map<String, String>
-    _decs = const {'lt': '<', 'gt': '>', 'amp': '&'};
+    _decs = const {'lt': '<', 'gt': '>', 'amp': '&', 'quot': '"', 'nbsp': ' '};
 
   static String _decMapper(Match m) {
-    final String key = m.group(1);
+    final String key = m.group(1).toLowerCase();
     final String mapped = _decs[key];
     if (mapped != null)
       return mapped;

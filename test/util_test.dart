@@ -32,10 +32,15 @@ void main() {
       "&lt;abc<br/>\nanother line");
     expect(XmlUtil.encode("<abc> </abc>\ta", pre: true),
       "&lt;abc&gt;&nbsp;&lt;/abc&gt;&nbsp;&nbsp;&nbsp;&nbsp;a");
-    expect(XmlUtil.decode("&lt;abc&gt; and &amp;"), '<abc> and &');
+    expect(XmlUtil.decode("&lt;abc&GT; and &amp;"), '<abc> and &');
 
     expect(XmlUtil.encode("<abc de  f   \ng", space: true), "&lt;abc de&nbsp; f&nbsp;&nbsp; \ng");
     expect(XmlUtil.encode("<abc de  f   \ngg", space: true, multiLine: true),
       "&lt;abc de&nbsp; f&nbsp;&nbsp; <br/>\ngg");
+
+    final text = '<img src="foo"/>  <br/>';
+    expect(XmlUtil.decode(XmlUtil.encode(text, space: true)), text);
+
+    expect(XmlUtil.decode('&#39;&#34;&#x3C;'), '\'"<');
   });
 }
