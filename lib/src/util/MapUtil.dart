@@ -24,11 +24,11 @@ class MapUtil {
    * since it is just a proxy to the real map.
    * Refer to Rikulo UI's `View.dataset` for a sample implementation.
    */
-  static Map auto(Map creator()) => new _OnDemandMap(creator);
+  static Map<K, V> auto<K, V>(Map<K, V> creator()) => new _OnDemandMap(creator);
 
   /** Copies the given map ([source]) to the destination ([dest]).
    */
-  static Map copy(Map source, Map dest, [bool filter(key, value)]) {
+  static Map<K, V> copy<K, V>(Map<K, V> source, Map<K, V> dest, [bool filter(K key, V value)]) {
     for (final key in source.keys) {
       final value = source[key];
       if (filter != null || filter(key, value))
@@ -118,7 +118,7 @@ class MapWrapper<K, V> implements Map<K,V> {
   MapWrapper(Map<K, V> this.origin);
 
   @override
-  V  operator[](K key) => origin[key];
+  V  operator[](Object key) => origin[key];
   @override
   void operator[]=(K key, V value) {
     origin[key] = value;
@@ -132,11 +132,11 @@ class MapWrapper<K, V> implements Map<K,V> {
     origin.clear();
   }
   @override
-  bool containsKey(K key) => origin.containsKey(key);
+  bool containsKey(Object key) => origin.containsKey(key);
   @override
-  bool containsValue(V value) => origin.containsValue(value);
+  bool containsValue(Object value) => origin.containsValue(value);
   @override
-  void forEach(void f(key, value)) {
+  void forEach(void f(K key, V value)) {
     origin.forEach(f);
   }
   @override
@@ -152,7 +152,7 @@ class MapWrapper<K, V> implements Map<K,V> {
   @override
   V putIfAbsent(K key, V ifAbsent()) => origin.putIfAbsent(key, ifAbsent);
   @override
-  V remove(K key) => origin.remove(key);
+  V remove(Object key) => origin.remove(key);
   @override
   String toString() => origin.toString();
   @override
@@ -161,15 +161,15 @@ class MapWrapper<K, V> implements Map<K,V> {
 }
 
 class _OnDemandMap<K, V> implements Map<K,V> {
-  final AsMap _creator;
+  final AsMap<K, V> _creator;
   Map<K, V> _map;
 
-  _OnDemandMap(AsMap this._creator);
+  _OnDemandMap(AsMap<K, V> this._creator);
 
   Map _init() => _map != null ? _map: (_map = _creator());
 
   @override
-  V  operator[](K key) => _map != null ? _map[key]: null;
+  V  operator[](Object key) => _map != null ? _map[key]: null;
   @override
   void operator[]=(K key, V value) {
     _init()[key] = value;
@@ -183,17 +183,17 @@ class _OnDemandMap<K, V> implements Map<K,V> {
     if (_map != null) _map.clear();
   }
   @override
-  bool containsKey(K key) => _map != null && _map.containsKey(key);
+  bool containsKey(Object key) => _map != null && _map.containsKey(key);
   @override
-  bool containsValue(V value) => _map != null && _map.containsValue(value);
+  bool containsValue(Object value) => _map != null && _map.containsValue(value);
   @override
-  void forEach(void f(key, value)) {
+  void forEach(void f(K key, V value)) {
     if (_map != null) _map.forEach(f);
   }
   @override
-  Iterable<K> get keys => _map != null ? _map.keys: EMPTY_LIST;
+  Iterable<K> get keys => _map != null ? _map.keys: EMPTY_LIST as List<K>;
   @override
-  Iterable<V> get values => _map != null ? _map.values: EMPTY_LIST;
+  Iterable<V> get values => _map != null ? _map.values: EMPTY_LIST as List<V>;
   @override
   bool get isEmpty => _map == null || _map.isEmpty;
   @override
@@ -203,7 +203,7 @@ class _OnDemandMap<K, V> implements Map<K,V> {
   @override
   V putIfAbsent(K key, V ifAbsent()) => _init().putIfAbsent(key, ifAbsent);
   @override
-  V remove(K key) => _map != null ? _map.remove(key): null;
+  V remove(Object key) => _map != null ? _map.remove(key): null;
   @override
   String toString() => (_map != null ? _map: EMPTY_MAP).toString();
 }

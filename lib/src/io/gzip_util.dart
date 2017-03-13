@@ -6,7 +6,7 @@ part of rikulo_io;
 /** Deflates a list of bytes with GZIP.
  */
 List<int> gzip(List<int> bytes, {int level: 6}) {
-  final output = [];
+  final output = <int>[];
   var error;
   var controller = new StreamController(sync: true);
   controller.stream
@@ -27,7 +27,7 @@ List<int> gzipString(String string, {Encoding encoding: UTF8, int level: 6})
 /** Inflates a GZIP-ed list of bytes back to the original list of bytes.
  */
 List<int> ungzip(List<int> bytes) {
-  final output = [];
+  final output = <int>[];
   var error;
   var controller = new StreamController(sync: true);
   controller.stream

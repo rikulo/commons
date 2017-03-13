@@ -28,7 +28,7 @@ typedef bool AsBool();
 
 /** A function that returns a map.
  */
-typedef Map AsMap();
+typedef Map<K, V> AsMap<K, V>();
 /** A function that returns a list.
  */
-typedef List AsList();
+typedef List<T> AsList<T>();

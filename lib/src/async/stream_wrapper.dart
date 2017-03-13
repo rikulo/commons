@@ -18,35 +18,35 @@ class StreamWrapper<T> implements Stream<T> {
     => origin.asBroadcastStream(onListen: onListen, onCancel: onCancel);
   @override
   StreamSubscription<T> listen(void onData(T event),
-  { void onError(error), void onDone(), bool cancelOnError})
+  { Function onError, void onDone(), bool cancelOnError})
   => origin.listen(onData, onError: onError, onDone: onDone, cancelOnError: cancelOnError);
   @override
   Stream<T> where(bool test(T event)) => origin.where(test); 
   @override
-  Stream map(convert(T event)) => origin.map(convert);
+  Stream<S> map<S>(S convert(T event)) => origin.map(convert);
   @override
-  Stream asyncMap(convert(T event))
+  Stream<E> asyncMap<E>(convert(T event))
   => origin.asyncMap(convert);
   @override
-  Stream asyncExpand(Stream convert(T event))
+  Stream<E> asyncExpand<E>(Stream<E> convert(T event))
   => origin.asyncExpand(convert);
   @override
-  Stream<T> handleError(void handle(error), { bool test(error) })
+  Stream<T> handleError(Function handle, { bool test(error) })
   => origin.handleError(handle, test: test);
   @override
-  Stream expand(Iterable convert(T value)) => origin.expand(convert);
+  Stream<S> expand<S>(Iterable<S> convert(T value)) => origin.expand(convert);
   @override
   Future pipe(StreamConsumer<T> streamConsumer) => origin.pipe(streamConsumer);
   @override
-  Stream transform(StreamTransformer<T, dynamic> streamTransformer)
+  Stream<S> transform<S>(StreamTransformer<T, S> streamTransformer)
   => origin.transform(streamTransformer);
   @override
-  Future reduce(T combine(T previous, T element)) => origin.reduce(combine);
+  Future<T> reduce(T combine(T previous, T element)) => origin.reduce(combine);
   @override
-  Future fold(var initialValue, combine(var previous, T element))
+  Future<S> fold<S>(S initialValue, S combine(S previous, T element))
   => origin.fold(initialValue, combine);
   @override
-  Future<bool> contains(T match) => origin.contains(match);
+  Future<bool> contains(Object match) => origin.contains(match);
   @override
   Future forEach(void action(T element)) => origin.forEach(action);
   @override
@@ -62,7 +62,7 @@ class StreamWrapper<T> implements Stream<T> {
   @override
   Future<Set<T>> toSet() => origin.toSet();
   @override
-  Future drain([var futureValue]) => origin.drain(futureValue);
+  Future<E> drain<E>([E futureValue]) => origin.drain(futureValue);
   @override
   Stream<T> take(int count) => origin.take(count);
   @override
@@ -80,10 +80,10 @@ class StreamWrapper<T> implements Stream<T> {
   @override
   Future<T> get single => origin.single;
   @override
-  Future<T> firstWhere(bool test(T value), {T defaultValue()})
+  Future<dynamic> firstWhere(bool test(T value), {Object defaultValue()})
   => origin.firstWhere(test, defaultValue: defaultValue);
   @override
-  Future<T> lastWhere(bool test(T value), {T defaultValue()})
+  Future<dynamic> lastWhere(bool test(T value), {Object defaultValue()})
   => origin.lastWhere(test, defaultValue: defaultValue);
   @override
   Future<T> singleWhere(bool test(T value))
@@ -93,7 +93,7 @@ class StreamWrapper<T> implements Stream<T> {
   @override
   Future<String> join([String separator = ""]) => origin.join(separator);
   @override
-  Stream timeout(Duration timeLimit, {void onTimeout(EventSink sink)})
+  Stream<T> timeout(Duration timeLimit, {void onTimeout(EventSink<T> sink)})
   => origin.timeout(timeLimit, onTimeout: onTimeout);
 }
 

@@ -72,7 +72,7 @@ class _Stream<T> extends Stream<T> {
   _Stream(this._target, this._type);
 
   StreamSubscription<T> listen(void onData(T event),
-      {void onError(error), void onDone(), bool cancelOnError})
+      {Function onError, void onDone(), bool cancelOnError})
     => new _StreamSubscription<T>(this._target, this._type, onData);
 }
 
@@ -84,7 +84,7 @@ class _CapturableStream<T> extends Stream<T> {
   _CapturableStream(this._target, this._type, this._useCapture);
 
   StreamSubscription<T> listen(void onData(T event),
-      {void onError(error), void onDone(), bool cancelOnError})
+      {Function onError, void onDone(), bool cancelOnError})
     => new _CapturableStreamSubscription<T>(
       this._target, this._type, onData, this._useCapture);
 }
@@ -122,7 +122,7 @@ abstract class _StreamSubscriptionBase<T> extends StreamSubscription<T> {
 
   /// Has no effect.
   @override
-  void onError(void handleError(error)) {}
+  void onError(Function handleError) {}
 
   /// Has no effect.
   @override
@@ -160,10 +160,9 @@ abstract class _StreamSubscriptionBase<T> extends StreamSubscription<T> {
   }
 
   @override
-  Future asFuture([var futureValue]) {
+  Future<E> asFuture<E>([E futureValue]) {
     // We just need a future that will never succeed or fail.
-    Completer completer = new Completer();
-    return completer.future;
+    return new Completer<E>().future;
   }
 
   //deriving to override//

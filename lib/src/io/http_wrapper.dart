@@ -76,6 +76,7 @@ class HttpResponseWrapper extends IOSinkWrapper implements HttpResponse {
   void set persistentConnection(bool persistentConnection) {
     origin.persistentConnection = persistentConnection;
   }
+
   @override
   Duration get deadline => origin.deadline;
   @override
@@ -130,7 +131,7 @@ abstract class AbstractBufferedResponse extends HttpResponseWrapper {
 
   @override
   Future<HttpResponse> addStream(Stream<List<int>> stream) {
-    final completer = new Completer();
+    final completer = new Completer<HttpResponse>();
     stream.listen((data) {add(data);})
       ..onDone(() {
         completer.complete(this);
@@ -213,7 +214,7 @@ class BufferedResponse extends AbstractBufferedResponse {
 /**
  * The HTTP headers wrapper.
  */
-class HttpHeadersWrapper extends HttpHeaders {
+class HttpHeadersWrapper implements HttpHeaders {
   ///The original HTTP headers
   final HttpHeaders origin;
 
@@ -286,5 +287,23 @@ class HttpHeadersWrapper extends HttpHeaders {
   @override
   void clear() {
     origin.clear();
+  }
+  @override
+  bool get chunkedTransferEncoding => origin.chunkedTransferEncoding;
+  @override
+  void set chunkedTransferEncoding(bool value) {
+    origin.chunkedTransferEncoding = value;
+  }
+  @override
+  int get contentLength => origin.contentLength;
+  @override
+  void set contentLength(int contentLength) {
+    origin.contentLength = contentLength;
+  }
+  @override
+  bool get persistentConnection => origin.persistentConnection;
+  @override
+  void set persistentConnection(bool value) {
+    origin.persistentConnection = value;
   }
 }
