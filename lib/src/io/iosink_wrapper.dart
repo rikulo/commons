@@ -9,11 +9,9 @@ part of rikulo_io;
  * override [write] to write some other place, you have to override all
  * `add` and `write` methods (such as [writeln] and so on)
  */
-class IOSinkWrapper extends StreamConsumerWrapper<List<int>> implements IOSink {
-  IOSinkWrapper(IOSink origin) : super(origin);
-
-  ///The original IO sink
-  IOSink get origin => super.origin as IOSink;
+class IOSinkWrapper<Origin extends IOSink>
+extends StreamConsumerWrapper<List<int>, Origin> implements IOSink {
+  IOSinkWrapper(Origin origin) : super(origin);
 
   //IOSink//
   @override

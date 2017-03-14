@@ -4,9 +4,9 @@
 part of rikulo_async;
 
 ///A Stream wrapper
-class StreamWrapper<T> implements Stream<T> {
+class StreamWrapper<T, Origin extends Stream<T>> implements Stream<T> {
   ///The origin stream
-  final Stream<T> origin;
+  final Origin origin;
   StreamWrapper(this.origin);
 
   @override
@@ -98,9 +98,10 @@ class StreamWrapper<T> implements Stream<T> {
 }
 
 ///The StreamConsumer wrapper
-class StreamConsumerWrapper<S> implements StreamConsumer<S> {
+class StreamConsumerWrapper<S, Origin extends StreamConsumer<S>>
+implements StreamConsumer<S> {
   ///The original stream consumer
-  final StreamConsumer<S> origin;
+  final Origin origin;
 
   StreamConsumerWrapper(this.origin);
 

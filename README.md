@@ -6,7 +6,7 @@
 * [Home](http://rikulo.org)
 * [Repository](https://github.com/rikulo/commons)
 * [Documentation](http://docs.rikulo.org)
-* [API Reference](http://www.dartdocs.org/documentation/rikulo_commons/2.3.3)
+* [API Reference](http://www.dartdocs.org/documentation/rikulo_commons/2.3.4)
 * [Discussion](http://stackoverflow.com/questions/tagged/rikulo)
 * [Issues](https://github.com/rikulo/commons/issues)
 
