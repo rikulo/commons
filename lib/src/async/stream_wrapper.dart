@@ -4,10 +4,12 @@
 part of rikulo_async;
 
 ///A Stream wrapper
-class StreamWrapper<T, Origin extends Stream<T>> implements Stream<T> {
+class StreamWrapper<T> implements Stream<T> {
+  StreamWrapper(Stream<T> origin): _origin = origin;
+
   ///The origin stream
-  final Origin origin;
-  StreamWrapper(this.origin);
+  Stream<T> get origin => _origin;
+  final Stream<T> _origin;
 
   @override
   bool get isBroadcast => origin.isBroadcast;
@@ -98,12 +100,12 @@ class StreamWrapper<T, Origin extends Stream<T>> implements Stream<T> {
 }
 
 ///The StreamConsumer wrapper
-class StreamConsumerWrapper<S, Origin extends StreamConsumer<S>>
-implements StreamConsumer<S> {
-  ///The original stream consumer
-  final Origin origin;
+class StreamConsumerWrapper<S> implements StreamConsumer<S> {
+  StreamConsumerWrapper(StreamConsumer<S> origin): _origin = origin;
 
-  StreamConsumerWrapper(this.origin);
+  ///The original stream consumer
+  StreamConsumer<S> get origin => _origin;
+  final StreamConsumer<S> _origin;
 
   @override
   Future addStream(Stream<S> stream) => origin.addStream(stream);

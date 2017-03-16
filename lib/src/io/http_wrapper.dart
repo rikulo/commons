@@ -6,8 +6,10 @@ part of rikulo_io;
 /**
  * The HTTP request wrapper.
  */
-class HttpRequestWrapper extends StreamWrapper<List<int>, HttpRequest> implements HttpRequest {
+class HttpRequestWrapper extends StreamWrapper<List<int>> implements HttpRequest {
   HttpRequestWrapper(HttpRequest origin): super(origin);
+
+  HttpRequest get origin => super.origin;
 
   @override
   int get contentLength => origin.contentLength;
@@ -40,8 +42,10 @@ class HttpRequestWrapper extends StreamWrapper<List<int>, HttpRequest> implement
 /**
  * The HTTP response wrapper.
  */
-class HttpResponseWrapper extends IOSinkWrapper<HttpResponse> implements HttpResponse {
+class HttpResponseWrapper extends IOSinkWrapper implements HttpResponse {
   HttpResponseWrapper(HttpResponse origin): super(origin);
+
+  HttpResponse get origin => super.origin;
 
   @override
   int get contentLength => origin.contentLength;
