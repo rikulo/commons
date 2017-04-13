@@ -114,29 +114,26 @@ abstract class AbstractBufferedResponse extends HttpResponseWrapper {
   AbstractBufferedResponse(HttpResponse origin): super(origin);
 
   @override
-  Future flush() => new Future.value(this);
+  Future flush() => new Future.value();
   @override
   Future close() {
-    _closer.complete(this);
+    _closer.complete();
     return done;
   }
   @override
-  Future<HttpResponse> get done => _closer.future.then((_) => this);
+  Future get done => _closer.future;
 
   //Used for implementing [close] and [done]//
-  Completer get _closer => _$closer != null ? _$closer: (_$closer = new Completer());
+  Completer get _closer
+  => _$closer != null ? _$closer: (_$closer = new Completer());
   Completer _$closer;
 
   @override
-  Future<HttpResponse> addStream(Stream<List<int>> stream) {
-    final completer = new Completer<HttpResponse>();
-    stream.listen((data) {add(data);})
-      ..onDone(() {
-        completer.complete(this);
-      })
-      ..onError((err) {
-        completer.completeError(err);
-      });
+  Future addStream(Stream<List<int>> stream) {
+    final completer = new Completer();
+    stream.listen(add)
+      ..onDone(completer.complete)
+      ..onError(completer.completeError);
     return completer.future;
   }
   @override

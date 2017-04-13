@@ -6,7 +6,7 @@ library rikulo_io;
 
 import "dart:io";
 import "dart:async";
-import "dart:collection" show HashMap, LinkedHashMap;
+import "dart:collection" show HashMap;
 import "dart:convert";
 
 import "package:mime/mime.dart" show lookupMimeType;

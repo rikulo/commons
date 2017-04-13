@@ -39,7 +39,7 @@ class IOSinkWrapper extends StreamConsumerWrapper<List<int>> implements IOSink {
   @override
   Future close() => origin.close();
   @override
-  Future get done => origin.done.then((_) => this);
+  Future get done => origin.done;
 
   //StringSink//
   @override

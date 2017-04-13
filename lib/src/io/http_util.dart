@@ -17,9 +17,8 @@ class HttpUtil {
    *       request, new Map.from(request.queryParameters));
    */
   static Future<Map<String, String>> decodePostedParameters(
-      Stream<List<int>> request, [Map<String, String> parameters])
-  => readAsString(request)
-      .then((String data) => decodeQuery(data, parameters));
+      Stream<List<int>> request, [Map<String, String> parameters]) async
+  => decodeQuery(await readAsString(request), parameters);
 
   /** Decodes the query string into a map of name-value pairs (aka., parameters).
    *
@@ -30,7 +29,7 @@ class HttpUtil {
   static Map<String, String> decodeQuery(
       String queryString, [Map<String, String> parameters]) {
     if (parameters == null)
-      parameters = new LinkedHashMap();
+      parameters = <String, String>{};
 
     int i = 0, len = queryString.length;
     while (i < len) {

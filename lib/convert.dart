@@ -21,5 +21,5 @@ Future<String> readAsString(Stream<List<int>> stream,
  * and then convert to an object.
  */
 Future<dynamic> readAsJson(Stream<List<int>> stream,
-    {Encoding encoding: UTF8})
-=> readAsString(stream, encoding: encoding).then((String data) => JSON.decode(data));
+    {Encoding encoding: UTF8}) async
+=> JSON.decode(await readAsString(stream, encoding: encoding));
