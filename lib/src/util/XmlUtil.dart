@@ -66,7 +66,8 @@ class XmlUtil {
   static final RegExp _reDecode = new RegExp(r"&([a-z]+|#x?[0-9a-f]+);",
     caseSensitive: false);
   static const Map<String, String>
-    _decs = const {'lt': '<', 'gt': '>', 'amp': '&', 'quot': '"', 'nbsp': ' '};
+    _decs = const <String, String> {
+      'lt': '<', 'gt': '>', 'amp': '&', 'quot': '"', 'nbsp': ' '};
 
   static String _decMapper(Match m) {
     final String key = m.group(1).toLowerCase();
