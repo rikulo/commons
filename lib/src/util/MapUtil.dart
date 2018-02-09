@@ -153,6 +153,27 @@ class MapWrapper<K, V> implements Map<K,V> {
   V putIfAbsent(K key, V ifAbsent()) => origin.putIfAbsent(key, ifAbsent);
   @override
   V remove(Object key) => origin.remove(key);
+
+  @override
+  void addEntries(Iterable<MapEntry<K, V>> newEntries)
+  => origin.addEntries(newEntries);
+  @override
+  Map<K2, V2> map<K2, V2>(MapEntry<K2, V2> f(K key, V value)) => origin.map(f);
+  @override
+  Map<RK, RV> cast<RK, RV>() => origin.cast();
+  @override
+  void removeWhere(bool predicate(K key, V value))
+  => origin.removeWhere(predicate);
+  @override
+  Map<RK, RV> retype<RK, RV>() => origin.retype();
+  @override
+  V update(K key, V update(V value), {V ifAbsent()})
+  => origin.update(key, update, ifAbsent: ifAbsent);
+  @override
+  void updateAll(V update(K key, V value)) => origin.updateAll(update);
+  @override
+  Iterable<MapEntry<K, V>> get entries => origin.entries;
+
   @override
   String toString() => origin.toString();
   @override
@@ -166,7 +187,7 @@ class _OnDemandMap<K, V> implements Map<K,V> {
 
   _OnDemandMap(AsMap<K, V> this._creator);
 
-  Map _init() => _map != null ? _map: (_map = _creator());
+  Map<K, V> _init() => _map != null ? _map: (_map = _creator());
 
   @override
   V  operator[](Object key) => _map != null ? _map[key]: null;
@@ -206,4 +227,28 @@ class _OnDemandMap<K, V> implements Map<K,V> {
   V remove(Object key) => _map != null ? _map.remove(key): null;
   @override
   String toString() => (_map != null ? _map: EMPTY_MAP).toString();
+
+  @override
+  void addEntries(Iterable<MapEntry<K, V>> newEntries)
+  => _init().addEntries(newEntries);
+  @override
+  Map<K2, V2> map<K2, V2>(MapEntry<K2, V2> f(K key, V value))
+  => _map != null ? _map.map(f): {};
+  @override
+  Map<RK, RV> cast<RK, RV>() => _init().cast();
+  @override
+  void removeWhere(bool predicate(K key, V value)) {
+    if (_map != null) _map.removeWhere(predicate);
+  }
+  @override
+  Map<RK, RV> retype<RK, RV>() => _init().retype();
+  @override
+  V update(K key, V update(V value), {V ifAbsent()})
+  => _init().update(key, update, ifAbsent: ifAbsent);
+  @override
+  void updateAll(V update(K key, V value)) {
+    if (_map != null) _map.updateAll(update);
+  }
+  @override
+  Iterable<MapEntry<K, V>> get entries => _init().entries;
 }
