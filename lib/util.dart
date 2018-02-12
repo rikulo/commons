@@ -4,14 +4,14 @@ library rikulo_util;
 
 //don't include dart:html since this library is designed to work
 //at both client and server
-import "dart:math";
+import "dart:math" show max, min;
 import "dart:collection";
 
-part "src/util/StringUtil.dart";
-part "src/util/XmlUtil.dart";
-part "src/util/ListUtil.dart";
-part "src/util/MapUtil.dart";
-part "src/util/Color.dart";
+part "src/util/strings.dart";
+part "src/util/xmls.dart";
+part "src/util/lists.dart";
+part "src/util/maps.dart";
+part "src/util/color.dart";
 
 /** A function that returns an integer.
  */

@@ -82,13 +82,15 @@ class StreamWrapper<T> implements Stream<T> {
   @override
   Future<T> get single => origin.single;
   @override
-  Future<dynamic> firstWhere(bool test(T value), {Object defaultValue()})
+  Future<T> firstWhere(bool test(T element),
+      {dynamic defaultValue(), T orElse()})
   => origin.firstWhere(test, defaultValue: defaultValue);
   @override
-  Future<dynamic> lastWhere(bool test(T value), {Object defaultValue()})
+  Future<T> lastWhere(bool test(T element),
+      {dynamic defaultValue(), T orElse()})
   => origin.lastWhere(test, defaultValue: defaultValue);
   @override
-  Future<T> singleWhere(bool test(T value))
+  Future<T> singleWhere(bool test(T element), {T orElse()})
   => origin.singleWhere(test);
   @override
   Future<T> elementAt(int index) => origin.elementAt(index);
@@ -97,6 +99,11 @@ class StreamWrapper<T> implements Stream<T> {
   @override
   Stream<T> timeout(Duration timeLimit, {void onTimeout(EventSink<T> sink)})
   => origin.timeout(timeLimit, onTimeout: onTimeout);
+
+  @override
+  Stream<R> cast<R>() => origin.cast();
+  @override
+  Stream<R> retype<R>() => origin.retype();
 }
 
 ///The StreamConsumer wrapper

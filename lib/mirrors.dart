@@ -7,6 +7,6 @@ library rikulo_mirrors;
 import "dart:mirrors";
 import "dart:collection" show HashMap;
 
-part "src/mirrors/ClassUtil.dart";
-part "src/mirrors/ObjectUtil.dart";
+part "src/mirrors/classes.dart";
+part "src/mirrors/objects.dart";
 part "src/mirrors/error.dart";
