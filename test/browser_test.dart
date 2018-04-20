@@ -21,6 +21,7 @@ main() {
   void isEdge(Browser browser, num version) {
     expect(browser.webkit, isTrue);
     expect(browser.edge, isTrue);
+    expect(browser.ie, isFalse); //Edge is not IE
     expect(browser.chrome, isFalse);
     expect(browser.firefox, isFalse);
     expect(browser.name, "edge");
@@ -28,6 +29,7 @@ main() {
   }
   void isIE(Browser browser, num version) {
     expect(browser.ie, isTrue);
+    expect(browser.edge, isFalse);
     expect(browser.webkit, isFalse);
     expect(browser.chrome, isFalse);
     expect(browser.firefox, isFalse);
