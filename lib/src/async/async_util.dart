@@ -41,9 +41,13 @@ void defer(key, task(), {Duration min: const Duration(seconds: 1), Duration max}
  * * [onError] - (optional) used to process the error thrown by a deferred task.
  * If not specified, the exception won't be caught and will terminate
  * this method.
+ * * [repeat] - If specified, it will continue to flush any new deferred
+ * function (registered via [defer] when flusing existing deferred functions).
+ * Default: false
  */
 Future flushDefers({void onAction(key, bool end),
-    void onError(ex, st)}) => _deferrer.flush(onAction, onError);
+    void onError(ex, st), bool repeat: false})
+=> _deferrer.flush(onAction, onError, repeat);
 
 typedef _Task();
 
@@ -87,7 +91,8 @@ class _Deferrer {
     }
   }
 
-  Future flush(void onAction(key, bool end), void onError(ex, st)) {
+  Future flush(void onAction(key, bool end), void onError(ex, st),
+      bool repeat) {
     final List<Future> ops = [];
     final defers = _defers;
     _defers = new HashMap();
@@ -116,8 +121,14 @@ class _Deferrer {
       }
     }
 
-    return Future.wait(ops);
-      //Let them run in parallel to avoid one blocks the other
+    //Let them run in parallel to avoid one blocks the other
+    var result = Future.wait(ops);
+    if (repeat)
+      result = result.then((_) {
+            if (_defers.isNotEmpty)
+              flush(onAction, onError, true);
+          });
+    return result;
   }
 
   Timer _startTimer(key, Duration min)
