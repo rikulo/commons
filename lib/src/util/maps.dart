@@ -165,8 +165,6 @@ class MapWrapper<K, V> implements Map<K,V> {
   void removeWhere(bool predicate(K key, V value))
   => origin.removeWhere(predicate);
   @override
-  Map<RK, RV> retype<RK, RV>() => origin.retype();
-  @override
   V update(K key, V update(V value), {V ifAbsent()})
   => origin.update(key, update, ifAbsent: ifAbsent);
   @override
@@ -240,8 +238,6 @@ class _OnDemandMap<K, V> implements Map<K,V> {
   void removeWhere(bool predicate(K key, V value)) {
     if (_map != null) _map.removeWhere(predicate);
   }
-  @override
-  Map<RK, RV> retype<RK, RV>() => _init().retype();
   @override
   V update(K key, V update(V value), {V ifAbsent()})
   => _init().update(key, update, ifAbsent: ifAbsent);

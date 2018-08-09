@@ -62,7 +62,7 @@ class _DeferInfo {
     if (max != null) {
       final remaining = max - new DateTime.now().difference(_startAt);
       if (remaining < min)
-        return remaining > Duration.ZERO ? remaining: null;
+        return remaining > Duration.zero ? remaining: null;
     }
     return min;
   }

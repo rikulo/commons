@@ -82,11 +82,11 @@ class StreamWrapper<T> implements Stream<T> {
   @override
   Future<T> get single => origin.single;
   @override
-  Future<T> firstWhere(bool test(T element), {dynamic defaultValue(), T orElse()})
-  => origin.firstWhere(test, defaultValue: defaultValue, orElse: orElse);
+  Future<T> firstWhere(bool test(T element), {T orElse()})
+  => origin.firstWhere(test, orElse: orElse);
   @override
-  Future<T> lastWhere(bool test(T element), {dynamic defaultValue(), T orElse()})
-  => origin.lastWhere(test, defaultValue: defaultValue, orElse: orElse);
+  Future<T> lastWhere(bool test(T element), {T orElse()})
+  => origin.lastWhere(test, orElse: orElse);
   @override
   Future<T> singleWhere(bool test(T element), {T orElse()})
   => origin.singleWhere(test, orElse: orElse);
@@ -100,8 +100,6 @@ class StreamWrapper<T> implements Stream<T> {
 
   @override
   Stream<R> cast<R>() => origin.cast();
-  @override
-  Stream<R> retype<R>() => origin.retype();
 }
 
 ///The StreamConsumer wrapper

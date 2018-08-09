@@ -1,5 +1,5 @@
 name: rikulo_commons
-version: 2.3.9
+version: 3.0.0
 description: Common reusable Dart classes and utilities.
 authors:
 - Tom Yeh <tomyeh@rikulo.org>
@@ -12,4 +12,4 @@ dependencies:
 dev_dependencies:
   test: any
 environment:
-  sdk: ">=1.12.0"
+  sdk: ">=2.0.0 <3.0.0"

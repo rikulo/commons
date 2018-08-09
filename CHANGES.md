@@ -1,5 +1,9 @@
 #Rikulo Commons Changes
 
+##3.0.0
+
+* Dart 2 required
+
 ##2.3.0
 
 * The signature of flushDefers() was changed.

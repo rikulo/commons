@@ -76,7 +76,7 @@ class ObjectUtil {
   static _autoCreate(o2, String field) {
     final clz = ClassUtil.getSetterType(reflect(o2).type, field);
     if (clz == null)
-      throw new NoSuchMethodError(o2, new Symbol("$field="), null, null);
+      throw new NoSuchMethodError.withInvocation(o2, new Invocation.setter(new Symbol("$field="), null));
 
     final o3 = clz.newInstance(const Symbol(""), []).reflectee;
       //1. use getSetterType since it will be assigned through setField
@@ -93,7 +93,8 @@ class ObjectUtil {
     final clz = ClassUtil.getSetterType(reflect(instance).type, name);
     if (clz == null) { //not found
       if (!silent) {
-        final err = new NoSuchMethodError(instance, new Symbol("$name="), null, null);
+        final err = new NoSuchMethodError.withInvocation(instance,
+            new Invocation.method(new Symbol("$name="), null));
         if (onSetterError == null)
           throw err;
         onSetterError(instance, name, value, err);

@@ -9,7 +9,7 @@ import "dart:convert";
 /** Reads the entire stream as a string using the given [Encoding].
  */
 Future<String> readAsString(Stream<List<int>> stream, 
-    {Encoding encoding: UTF8}) {
+    {Encoding encoding: utf8}) {
   final List<int> result = [];
   return stream.listen((data) {
     result.addAll(data);
@@ -21,5 +21,5 @@ Future<String> readAsString(Stream<List<int>> stream,
  * and then convert to an object.
  */
 Future<dynamic> readAsJson(Stream<List<int>> stream,
-    {Encoding encoding: UTF8}) async
-=> JSON.decode(await readAsString(stream, encoding: encoding));
+    {Encoding encoding: utf8}) async
+=> json.decode(await readAsString(stream, encoding: encoding));
