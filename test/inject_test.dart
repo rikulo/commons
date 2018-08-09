@@ -18,6 +18,7 @@ class User {
   String get lastName => _lastName;
 
   int age;
+  @override
   String toString() => "User($firstName $lastName, $age)";
   User manager;
 
@@ -32,12 +33,12 @@ void main() {
     expect(INT_MIRROR, isNotNull);
     expect(NUM_MIRROR, isNotNull);
     expect(BOOL_MIRROR, ClassUtil.forName("dart.core.bool"));
-    expect(reflect(new User()).type, ClassUtil.forName("test_inject.User"));
+    expect(reflect(User()).type, ClassUtil.forName("test_inject.User"));
   });
 
   group("inject tests", () {
     test("inject one-level", () {
-      User user = ObjectUtil.inject(new User(), {
+      User user = ObjectUtil.inject(User(), {
         "firstName": "Bill",
         "lastName": "Gates",
         "age": "32" //test coercion
@@ -49,7 +50,7 @@ void main() {
     });
 
     test("inject three-level and auto-assign", () {
-      User user = ObjectUtil.inject(new User(), {
+      User user = ObjectUtil.inject(User(), {
         "firstName": "Bill",
         "lastName": "Gates",
         "age": "32", //test coercion
@@ -68,7 +69,7 @@ void main() {
     });
 
     test("inject non-existing", () {
-      User user = ObjectUtil.inject(new User(), {
+      User user = ObjectUtil.inject(User(), {
         "firstName": "Bill",
         "nonExisting": "Gates",
         "level1.level2": 123,
@@ -83,7 +84,7 @@ void main() {
     test("inject validate and onSetterError", () {
       List<String> validated = [];
       List<String> setterFailed = [];
-      User user = ObjectUtil.inject(new User(), {
+      User user = ObjectUtil.inject(User(), {
         "firstName": "Bill",
         "lastName": "Gates",
         "age": "32", //test coercion
@@ -104,7 +105,7 @@ void main() {
 
     test("inject two-level and onSetterError", () {
       List<String> setterFailed = [];
-      User user = ObjectUtil.inject(new User(), {
+      User user = ObjectUtil.inject(User(), {
         "manager.wrong": false,
         "whatever": 123,
         "manager.firstName": "John",

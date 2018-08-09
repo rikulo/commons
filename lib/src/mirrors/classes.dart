@@ -31,14 +31,14 @@ class ClassUtil {
     Map splited = _splitQualifiedName(qname);
     if (splited != null) {
       final LibraryMirror lib =
-        currentMirrorSystem().findLibrary(new Symbol(splited["lib"]));
+        currentMirrorSystem().findLibrary(Symbol(splited["lib"]));
       if (lib != null) {
-        final klass = lib.declarations[new Symbol(splited["class"])];
+        final klass = lib.declarations[Symbol(splited["class"])];
         if (klass is ClassMirror)
           return klass;
       }
     }
-    throw new NoSuchClassError(qname);
+    throw NoSuchClassError(qname);
   }
 
   /**
@@ -106,7 +106,7 @@ class ClassUtil {
    * Returns the types of the specified parameters
    */
   static List<TypeMirror> getParameterTypes(List<ParameterMirror> params) {
-    List<TypeMirror> types = new List();
+    final types = <TypeMirror>[];
     for (ParameterMirror param in params) {
 //TODO(henri) : we have not supported named parameter
 //      if (param.isNamed) {
@@ -173,8 +173,8 @@ class ClassUtil {
   ///Converts a map of named parameters to Symbol for synchronous invocation
   static Map<Symbol, dynamic> _toNamedParams(Map<String, dynamic> namedArgs) {
     if (namedArgs != null) {
-      Map<Symbol, dynamic> nargs = new HashMap();
-      namedArgs.forEach((k,v) => nargs[new Symbol(k)] = v);
+      Map<Symbol, dynamic> nargs = HashMap();
+      namedArgs.forEach((k,v) => nargs[Symbol(k)] = v);
       return nargs;
     }
     return null;
@@ -235,25 +235,25 @@ class ClassUtil {
     if (targetClass == BOOL_MIRROR)
       return !sval.isEmpty && (sval = sval.toLowerCase()) != "false" && sval != "no"
         && sval != "off" && sval != "none";
-    throw new CoercionError(instance, targetClass);
+    throw CoercionError(instance, targetClass);
   }
 
   /** Returns the class mirror of the given field (including setter), or null
    * if no such field nor setter.
    */
   static ClassMirror getSetterType(ClassMirror classMirror, String field) {
-    var mtd = classMirror.declarations[new Symbol("$field=")];
+    var mtd = classMirror.declarations[Symbol("$field=")];
     if (mtd is MethodMirror)
       return mtd.parameters[0].type;
 
-    mtd = classMirror.declarations[new Symbol(field)];
+    mtd = classMirror.declarations[Symbol(field)];
     return mtd is VariableMirror ? mtd.type: null;
   }
   /** Returns the class mirror of the given field (including getter), or null
    * if no such field nor getter.
    */
   static ClassMirror getGetterType(ClassMirror classMirror, String field) {
-    final mtd = classMirror.declarations[new Symbol(field)];
+    final mtd = classMirror.declarations[Symbol(field)];
     return mtd is MethodMirror ? mtd.returnType:
         mtd is VariableMirror ? mtd.type: null;
   }

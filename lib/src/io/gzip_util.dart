@@ -8,9 +8,9 @@ part of rikulo_io;
 List<int> gzip(List<int> bytes, {int level: 6}) {
   final output = <int>[];
   var error;
-  var controller = new StreamController(sync: true);
+  var controller = StreamController(sync: true);
   controller.stream
-    .transform(new ZLibEncoder(level: level))
+    .transform(ZLibEncoder(level: level))
     .listen((data) => output.addAll(data),
       onError: (e) => error = e);
   controller.add(bytes);
@@ -29,9 +29,9 @@ List<int> gzipString(String string, {Encoding encoding: utf8, int level: 6})
 List<int> ungzip(List<int> bytes) {
   final output = <int>[];
   var error;
-  var controller = new StreamController(sync: true);
+  var controller = StreamController(sync: true);
   controller.stream
-    .transform(new ZLibDecoder())
+    .transform(ZLibDecoder())
     .listen((data) => output.addAll(data),
       onError: (e) => error = e);
   controller.add(bytes);

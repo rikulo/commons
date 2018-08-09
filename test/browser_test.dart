@@ -106,7 +106,7 @@ main() {
 
       for (final ua in uas.keys) {
 //        print(ua);
-        final browser = new _Browser(ua);
+        final browser = _Browser(ua);
         final List result = uas[ua];
         result[0](browser, result[1]);
       }
@@ -115,6 +115,7 @@ main() {
 }
 
 class _Browser extends Browser {
+  @override
   final String userAgent;
 
   _Browser(this.userAgent);

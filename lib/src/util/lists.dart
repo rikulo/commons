@@ -5,13 +5,13 @@ part of rikulo_util;
 
 /** A readonly and empty list.
  */
-const List EMPTY_LIST = const [];
+const List emptyList = [];
 /** A readonly and empty iterator.
  */
-const Iterator EMPTY_ITERATOR = const _EmptyIter();
+const Iterator emptyIterator = _EmptyIter();
 /** A readonly and empty set.
  */
-final Set EMPTY_SET = EMPTY_LIST.toSet();
+final Set emptySet = emptyList.toSet();
 
 class _EmptyIter<T> implements Iterator<T> {
   const _EmptyIter();

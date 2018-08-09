@@ -12,6 +12,7 @@ part of rikulo_io;
 class IOSinkWrapper extends StreamConsumerWrapper<List<int>> implements IOSink {
   IOSinkWrapper(IOSink origin) : super(origin);
 
+  @override
   IOSink get origin => super.origin;
 
   //IOSink//

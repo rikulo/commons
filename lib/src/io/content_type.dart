@@ -63,17 +63,17 @@ ContentType parseContentType(String value) {
 }
 
 ///extension => ContentType
-final Map<String, ContentType> _ctypes = new HashMap();
+final Map<String, ContentType> _ctypes = HashMap();
 ///value => ContentType
-final Map<String, ContentType> _rawCtypes = new HashMap();
+final Map<String, ContentType> _rawCtypes = HashMap();
 
 bool _isTextType(String mime)
 => mime.startsWith("text/")
-|| (mime.startsWith(_APP_PREFIX) && 
-    _textSubtypes.containsKey(mime.substring(_APP_PREFIX.length)));
+|| (mime.startsWith(_appPrefix) &&
+    _textSubtypes.containsKey(mime.substring(_appPrefix.length)));
 
-const String _APP_PREFIX = "application/";
-final _textSubtypes = const<String, bool> {
+const String _appPrefix = "application/";
+const _textSubtypes = <String, bool> {
   "json": true, "javascript": true, "dart": true, "xml": true,
   "xhtml+xml": true, "xslt+xml": true,  "rss+xml": true,
   "atom+xml": true, "mathml+xml": true, "svg+xml": true

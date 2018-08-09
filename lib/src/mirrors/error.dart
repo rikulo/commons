@@ -9,6 +9,7 @@ class NoSuchClassError implements Exception {
   final message;
   const NoSuchClassError([this.message]);
 
+  @override
   String toString() => (message == null) ? "No such class" : "No such class: $message";
 }
 
@@ -18,5 +19,6 @@ class CoercionError implements Exception {
   final targetType;
   const CoercionError([this.message, this.targetType]);
 
+  @override
   String toString() => (message == null) ? "Coercion error" : "Coercion error: $message => $targetType";
 }

@@ -56,11 +56,11 @@ class _DeferInfo {
   final DateTime _startAt;
   _Task task;
 
-  _DeferInfo(this.timer, this.task): _startAt = new DateTime.now();
+  _DeferInfo(this.timer, this.task): _startAt = DateTime.now();
 
   Duration getDelay(Duration min, Duration max) {
     if (max != null) {
-      final remaining = max - new DateTime.now().difference(_startAt);
+      final remaining = max - DateTime.now().difference(_startAt);
       if (remaining < min)
         return remaining > Duration.zero ? remaining: null;
     }
@@ -69,12 +69,12 @@ class _DeferInfo {
 }
 
 class _Deferrer {
-  Map<dynamic, _DeferInfo> _defers = new HashMap();
+  Map<dynamic, _DeferInfo> _defers = HashMap();
 
   void run(key, task(), Duration min, Duration max) {
     final _DeferInfo di = _defers[key];
     if (di == null) {
-      _defers[key] = new _DeferInfo(_startTimer(key, min), task);
+      _defers[key] = _DeferInfo(_startTimer(key, min), task);
       return;
     }
 
@@ -95,7 +95,7 @@ class _Deferrer {
       bool repeat) {
     final List<Future> ops = [];
     final defers = _defers;
-    _defers = new HashMap();
+    _defers = HashMap();
 
     for (final key in defers.keys) {
       try {
@@ -132,6 +132,6 @@ class _Deferrer {
   }
 
   Timer _startTimer(key, Duration min)
-  => new Timer(min, () => (_defers.remove(key))?.task());
+  => Timer(min, () => (_defers.remove(key))?.task());
 }
-final _Deferrer _deferrer = new _Deferrer();
+final _Deferrer _deferrer = _Deferrer();

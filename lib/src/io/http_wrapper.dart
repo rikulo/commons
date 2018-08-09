@@ -9,6 +9,7 @@ part of rikulo_io;
 class HttpRequestWrapper extends StreamWrapper<List<int>> implements HttpRequest {
   HttpRequestWrapper(HttpRequest origin): super(origin);
 
+  @override
   HttpRequest get origin => super.origin;
 
   @override
@@ -36,6 +37,7 @@ class HttpRequestWrapper extends StreamWrapper<List<int>> implements HttpRequest
   @override
   HttpConnectionInfo get connectionInfo => origin.connectionInfo;
 
+  @override
   String toString() => origin.toString();
 }
 
@@ -45,6 +47,7 @@ class HttpRequestWrapper extends StreamWrapper<List<int>> implements HttpRequest
 class HttpResponseWrapper extends IOSinkWrapper implements HttpResponse {
   HttpResponseWrapper(HttpResponse origin): super(origin);
 
+  @override
   HttpResponse get origin => super.origin;
 
   @override
@@ -114,7 +117,7 @@ abstract class AbstractBufferedResponse extends HttpResponseWrapper {
   AbstractBufferedResponse(HttpResponse origin): super(origin);
 
   @override
-  Future flush() => new Future.value();
+  Future flush() => Future.value();
   @override
   Future close() {
     _closer.complete();
@@ -125,12 +128,12 @@ abstract class AbstractBufferedResponse extends HttpResponseWrapper {
 
   //Used for implementing [close] and [done]//
   Completer get _closer
-  => _$closer != null ? _$closer: (_$closer = new Completer());
+  => _$closer != null ? _$closer: (_$closer = Completer());
   Completer _$closer;
 
   @override
   Future addStream(Stream<List<int>> stream) {
-    final completer = new Completer();
+    final completer = Completer();
     stream.listen(add)
       ..onDone(completer.complete)
       ..onError(completer.completeError);
@@ -159,7 +162,7 @@ abstract class AbstractBufferedResponse extends HttpResponseWrapper {
   }
   @override
   void writeCharCode(int charCode) {
-    write(new String.fromCharCode(charCode));
+    write(String.fromCharCode(charCode));
   }
 }
 

@@ -8,16 +8,16 @@ part of rikulo_util;
  */
 class XmlUtil {
   static final RegExp
-    _reEncode   = new RegExp(r'[<>&"]'),
-    _reEncodeP  = new RegExp(r'[<>&" \t]'),
-    _reEncodeL  = new RegExp(r'[<>&"\r\n]'),
-    _reEncodePL = new RegExp(r'[<>&" \t\r\n]'),
-    _reEncodeS  = new RegExp(r'([ \t])+|[<>&"]'),
-    _reEncodeSL = new RegExp(r'([ \t])+|[<>&"\r\n]');
+    _reEncode   = RegExp(r'[<>&"]'),
+    _reEncodeP  = RegExp(r'[<>&" \t]'),
+    _reEncodeL  = RegExp(r'[<>&"\r\n]'),
+    _reEncodePL = RegExp(r'[<>&" \t\r\n]'),
+    _reEncodeS  = RegExp(r'([ \t])+|[<>&"]'),
+    _reEncodeSL = RegExp(r'([ \t])+|[<>&"\r\n]');
   static const Map<String, String> _encs =
-    const {'<': '&lt;', '>': '&gt;', '&': '&amp;', '"': "&quot;",
-      '\n': '<br/>\n', '\r': '',
-      ' ' : "&nbsp;", '\t': '&nbsp;&nbsp;&nbsp;&nbsp;'};
+      {'<': '&lt;', '>': '&gt;', '&': '&amp;', '"': "&quot;",
+       '\n': '<br/>\n', '\r': '',
+       ' ' : "&nbsp;", '\t': '&nbsp;&nbsp;&nbsp;&nbsp;'};
 
   static String _encMapper(Match m) => _encs[m.group(0)];
   static String _encMapperS(Match m) {
@@ -37,7 +37,7 @@ class XmlUtil {
     if (count == 1)
       return ' ';
 
-    final StringBuffer buf = new StringBuffer();
+    final StringBuffer buf = StringBuffer();
     while (--count > 0)
       buf.write('&nbsp;');
     buf.write(' '); //better to line-break here if any
@@ -63,10 +63,10 @@ class XmlUtil {
       space ? _encMapperS: _encMapper);
   }
 
-  static final RegExp _reDecode = new RegExp(r"&([a-z]+|#x?[0-9a-f]+);",
+  static final RegExp _reDecode = RegExp(r"&([a-z]+|#x?[0-9a-f]+);",
     caseSensitive: false);
   static const Map<String, String>
-    _decs = const <String, String> {
+    _decs = <String, String> {
       'lt': '<', 'gt': '>', 'amp': '&', 'quot': '"', 'nbsp': ' '};
 
   static String _decMapper(Match m) {
@@ -76,7 +76,7 @@ class XmlUtil {
       return mapped;
 
     if (key.length >= 3 && key[0] == '#')
-      return new String.fromCharCodes(
+      return String.fromCharCodes(
           [int.parse(
             key[1].toLowerCase() == 'x' ?
               "0x${key.substring(2)}": key.substring(1))]);

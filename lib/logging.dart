@@ -14,7 +14,7 @@ import "package:logging/logging.dart";
  */
 void simpleLoggerHandler(LogRecord record) {
   //for better response time, do it async (since the onRecord stream is sync)
-  new Future(() {
+  Future(() {
     print("${record.time}:${record.loggerName}:${record.sequenceNumber}\n"
       "${record.level}: ${record.message}");
     if (record.error != null)

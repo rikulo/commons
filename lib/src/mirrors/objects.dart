@@ -48,7 +48,7 @@ class ObjectUtil {
         if (silent && ClassUtil.getGetterType(reflect(o2).type, field) == null)
           continue l_keys;
 
-        var o3 = reflect(o2).getField(new Symbol(field)).reflectee;
+        var o3 = reflect(o2).getField(Symbol(field)).reflectee;
         if (o3 == null) {
           if (silent && ClassUtil.getSetterType(reflect(o2).type, field) == null)
             continue l_keys;
@@ -76,12 +76,12 @@ class ObjectUtil {
   static _autoCreate(o2, String field) {
     final clz = ClassUtil.getSetterType(reflect(o2).type, field);
     if (clz == null)
-      throw new NoSuchMethodError.withInvocation(o2, new Invocation.setter(new Symbol("$field="), null));
+      throw NoSuchMethodError.withInvocation(o2, Invocation.setter(Symbol("$field="), null));
 
     final o3 = clz.newInstance(const Symbol(""), []).reflectee;
       //1. use getSetterType since it will be assigned through setField
       //2. assume there must be a default constructor. otherwise, it is caller's issue
-    reflect(o2).setField(new Symbol(field), o3); //setField takes o3 (not InstanceMirror)
+    reflect(o2).setField(Symbol(field), o3); //setField takes o3 (not InstanceMirror)
     return o3;
   }
   static void _inject(instance, String name, value,
@@ -93,8 +93,8 @@ class ObjectUtil {
     final clz = ClassUtil.getSetterType(reflect(instance).type, name);
     if (clz == null) { //not found
       if (!silent) {
-        final err = new NoSuchMethodError.withInvocation(instance,
-            new Invocation.method(new Symbol("$name="), null));
+        final err = NoSuchMethodError.withInvocation(instance,
+            Invocation.method(Symbol("$name="), null));
         if (onSetterError == null)
           throw err;
         onSetterError(instance, name, value, err);
@@ -116,7 +116,7 @@ class ObjectUtil {
       validate(instance, name, value);
 
     final om = reflect(instance),
-      symbol = new Symbol(name);
+      symbol = Symbol(name);
     if (onSetterError != null) {
       try {
         om.setField(symbol, value);

@@ -39,11 +39,11 @@ class Color {
       lead == 1 ? (blue - red) / ch + 2 : (red - green) / ch + 4);
     final num val = mx  / 255;
     final num sat = mx == 0 ? 0 : ch / mx;
-    return new HsvColor(hue, sat, val, alpha);
+    return HsvColor(hue, sat, val, alpha);
   }
   ///Convert to [HslColor]
   HslColor hsl() {
-    throw new UnsupportedError("TODO");
+    throw UnsupportedError("TODO");
   }
   
   /** Parses the color code as a Color literal and returns its value. Example,
@@ -68,7 +68,7 @@ class Color {
           if (step == 1)
             rgb[j] = (rgb[j] * 255) ~/ 15;
         }
-        return new Color(rgb[0], rgb[1], rgb[2]);
+        return Color(rgb[0], rgb[1], rgb[2]);
       } else {
         final k = colorCode.indexOf('(');
         if (k >= 0) {
@@ -94,7 +94,7 @@ class Color {
               for (int i = 0; i < 3; ++i)
                 if (hundredth[i])
                   val[i] = (255 * val[i]) ~/ 100;
-              return new Color(val[0], val[1], val[2], val[3]);
+              return Color(val[0], val[1], val[2], val[3]);
 
             case "hsl":
             case "hsla":
@@ -106,8 +106,8 @@ class Color {
                 if (hundredth[i])
                   val[i] /= 100;
               return type.startsWith("hsl") ?
-                new HslColor(val[0], val[1], val[2], val[3]):
-                new HsvColor(val[0], val[1], val[2], val[3]);
+                HslColor(val[0], val[1], val[2], val[3]):
+                HsvColor(val[0], val[1], val[2], val[3]);
           }
         } else {
           final color = _stdcolors[colorCode.toLowerCase()];
@@ -116,15 +116,18 @@ class Color {
         }
       }
     } catch (e) {
-      throw new FormatException(colorCode);
+      throw FormatException(colorCode);
     }
-    throw new FormatException(colorCode);
+    throw FormatException(colorCode);
   }
 
+  @override
   int get hashCode => red.hashCode ^ green.hashCode ^ blue.hashCode ^ alpha.hashCode;
+  @override
   bool operator==(o)
   => o is Color && o.red == red && o.green == green && o.blue == blue && o.alpha == alpha;
-  String toString() => 
+  @override
+  String toString() =>
       alpha == 1 ? "#${_hex(red)}${_hex(green)}${_hex(blue)}" : 
       "rgba($red, $green, $blue, $alpha)";
   
@@ -162,32 +165,40 @@ class HslColor implements Color {
   final num lightness;
   
   /// The opacity of color.
+  @override
   final num alpha;
   
   /// The red component.
   ///Note: it is a shortcut of `rgb().red`, so the performance might not be good
+  @override
   num get red => rgb().red;
   /// The green component.
   ///Note: it is a shortcut of `rgb().green`, so the performance might not be good
+  @override
   num get green => rgb().green;
   /// The blue component.
   ///Note: it is a shortcut of `rgb().blue`, so the performance might not be good
+  @override
   num get blue => rgb().blue;
   @override
   HslColor hsl() => this;
 
   /// Convert to RGB based [Color].
   Color rgb() {
-    throw new UnsupportedError("TODO");
+    throw UnsupportedError("TODO");
   }
   ///Convert to [HsvColor]
+  @override
   HsvColor hsv() {
-    throw new UnsupportedError("TODO");
+    throw UnsupportedError("TODO");
   }
 
+  @override
   int get hashCode => hue.hashCode ^ saturation.hashCode ^ lightness.hashCode ^ alpha.hashCode;
+  @override
   bool operator==(o)
   => o is HslColor && o.hue == hue && o.saturation == saturation && o.lightness == lightness && o.alpha == alpha;
+  @override
   String toString() => "hsl($hue, $saturation, $lightness, $alpha)";
 }
 
@@ -221,16 +232,20 @@ class HsvColor implements Color {
   final num value;
   
   /// The opacity of color.
+  @override
   final num alpha;
   
   /// The red component.
   ///Note: it is a shortcut of `rgb().red`, so the performance might not be good
+  @override
   num get red => rgb().red;
   /// The green component.
   ///Note: it is a shortcut of `rgb().green`, so the performance might not be good
+  @override
   num get green => rgb().green;
   /// The blue component.
   ///Note: it is a shortcut of `rgb().blue`, so the performance might not be good
+  @override
   num get blue => rgb().blue;
   @override
   HsvColor hsv() => this;
@@ -253,39 +268,43 @@ class HsvColor implements Color {
     } else {
       b = x; r = ch;
     }
-    return new Color((r + m) * 255, (g + m) * 255, (b + m) * 255, alpha);
+    return Color((r + m) * 255, (g + m) * 255, (b + m) * 255, alpha);
   }
   ///Convert to [HslColor]
+  @override
   HslColor hsl() {
-    throw new UnsupportedError("TODO");
+    throw UnsupportedError("TODO");
   }
 
+  @override
   int get hashCode => hue.hashCode ^ saturation.hashCode ^ value.hashCode ^ alpha.hashCode;
+  @override
   bool operator==(o)
   => o is HsvColor && o.hue == hue && o.saturation == saturation && o.value == value && o.alpha == alpha;
+  @override
   String toString() => "hsv($hue, $saturation, $value, $alpha)";
 }
 
 ///The white color
-const BLACK = const Color(0, 0, 0);
+const black = Color(0, 0, 0);
 ///The black color
-const WHITE = const Color(0xff, 0xff, 0xff);
-const Map<String, Color>_stdcolors = const {
-  "aqua": const Color(0, 0xff, 0xff),
-   "black": BLACK,
-   "blue": const Color(0, 0, 0xff),
-   "fuchsia": const Color(0xff, 0, 0xff),
-   "gray": const Color(0x80, 0x80, 0x80),
-   "grey": const Color(0x80, 0x80, 0x80),
-   "green": const Color(0, 0x80, 0),
-   "lime": const Color(0, 0xff, 0),
-   "maroon": const Color(0x80, 0, 0),
-   "navy": const Color(0, 0, 0x80),
-   "olive": const Color(0x80, 0x80, 0),
-   "purple": const Color(0x80, 0, 0x80),
-   "red": const Color(0xff, 0, 0),
-   "silver": const Color(0xc0, 0xc0, 0xc0),
-   "teal": const Color(0, 0x80, 0x80),
-   "white": WHITE,
-   "yellow": const Color(0xff, 0xff, 0)  
+const white = Color(0xff, 0xff, 0xff);
+const Map<String, Color>_stdcolors = {
+  "aqua": Color(0, 0xff, 0xff),
+   "black": black,
+   "blue": Color(0, 0, 0xff),
+   "fuchsia": Color(0xff, 0, 0xff),
+   "gray": Color(0x80, 0x80, 0x80),
+   "grey": Color(0x80, 0x80, 0x80),
+   "green": Color(0, 0x80, 0),
+   "lime": Color(0, 0xff, 0),
+   "maroon": Color(0x80, 0, 0),
+   "navy": Color(0, 0, 0x80),
+   "olive": Color(0x80, 0x80, 0),
+   "purple": Color(0x80, 0, 0x80),
+   "red": Color(0xff, 0, 0),
+   "silver": Color(0xc0, 0xc0, 0xc0),
+   "teal": Color(0, 0x80, 0x80),
+   "white": white,
+   "yellow": Color(0xff, 0xff, 0)
 };

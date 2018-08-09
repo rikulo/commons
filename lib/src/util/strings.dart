@@ -17,12 +17,12 @@ class StringUtil {
    * + [match] specifies a string of characters that are matched (aka., allowed).
    */
   static bool isChar(String cc, {bool digit: false, bool upper: false, bool lower: false,
-  bool whitespace: false, String match: null}) {
+  bool whitespace: false, String match}) {
     int v = cc.isEmpty ? 0: cc.codeUnitAt(0);
-    return (digit && v >= _CC_0 && v <= _CC_9)
-    || (upper && v >= _CC_A && v <= _CC_Z)
-    || (lower && v >= _CC_a && v <= _CC_z)
-    || (whitespace && _WHITE_SPACES.indexOf(cc) >= 0)
+    return (digit && v >= _cc0 && v <= _cc_9)
+    || (upper && v >= _ccA && v <= _ccZ)
+    || (lower && v >= _cca && v <= _ccz)
+    || (whitespace && _whiteSpaces.indexOf(cc) >= 0)
     || (match != null && match.indexOf(cc) >= 0);
   }
 
@@ -46,7 +46,7 @@ class StringUtil {
     int k = 0;
     for (int i = 0, len = name.length; i < len; ++i) {
       if (name[i] == '-') {
-        if (sb == null) sb = new StringBuffer();
+        if (sb == null) sb = StringBuffer();
         sb..write(name.substring(k, i))
           ..write(name[++i].toUpperCase());
         k = i + 1;
@@ -62,8 +62,8 @@ class StringUtil {
     int k = 0;
     for (int i = 0, len = name.length; i < len; ++i) {
       final cc = name.codeUnitAt(i);
-      if (cc >= _CC_A && cc <= _CC_Z) {
-        if (sb == null) sb = new StringBuffer();
+      if (cc >= _ccA && cc <= _ccZ) {
+        if (sb == null) sb = StringBuffer();
         sb..write(name.substring(k, i))..write('-')..write(name[i].toLowerCase());
         k = i + 1;
       }
@@ -72,7 +72,7 @@ class StringUtil {
   }
 }
 
-const int _CC_0 = 48, _CC_9 = _CC_0 + 9,
-  _CC_A = 65, _CC_Z = _CC_A + 25,
-  _CC_a = 97, _CC_z = _CC_a + 25;
-const String _WHITE_SPACES = " \t\n\r\u{0085}\u{00a0}";
+const int _cc0 = 48, _cc_9 = _cc0 + 9,
+  _ccA = 65, _ccZ = _ccA + 25,
+  _cca = 97, _ccz = _cca + 25;
+const String _whiteSpaces = " \t\n\r\u{0085}\u{00a0}";

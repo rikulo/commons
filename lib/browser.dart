@@ -8,18 +8,18 @@ library rikulo_browser;
  */
 abstract class Browser {
   // all RegExp shall be lower case here
-  static final RegExp _rwebkit = new RegExp(r"(webkit)[ /]([\w.]+)"),
-    _rsafari = new RegExp(r"(version)/([\w.]+).*safari"),
-    _rchrome = new RegExp(r"(chrome|crios)[ /]([\w.]+)"),
-    _redge = new RegExp(r"(edge)/([\w.]+)"),
-    _rie = new RegExp(r"(msie) ([\w.]+)"),
-    _rie2 = new RegExp(r"trident/.+(rv:)([\w.]+)"),
-    _rfirefox = new RegExp(r"(firefox)/([\w.]+)"),
-    _ropera = new RegExp(r"(opera)(?:.*version)?[ /]([\w.]+)"),
-    _riOS = new RegExp(r"os[ /]([\w_]+) like mac os"),
-    _rmacOS = new RegExp(r"mac os "),
-    _randroid = new RegExp(r"android[ /]([\w.]+)"),
-    _rdart = new RegExp(r"[^a-z]dart[^a-z]");
+  static final RegExp _rwebkit = RegExp(r"(webkit)[ /]([\w.]+)"),
+    _rsafari = RegExp(r"(version)/([\w.]+).*safari"),
+    _rchrome = RegExp(r"(chrome|crios)[ /]([\w.]+)"),
+    _redge = RegExp(r"(edge)/([\w.]+)"),
+    _rie = RegExp(r"(msie) ([\w.]+)"),
+    _rie2 = RegExp(r"trident/.+(rv:)([\w.]+)"),
+    _rfirefox = RegExp(r"(firefox)/([\w.]+)"),
+    _ropera = RegExp(r"(opera)(?:.*version)?[ /]([\w.]+)"),
+    _riOS = RegExp(r"os[ /]([\w_]+) like mac os"),
+    _rmacOS = RegExp(r"mac os "),
+    _randroid = RegExp(r"android[ /]([\w.]+)"),
+    _rdart = RegExp(r"[^a-z]dart[^a-z]");
 
   /** The browser's name. */
   String name;

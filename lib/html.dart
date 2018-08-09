@@ -70,5 +70,5 @@ Element createUncheckedHtml(String html, {bool encode: false}) {
   if (encode)
     html = XmlUtil.encode(html);
   
-  return new Element.html(html, treeSanitizer: NodeTreeSanitizer.trusted);
+  return Element.html(html, treeSanitizer: NodeTreeSanitizer.trusted);
 }

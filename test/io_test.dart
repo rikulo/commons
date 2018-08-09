@@ -9,7 +9,7 @@ import "package:rikulo_commons/io.dart";
 main() {
   group("io tests", () {
     test("gzip test", () {
-      final buf = new StringBuffer();
+      final buf = StringBuffer();
       for (int i = 100; --i >= 0;)
         buf.write("this is a test for string");
       final source = buf.toString();

@@ -36,7 +36,7 @@ main() {
 
     test("posted parameters", () {
       final queryString = "first=123&second=%09";
-      final request = new Stream.fromIterable([utf8.encode(queryString)]);
+      final request = Stream.fromIterable([utf8.encode(queryString)]);
       return HttpUtil.decodePostedParameters(request).then((params) {
         expect(HttpUtil.encodeQuery(params), queryString);
       });

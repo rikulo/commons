@@ -62,7 +62,7 @@ class HttpUtil {
    * If it is null, an empty string is generated.
    */
   static String encodeQuery(Map<String, dynamic> parameters) {
-    final buf = new StringBuffer();
+    final buf = StringBuffer();
     for (final name in parameters.keys) {
       if (!buf.isEmpty)
         buf.write('&');

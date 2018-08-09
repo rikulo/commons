@@ -43,7 +43,7 @@ class StreamProvider<T> {
    * Gets a [Stream] for this event type, on the specified target.
    */
   Stream<T> forTarget(StreamTarget target) {
-    return new _Stream(target, _type);
+    return _Stream(target, _type);
   }
 }
 
@@ -61,7 +61,7 @@ class CapturableStreamProvider<T> {
    * * [useCapture] is applicable only if the view event is caused by a DOM event.
    */
   Stream<T> forTarget(CapturableStreamTarget target, {bool useCapture: false}) {
-    return new _CapturableStream(target, _type, useCapture);
+    return _CapturableStream(target, _type, useCapture);
   }
 }
 
@@ -71,9 +71,10 @@ class _Stream<T> extends Stream<T> {
 
   _Stream(this._target, this._type);
 
+  @override
   StreamSubscription<T> listen(void onData(T event),
       {Function onError, void onDone(), bool cancelOnError})
-    => new _StreamSubscription<T>(this._target, this._type, onData);
+    => _StreamSubscription<T>(this._target, this._type, onData);
 }
 
 class _CapturableStream<T> extends Stream<T> {
@@ -83,9 +84,10 @@ class _CapturableStream<T> extends Stream<T> {
 
   _CapturableStream(this._target, this._type, this._useCapture);
 
+  @override
   StreamSubscription<T> listen(void onData(T event),
       {Function onError, void onDone(), bool cancelOnError})
-    => new _CapturableStreamSubscription<T>(
+    => _CapturableStreamSubscription<T>(
       this._target, this._type, onData, this._useCapture);
 }
 
@@ -105,13 +107,13 @@ abstract class _StreamSubscriptionBase<T> extends StreamSubscription<T> {
       // Clear out the target to indicate this is complete.
       _onData = null;
     }
-    return new Future.value();
+    return Future.value();
   }
 
   @override
   void onData(void handleData(T event)) {
     if (_canceled) {
-      throw new StateError("Subscription has been canceled.");
+      throw StateError("Subscription has been canceled.");
     }
     // Remove current event listener.
     _unlisten();
@@ -162,7 +164,7 @@ abstract class _StreamSubscriptionBase<T> extends StreamSubscription<T> {
   @override
   Future<E> asFuture<E>([E futureValue]) {
     // We just need a future that will never succeed or fail.
-    return new Completer<E>().future;
+    return Completer<E>().future;
   }
 
   //deriving to override//
@@ -183,13 +185,16 @@ class _StreamSubscription<T> extends _StreamSubscriptionBase<T> {
 
     // Clear out the target to indicate this is complete.
     _target = null;
-    return new Future.value();
+    return Future.value();
   }
 
+  @override
   bool get _canceled => _target == null;
+  @override
   void _add() {
     _target.addEventListener(_type, _onData);
   }
+  @override
   void _remove() {
     _target.removeEventListener(_type, _onData);
   }
@@ -208,13 +213,16 @@ class _CapturableStreamSubscription<T> extends _StreamSubscriptionBase<T> {
 
     // Clear out the target to indicate this is complete.
     _target = null;
-    return new Future.value();
+    return Future.value();
   }
 
+  @override
   bool get _canceled => _target == null;
+  @override
   void _add() {
     _target.addEventListener(_type, _onData, useCapture: _useCapture);
   }
+  @override
   void _remove() {
     _target.removeEventListener(_type, _onData, useCapture: _useCapture);
   }

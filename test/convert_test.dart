@@ -13,7 +13,7 @@ main() {
     test("stream to json", () {
       final val = {"abc": 123, "foo": ["this", "is", 200]};
       final list = utf8.encode(json.encode(val));
-      return readAsJson(new Stream.fromIterable([list]))
+      return readAsJson(Stream.fromIterable([list]))
       .then((got) {
         expect(got, val);
       });

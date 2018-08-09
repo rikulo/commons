@@ -5,7 +5,7 @@ part of rikulo_util;
 
 /** A readonly and empty map.
  */
-const Map EMPTY_MAP = const {};
+const Map emptyMap = {};
 
 /**
  * A collection of Map related utilities.
@@ -24,7 +24,7 @@ class MapUtil {
    * since it is just a proxy to the real map.
    * Refer to Rikulo UI's `View.dataset` for a sample implementation.
    */
-  static Map<K, V> auto<K, V>(Map<K, V> creator()) => new _OnDemandMap(creator);
+  static Map<K, V> auto<K, V>(Map<K, V> creator()) => _OnDemandMap(creator);
 
   /** Copies the given map ([source]) to the destination ([dest]).
    */
@@ -47,7 +47,7 @@ class MapUtil {
    */
   static Map<String, String> parse(String data,
     {bool backslash:true, String defaultValue}) {
-    Map<String, String> map = new LinkedHashMap();
+    Map<String, String> map = LinkedHashMap();
     for (int i = 0, len = data.length; i < len;) {
       i = StringUtil.skipWhitespaces(data, i);
       if (i >= len)
@@ -59,12 +59,12 @@ class MapUtil {
         if (cc == '=' || StringUtil.isChar(cc, whitespace: true))
           break;
         if (cc == "'" || cc == '"')
-          throw new FormatException("Quotation marks not allowed in key, $data");
+          throw FormatException("Quotation marks not allowed in key, $data");
       }
 
       final key = data.substring(j, i);
       if (key.isEmpty)
-        throw new FormatException("Key required, $data");
+        throw FormatException("Key required, $data");
 
       i = StringUtil.skipWhitespaces(data, i);
       if (i >= len || data[i] != '=') {
@@ -74,16 +74,16 @@ class MapUtil {
         continue;
       }
 
-      final val = new StringBuffer();
+      final val = StringBuffer();
       i = StringUtil.skipWhitespaces(data, i + 1);
       if (i < len) {
         final sep = data[i];
         if (sep != '"' &&  sep != "'")
-          throw new FormatException("Quatation marks required for a value, $data");
+          throw FormatException("Quatation marks required for a value, $data");
 
         for (;;) {
           if (++i >= len)
-            throw new FormatException("Unclosed string, $data");
+            throw FormatException("Unclosed string, $data");
 
           final cc = data[i];
           if (cc == sep) {
@@ -92,7 +92,7 @@ class MapUtil {
           }
           if (backslash && cc == '\\') {
             if (++i >= len)
-              throw new FormatException("Illegal backslash, $data");
+              throw FormatException("Illegal backslash, $data");
             switch (data[i]) {
               case 'n': val.write('\n'); continue;
               case 't': val.write('\t'); continue;
@@ -210,9 +210,9 @@ class _OnDemandMap<K, V> implements Map<K,V> {
     if (_map != null) _map.forEach(f);
   }
   @override
-  Iterable<K> get keys => _map != null ? _map.keys: EMPTY_LIST as List<K>;
+  Iterable<K> get keys => _map != null ? _map.keys: emptyList as List<K>;
   @override
-  Iterable<V> get values => _map != null ? _map.values: EMPTY_LIST as List<V>;
+  Iterable<V> get values => _map != null ? _map.values: emptyList as List<V>;
   @override
   bool get isEmpty => _map == null || _map.isEmpty;
   @override
@@ -224,7 +224,7 @@ class _OnDemandMap<K, V> implements Map<K,V> {
   @override
   V remove(Object key) => _map != null ? _map.remove(key): null;
   @override
-  String toString() => (_map != null ? _map: EMPTY_MAP).toString();
+  String toString() => (_map != null ? _map: emptyMap).toString();
 
   @override
   void addEntries(Iterable<MapEntry<K, V>> newEntries)
