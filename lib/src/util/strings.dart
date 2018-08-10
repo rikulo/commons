@@ -16,15 +16,30 @@ class StringUtil {
    * + [whitespace] specifies if it matches whitespace.
    * + [match] specifies a string of characters that are matched (aka., allowed).
    */
-  static bool isChar(String cc, {bool digit: false, bool upper: false, bool lower: false,
-  bool whitespace: false, String match}) {
-    int v = cc.isEmpty ? 0: cc.codeUnitAt(0);
-    return (digit && v >= _cc0 && v <= _cc_9)
-    || (upper && v >= _ccA && v <= _ccZ)
-    || (lower && v >= _cca && v <= _ccz)
-    || (whitespace && _whiteSpaces.indexOf(cc) >= 0)
-    || (match != null && match.indexOf(cc) >= 0);
-  }
+  static bool isChar(String cc, {bool digit: false, bool upper: false,
+        bool lower: false, bool whitespace: false, String match})
+  => isCharCode(cc.codeUnitAt(0), digit: digit, upper: upper,
+        lower: lower, whitespace: whitespace)
+      || (match != null && match.indexOf(cc) >= 0);
+
+  /**
+   * Returns whether the character code matches the specified conditions.
+   *
+   * + [cc] is the character to test.
+   * + [digit] specifies if it matches digit.
+   * + [upper] specifies if it matches upper case.
+   * + [lower] specifies if it matches lower case.
+   * + [whitespace] specifies if it matches whitespace.
+   * + [match] specifies a string of characters that are matched (aka., allowed).
+   */
+  static bool isCharCode(int cc, {bool digit: false, bool upper: false,
+      bool lower: false, bool whitespace: false})
+  =>   (digit && cc >= $0 && cc <= $9)
+    || (upper && cc >= $A && cc <= $Z)
+    || (lower && cc >= $a && cc <= $z)
+    || (whitespace && whitespaces.contains(cc));
+
+  static final whitespaces = const <int>[$space, $tab, $lf, $cr, $ff, 0x85, 0xa0].toSet();
 
   /** Returns the index of the first non-whitespace character starting at [from],
    * `min(from, str.length)` if not found.
@@ -62,7 +77,7 @@ class StringUtil {
     int k = 0;
     for (int i = 0, len = name.length; i < len; ++i) {
       final cc = name.codeUnitAt(i);
-      if (cc >= _ccA && cc <= _ccZ) {
+      if (cc >= $A && cc <= $Z) {
         if (sb == null) sb = StringBuffer();
         sb..write(name.substring(k, i))..write('-')..write(name[i].toLowerCase());
         k = i + 1;
@@ -71,8 +86,3 @@ class StringUtil {
     return sb != null ? (sb..write(name.substring(k))).toString(): name;
   }
 }
-
-const int _cc0 = 48, _cc_9 = _cc0 + 9,
-  _ccA = 65, _ccZ = _ccA + 25,
-  _cca = 97, _ccz = _cca + 25;
-const String _whiteSpaces = " \t\n\r\u{0085}\u{00a0}";
