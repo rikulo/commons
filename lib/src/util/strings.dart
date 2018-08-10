@@ -47,7 +47,7 @@ class StringUtil {
    */
   static int skipWhitespaces(String str, int from) {
     for (int len = str.length; from < len; ++from)
-      if (!isCharCode(str.codeUnitAt(from), whitespace: true))
+      if (!$whitespaces.contains(str.codeUnitAt(from)))
         break;
     return from;
   }

@@ -51,10 +51,10 @@ class MapUtil {
 
       final j = i;
       for (; i < len; ++i) {
-        final cc = data[i];
-        if (cc == '=' || StringUtil.isChar(cc, whitespace: true))
+        final cc = data.codeUnitAt(i);
+        if (cc == $equal || $whitespaces.contains(cc))
           break;
-        if (cc == "'" || cc == '"')
+        if (cc == $single_quote || cc == $double_quote)
           throw FormatException("Quotation marks not allowed in key, $data");
       }
 
@@ -73,31 +73,31 @@ class MapUtil {
       final val = StringBuffer();
       i = StringUtil.skipWhitespaces(data, i + 1);
       if (i < len) {
-        final sep = data[i];
-        if (sep != '"' &&  sep != "'")
+        final sep = data.codeUnitAt(i);
+        if (sep != $double_quote &&  sep != $single_quote)
           throw FormatException("Quatation marks required for a value, $data");
 
         for (;;) {
           if (++i >= len)
             throw FormatException("Unclosed string, $data");
 
-          final cc = data[i];
+          final cc = data.codeUnitAt(i);
           if (cc == sep) {
             ++i;
             break; //done
           }
-          if (backslash && cc == '\\') {
+          if (backslash && cc == $backslash) {
             if (++i >= len)
               throw FormatException("Illegal backslash, $data");
-            switch (data[i]) {
-              case 'n': val.write('\n'); continue;
-              case 't': val.write('\t'); continue;
-              case 'b': val.write('\b'); continue;
-              case 'r': val.write('\r'); continue;
-              default: val.write(data[i]); continue;
+            switch (data.codeUnitAt(i)) {
+              case $n: val.write('\n'); continue;
+              case $t: val.write('\t'); continue;
+              case $b: val.write('\b'); continue;
+              case $r: val.write('\r'); continue;
+              default: val.writeCharCode(data.codeUnitAt(i)); continue;
             }
           }
-          val.write(cc);
+          val.writeCharCode(cc);
         }
       } //if i >= 0
       map[key] = val.toString();
