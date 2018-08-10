@@ -3,10 +3,6 @@
 // Author: tomyeh
 part of rikulo_util;
 
-/** A readonly and empty map.
- */
-const Map emptyMap = {};
-
 /**
  * A collection of Map related utilities.
  */
@@ -46,8 +42,8 @@ class MapUtil {
    * (i.e., no equal sign).
    */
   static Map<String, String> parse(String data,
-    {bool backslash:true, String defaultValue}) {
-    Map<String, String> map = LinkedHashMap();
+      {bool backslash:true, String defaultValue}) {
+    final map = LinkedHashMap<String, String>();
     for (int i = 0, len = data.length; i < len;) {
       i = StringUtil.skipWhitespaces(data, i);
       if (i >= len)
@@ -210,9 +206,9 @@ class _OnDemandMap<K, V> implements Map<K,V> {
     if (_map != null) _map.forEach(f);
   }
   @override
-  Iterable<K> get keys => _map != null ? _map.keys: emptyList as List<K>;
+  Iterable<K> get keys => _map != null ? _map.keys: const [];
   @override
-  Iterable<V> get values => _map != null ? _map.values: emptyList as List<V>;
+  Iterable<V> get values => _map != null ? _map.values: const [];
   @override
   bool get isEmpty => _map == null || _map.isEmpty;
   @override
@@ -224,7 +220,7 @@ class _OnDemandMap<K, V> implements Map<K,V> {
   @override
   V remove(Object key) => _map != null ? _map.remove(key): null;
   @override
-  String toString() => (_map != null ? _map: emptyMap).toString();
+  String toString() => (_map ?? const {}).toString();
 
   @override
   void addEntries(Iterable<MapEntry<K, V>> newEntries)

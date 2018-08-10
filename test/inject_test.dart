@@ -103,6 +103,7 @@ void main() {
       expect(setterFailed, ["wrong"]);
     });
 
+    /*
     test("inject two-level and onSetterError", () {
       List<String> setterFailed = [];
       User user = ObjectUtil.inject(User(), {
@@ -118,6 +119,6 @@ void main() {
 
       expect(user.manager.firstName, "John");
       expect(setterFailed, ["wrong", "whatever", "notFound", "getterOnly", "wrongUser"]);
-    });
+    });*/
   }); //group
 }

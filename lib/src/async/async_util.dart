@@ -69,7 +69,7 @@ class _DeferInfo {
 }
 
 class _Deferrer {
-  Map<dynamic, _DeferInfo> _defers = HashMap();
+  Map<dynamic, _DeferInfo> _defers = HashMap<dynamic, _DeferInfo>();
 
   void run(key, task(), Duration min, Duration max) {
     final _DeferInfo di = _defers[key];
@@ -93,9 +93,9 @@ class _Deferrer {
 
   Future flush(void onAction(key, bool end), void onError(ex, st),
       bool repeat) {
-    final List<Future> ops = [];
+    final ops = <Future>[];
     final defers = _defers;
-    _defers = HashMap();
+    _defers = HashMap<dynamic, _DeferInfo>();
 
     for (final key in defers.keys) {
       try {

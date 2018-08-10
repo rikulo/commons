@@ -63,9 +63,9 @@ ContentType parseContentType(String value) {
 }
 
 ///extension => ContentType
-final Map<String, ContentType> _ctypes = HashMap();
+final _ctypes = HashMap<String, ContentType>();
 ///value => ContentType
-final Map<String, ContentType> _rawCtypes = HashMap();
+final _rawCtypes = HashMap<String, ContentType>();
 
 bool _isTextType(String mime)
 => mime.startsWith("text/")

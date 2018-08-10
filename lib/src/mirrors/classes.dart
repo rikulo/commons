@@ -173,7 +173,7 @@ class ClassUtil {
   ///Converts a map of named parameters to Symbol for synchronous invocation
   static Map<Symbol, dynamic> _toNamedParams(Map<String, dynamic> namedArgs) {
     if (namedArgs != null) {
-      Map<Symbol, dynamic> nargs = HashMap();
+      final nargs = HashMap<Symbol, dynamic>();
       namedArgs.forEach((k,v) => nargs[Symbol(k)] = v);
       return nargs;
     }
