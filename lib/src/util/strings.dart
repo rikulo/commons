@@ -3,6 +3,9 @@
 // Author: tomyeh
 part of rikulo_util;
 
+/// A set of whitespaces in code units.
+final $whitespaces = const <int>[$space, $tab, $lf, $cr, $ff, 0x85, 0xa0].toSet();
+
 /** String utilities.
  */
 class StringUtil {
@@ -37,16 +40,14 @@ class StringUtil {
   =>   (digit && cc >= $0 && cc <= $9)
     || (upper && cc >= $A && cc <= $Z)
     || (lower && cc >= $a && cc <= $z)
-    || (whitespace && whitespaces.contains(cc));
-
-  static final whitespaces = const <int>[$space, $tab, $lf, $cr, $ff, 0x85, 0xa0].toSet();
+    || (whitespace && $whitespaces.contains(cc));
 
   /** Returns the index of the first non-whitespace character starting at [from],
    * `min(from, str.length)` if not found.
    */
   static int skipWhitespaces(String str, int from) {
     for (int len = str.length; from < len; ++from)
-      if (!isChar(str[from], whitespace: true))
+      if (!isCharCode(str.codeUnitAt(from), whitespace: true))
         break;
     return from;
   }
@@ -60,7 +61,7 @@ class StringUtil {
     StringBuffer sb;
     int k = 0;
     for (int i = 0, len = name.length; i < len; ++i) {
-      if (name[i] == '-') {
+      if (name.codeUnitAt(i) == $dash) {
         if (sb == null) sb = StringBuffer();
         sb..write(name.substring(k, i))
           ..write(name[++i].toUpperCase());
