@@ -10,6 +10,7 @@ import "dart:collection" show HashMap;
 import "dart:convert";
 
 import "package:mime/mime.dart" show lookupMimeType;
+import "package:charcode/ascii.dart";
 
 import "async.dart";
 import "convert.dart";

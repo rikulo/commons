@@ -63,7 +63,7 @@ class MapUtil {
         throw FormatException("Key required, $data");
 
       i = StringUtil.skipWhitespaces(data, i);
-      if (i >= len || data[i] != '=') {
+      if (i >= len || data.codeUnitAt(i) != $equal) {
         map[key] = defaultValue;
         if (i >= len)
           break; //done

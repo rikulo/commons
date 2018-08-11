@@ -75,11 +75,12 @@ class XmlUtil {
     if (mapped != null)
       return mapped;
 
-    if (key.length >= 3 && key[0] == '#')
+    if (key.length >= 3 && key.codeUnitAt(0) == $hash) {
+      final k1 = key.codeUnitAt(1);
       return String.fromCharCodes(
-          [int.parse(
-            key[1].toLowerCase() == 'x' ?
+          [int.parse(k1 == $x || k1 == $X ?
               "0x${key.substring(2)}": key.substring(1))]);
+    }
 
     return m.group(0);
   }

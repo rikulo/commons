@@ -35,10 +35,10 @@ class HttpUtil {
     while (i < len) {
       int j = i, iEquals;
       for (; j < len; ++j) {
-        final cc = queryString[j];
-        if (cc == '=')
+        final cc = queryString.codeUnitAt(j);
+        if (cc == $equal)
           iEquals = j;
-        else if (cc == '&' || cc == ';')
+        else if (cc == $amp || cc == $semicolon)
           break;
       }
 
