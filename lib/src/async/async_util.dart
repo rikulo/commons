@@ -51,15 +51,22 @@ Future flushDefers({void onAction(key, bool end),
 
 /** Configures how to execute a deferred task.
  * 
+ * Note: `onAction` and `onError` are available if it is caused by
+ * the invocation of [flushDefers]. That is, they are passed from
+ * the arguments when calling [flushDefers].
+ * 
  * * [executor] - if specified, it is used to execute [task].
  * Otherwise, [task] was called directly.
  */
-void configureDefers({FutureOr executor(key, FutureOr task())}) {
+void configureDefers(
+    {FutureOr executor(key, FutureOr task(),
+        {void onAction(), void onError(ex, st)})}) {
   _deferrer.executor = executor;
 }
 
 typedef FutureOr _Task();
-typedef FutureOr _Executor(key, FutureOr task());
+typedef FutureOr _Executor(key, FutureOr task(),
+    {void onAction(), void onError(ex, st)});
 
 class _DeferInfo {
   Timer timer;
@@ -115,16 +122,23 @@ class _Deferrer {
 
         onAction?.call(key, false);
  
-        final op = executor != null ? executor(key, di.task): di.task();
-         if (op is Future) {
-          Future ft = op;
-          if (onAction != null)
-            ft = ft.then((_) => onAction(key, true));
-          if (onError != null)
-            ft = ft.catchError(onError);
-          ops.add(ft);
+        if (executor != null) {
+          final op = executor(key, di.task, onError: onError,
+              onAction: onAction == null ? null: () => onAction(key, true));
+          if (op is Future) ops.add(op);
+
         } else {
-          onAction?.call(key, true);
+          var op = di.task();
+          if (op is Future) {
+            Future ft = op;
+            if (onAction != null)
+              ft = ft.then((_) => onAction(key, true));
+            if (onError != null)
+              ft = ft.catchError(onError);
+            ops.add(ft);
+          } else {
+            onAction?.call(key, true);
+          }
         }
       } catch (ex, st) {
         if (onError != null) onError(ex, st);
