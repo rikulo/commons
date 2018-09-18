@@ -28,7 +28,7 @@ part of rikulo_async;
  * will be execute at least [max] milliseconds later even if there are
  * following invocations with the same key.
  */
-void defer(key, task(), {Duration min: const Duration(seconds: 1), Duration max}) {
+void defer(key, FutureOr task(), {Duration min: const Duration(seconds: 1), Duration max}) {
   _deferrer.run(key, task, min, max);
 }
 
@@ -49,7 +49,17 @@ Future flushDefers({void onAction(key, bool end),
     void onError(ex, st), bool repeat: false})
 => _deferrer.flush(onAction, onError, repeat);
 
-typedef _Task();
+/** Configures how to execute a deferred task.
+ * 
+ * * [executor] - if specified, it is used to execute [task].
+ * Otherwise, [task] was called directly.
+ */
+void configureDefers({FutureOr executor(key, FutureOr task())}) {
+  _deferrer.executor = executor;
+}
+
+typedef FutureOr _Task();
+typedef FutureOr _Executor(key, FutureOr task());
 
 class _DeferInfo {
   Timer timer;
@@ -70,8 +80,9 @@ class _DeferInfo {
 
 class _Deferrer {
   Map<dynamic, _DeferInfo> _defers = HashMap<dynamic, _DeferInfo>();
+  _Executor executor;
 
-  void run(key, task(), Duration min, Duration max) {
+  void run(key, FutureOr task(), Duration min, Duration max) {
     final _DeferInfo di = _defers[key];
     if (di == null) {
       _defers[key] = _DeferInfo(_startTimer(key, min), task);
@@ -104,14 +115,14 @@ class _Deferrer {
 
         onAction?.call(key, false);
  
-        var op = di.task();
- 
-        if (op is Future) {
+        final op = executor != null ? executor(key, di.task): di.task();
+         if (op is Future) {
+          Future ft = op;
           if (onAction != null)
-            op = op.then((_) => onAction(key, true));
+            ft = ft.then((_) => onAction(key, true));
           if (onError != null)
-            op = op.catchError(onError);
-          ops.add(op);
+            ft = ft.catchError(onError);
+          ops.add(ft);
         } else {
           onAction?.call(key, true);
         }
@@ -122,16 +133,18 @@ class _Deferrer {
     }
 
     //Let them run in parallel to avoid one blocks the other
-    var result = Future.wait(ops);
+    Future result = Future.wait(ops);
     if (repeat)
-      result = result.then((_) {
-            if (_defers.isNotEmpty)
-              flush(onAction, onError, true);
-          });
+      result = result.then((_)
+          => _defers.isNotEmpty ? flush(onAction, onError, true): null);
     return result;
   }
 
   Timer _startTimer(key, Duration min)
-  => Timer(min, () => (_defers.remove(key))?.task());
+  => Timer(min, () {
+    final di = _defers.remove(key);
+    return di == null ? null:
+        executor != null ? executor(key, di.task): di.task();
+  });
 }
 final _Deferrer _deferrer = _Deferrer();
