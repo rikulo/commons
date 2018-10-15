@@ -13,7 +13,7 @@ class IOSinkWrapper extends StreamConsumerWrapper<List<int>> implements IOSink {
   IOSinkWrapper(IOSink origin) : super(origin);
 
   @override
-  IOSink get origin => super.origin;
+  IOSink get origin => super.origin as IOSink;
 
   //IOSink//
   @override

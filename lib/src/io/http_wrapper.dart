@@ -10,7 +10,7 @@ class HttpRequestWrapper extends StreamWrapper<List<int>> implements HttpRequest
   HttpRequestWrapper(HttpRequest origin): super(origin);
 
   @override
-  HttpRequest get origin => super.origin;
+  HttpRequest get origin => super.origin as HttpRequest;
 
   @override
   int get contentLength => origin.contentLength;
@@ -48,7 +48,7 @@ class HttpResponseWrapper extends IOSinkWrapper implements HttpResponse {
   HttpResponseWrapper(HttpResponse origin): super(origin);
 
   @override
-  HttpResponse get origin => super.origin;
+  HttpResponse get origin => super.origin as HttpResponse;
 
   @override
   int get contentLength => origin.contentLength;

@@ -8,7 +8,7 @@ import 'package:test/test.dart';
 import "package:rikulo_commons/mirrors.dart";
 
 class User {
-  User({this.firstName, lastName, this.manager}): _lastName = lastName;
+  User({this.firstName, String lastName, this.manager}): _lastName = lastName;
 
   String firstName, _lastName;
 

@@ -46,7 +46,7 @@ void defer(key, FutureOr task(), {Duration min: const Duration(seconds: 1), Dura
  * Default: false
  */
 Future flushDefers({void onAction(key, bool end),
-    void onError(ex, st), bool repeat: false})
+    void onError(ex, StackTrace st), bool repeat: false})
 => _deferrer.flush(onAction, onError, repeat);
 
 /** Configures how to execute a deferred task.
@@ -60,13 +60,13 @@ Future flushDefers({void onAction(key, bool end),
  */
 void configureDefers(
     {FutureOr executor(key, FutureOr task(),
-        {void onAction(), void onError(ex, st)})}) {
+        {void onAction(), void onError(ex, StackTrace st)})}) {
   _deferrer.executor = executor;
 }
 
 typedef FutureOr _Task();
 typedef FutureOr _Executor(key, FutureOr task(),
-    {void onAction(), void onError(ex, st)});
+    {void onAction(), void onError(ex, StackTrace st)});
 
 class _DeferInfo {
   Timer timer;
@@ -109,7 +109,7 @@ class _Deferrer {
     }
   }
 
-  Future flush(void onAction(key, bool end), void onError(ex, st),
+  Future flush(void onAction(key, bool end), void onError(ex, StackTrace st),
       bool repeat) {
     final ops = <Future>[];
     final defers = _defers;

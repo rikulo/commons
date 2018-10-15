@@ -42,7 +42,7 @@ class StreamProvider<T> {
   /**
    * Gets a [Stream] for this event type, on the specified target.
    */
-  Stream<T> forTarget(StreamTarget target) {
+  Stream<T> forTarget(StreamTarget<T> target) {
     return _Stream(target, _type);
   }
 }
@@ -60,14 +60,14 @@ class CapturableStreamProvider<T> {
    *
    * * [useCapture] is applicable only if the view event is caused by a DOM event.
    */
-  Stream<T> forTarget(CapturableStreamTarget target, {bool useCapture: false}) {
+  Stream<T> forTarget(CapturableStreamTarget<T> target, {bool useCapture: false}) {
     return _CapturableStream(target, _type, useCapture);
   }
 }
 
 class _Stream<T> extends Stream<T> {
   final String _type;
-  final StreamTarget _target;
+  final StreamTarget<T> _target;
 
   _Stream(this._target, this._type);
 
@@ -79,7 +79,7 @@ class _Stream<T> extends Stream<T> {
 
 class _CapturableStream<T> extends Stream<T> {
   final String _type;
-  final CapturableStreamTarget _target;
+  final CapturableStreamTarget<T> _target;
   final bool _useCapture;
 
   _CapturableStream(this._target, this._type, this._useCapture);
@@ -91,10 +91,12 @@ class _CapturableStream<T> extends Stream<T> {
       this._target, this._type, onData, this._useCapture);
 }
 
+typedef void _OnData<T>(T event);
+
 abstract class _StreamSubscriptionBase<T> extends StreamSubscription<T> {
   int _pauseCount = 0;
   final String _type;
-  var _onData;
+  _OnData<T> _onData;
 
   _StreamSubscriptionBase(this._type, this._onData) {
     _tryResume();
@@ -174,7 +176,7 @@ abstract class _StreamSubscriptionBase<T> extends StreamSubscription<T> {
 }
 
 class _StreamSubscription<T> extends _StreamSubscriptionBase<T> {
-  StreamTarget _target;
+  StreamTarget<T> _target;
 
   _StreamSubscription(this._target, String type, void onData(T event)):
     super(type, onData);
@@ -201,7 +203,7 @@ class _StreamSubscription<T> extends _StreamSubscriptionBase<T> {
 }
 
 class _CapturableStreamSubscription<T> extends _StreamSubscriptionBase<T> {
-  CapturableStreamTarget _target;
+  CapturableStreamTarget<T> _target;
   final bool _useCapture;
 
   _CapturableStreamSubscription(this._target, String type, void onData(T event), this._useCapture):

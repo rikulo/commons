@@ -67,11 +67,10 @@ class HttpUtil {
       if (!buf.isEmpty)
         buf.write('&');
       buf..write(Uri.encodeQueryComponent(name))..write('=');
-      var value = parameters[name];
-      if (value != null)
-        value = value.toString();
-      if (value != null && !value.isEmpty)
-        buf.write(Uri.encodeQueryComponent(value));
+      final value = parameters[name];
+      final String sval = value != null ? value.toString(): null;
+      if (sval?.isNotEmpty == true)
+        buf.write(Uri.encodeQueryComponent(sval));
     }
     return buf.toString();
   }

@@ -28,7 +28,7 @@ class ClassUtil {
    * `dart:core.List` and `rikulo_mirrors.ClassMirror`.
    */
   static ClassMirror forName(String qname) {
-    Map splited = _splitQualifiedName(qname);
+    final splited = _splitQualifiedName(qname);
     if (splited != null) {
       final LibraryMirror lib =
         currentMirrorSystem().findLibrary(Symbol(splited["lib"]));
@@ -158,7 +158,7 @@ class ClassUtil {
    */
   static apply(Function function, List params,
       [Map<String, dynamic> namedArgs])
-    => applyByMirror(reflect(function), params, namedArgs);
+    => applyByMirror(reflect(function) as ClosureMirror, params, namedArgs);
   /**
    * apply a closure mirror.
    *
@@ -244,17 +244,17 @@ class ClassUtil {
   static ClassMirror getSetterType(ClassMirror classMirror, String field) {
     var mtd = classMirror.declarations[Symbol("$field=")];
     if (mtd is MethodMirror)
-      return mtd.parameters[0].type;
+      return mtd.parameters[0].type as ClassMirror;
 
     mtd = classMirror.declarations[Symbol(field)];
-    return mtd is VariableMirror ? mtd.type: null;
+    return mtd is VariableMirror ? mtd.type as ClassMirror: null;
   }
   /** Returns the class mirror of the given field (including getter), or null
    * if no such field nor getter.
    */
   static ClassMirror getGetterType(ClassMirror classMirror, String field) {
     final mtd = classMirror.declarations[Symbol(field)];
-    return mtd is MethodMirror ? mtd.returnType:
-        mtd is VariableMirror ? mtd.type: null;
+    return mtd is MethodMirror ? mtd.returnType as ClassMirror:
+        mtd is VariableMirror ? mtd.type as ClassMirror: null;
   }
 }
