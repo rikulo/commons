@@ -1,5 +1,9 @@
 #Rikulo Commons Changes
 
+##3.1.0
+
+* `Browser.dart` not supported.
+
 ##3.0.0
 
 * Dart 2 required

@@ -18,8 +18,7 @@ abstract class Browser {
     _ropera = RegExp(r"(opera)(?:.*version)?[ /]([\w.]+)"),
     _riOS = RegExp(r"os[ /]([\w_]+) like mac os"),
     _rmacOS = RegExp(r"mac os "),
-    _randroid = RegExp(r"android[ /]([\w.]+)"),
-    _rdart = RegExp(r"[^a-z]dart[^a-z]");
+    _randroid = RegExp(r"android[ /]([\w.]+)");
 
   /** The browser's name. */
   String name;
@@ -60,11 +59,7 @@ abstract class Browser {
    * If false, the browser is assumed to run on a desktop and
    * it can be resized by the user.
    */
-  bool mobile = false;
-
-  /** Whether Dart is supported.
-   */
-  bool dart = false;
+  bool mobile;
 
   /** The webkit's version if this is a webkit-based browser, or null
    * if it is not webkit-based. Note: Safari, Chrome and Edge are all
@@ -107,6 +102,7 @@ abstract class Browser {
       mobile = iOS = true;
       iOSVersion = parseVersion(m2.group(1), '_');
     } else {
+      mobile = ua.indexOf("mobile") >= 0;
       macOS = _rmacOS.hasMatch(ua);
     }
     
@@ -125,7 +121,6 @@ abstract class Browser {
     } else if (bm(_rie) || bm(_rie2)) {
       ie = true;
       name = "ie";
-      mobile = ua.indexOf("iemobile") >= 0;
     } else if (bm(_ropera)) {
       opera = true;
     } else if (bm(_rfirefox)) { //after opera
@@ -134,8 +129,6 @@ abstract class Browser {
       name = "";
       version = 1.0;
     }
-
-    dart = _rdart.hasMatch(ua);
   }
 
   /** Parses the given [version] into a double.
