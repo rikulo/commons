@@ -14,10 +14,6 @@ main() {
     expect(browser.name, "chrome");
     expect(browser.version, version);
   }
-  void isDartium(Browser browser, num version) {
-    isChrome(browser, version);
-    expect(browser.dart, isTrue);
-  }
   void isEdge(Browser browser, num version) {
     expect(browser.webkit, isTrue);
     expect(browser.edge, isTrue);
@@ -64,9 +60,6 @@ main() {
   group("browser tests", () {
     test("browser tests", () {
       final Map<String, List> uas = {
-"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 (Dart) Safari/537.31":
-  [isDartium, 26.0],
-
 "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36 Chrome 41.0.2227.1":
   [isChrome, 41.0],
 "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36 Chrome 41.0.2227.0":
