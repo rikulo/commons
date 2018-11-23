@@ -56,6 +56,11 @@ main() {
     expect(browser.name, "opera");
     expect(browser.version, version);
   }
+  void isWebkit(Browser browser, num version) {
+    expect(browser.safari, isFalse);
+    expect(browser.webkit, isTrue);
+    expect(browser.version, version);
+  }
 
   group("browser tests", () {
     test("browser tests", () {
@@ -95,6 +100,9 @@ main() {
   [isOpera, 12.14],
 "Mozilla/5.0 (Windows NT 6.0; rv:2.0) Gecko/20100101 Firefox/4.0 Opera 12.14":
   [isOpera, 12.14],
+"Xiaomi_MDT2_TD-LTE/V1 Linux/3.18.31 Android/7.1 Release/5.15.2017 "
+"Browser/AppleWebKit537.36 Mobile Safari/537.36 System/Android 7.1 XiaoMi/MiuiBrowser/8.7.7":
+  [isWebkit, 537.36],
       };
 
       for (final ua in uas.keys) {

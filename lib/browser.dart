@@ -8,7 +8,7 @@ library rikulo_browser;
  */
 abstract class Browser {
   // all RegExp shall be lower case here
-  static final RegExp _rwebkit = RegExp(r"(webkit)[ /]([\w.]+)"),
+  static final RegExp _rwebkit = RegExp(r"(webkit)[ /]?([0-9]+[0-9.]*)"),
     _rsafari = RegExp(r"(version)/([\w.]+).*safari"),
     _rchrome = RegExp(r"(chrome|crios)[ /]([\w.]+)"),
     _redge = RegExp(r"(edge)/([\w.]+)"),
@@ -118,6 +118,8 @@ abstract class Browser {
         safari = true;
         name = "safari";
       }
+      //opera, firefox for iOS all based on ApplieWebKit, but
+      //we consider them as webkit (than firefox or opera)
     } else if (bm(_rie) || bm(_rie2)) {
       ie = true;
       name = "ie";
