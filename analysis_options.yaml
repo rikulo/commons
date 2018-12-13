@@ -9,5 +9,5 @@ linter:
     - avoid_init_to_null
     - camel_case_types
     - constant_identifier_names
-    - unnecessary_new
+    #- unnecessary_new
     #- unnecessary_const
