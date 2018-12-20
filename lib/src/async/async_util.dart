@@ -41,13 +41,14 @@ void defer(key, FutureOr task(), {Duration min: const Duration(seconds: 1), Dura
  * * [onError] - (optional) used to process the error thrown by a deferred task.
  * If not specified, the exception won't be caught and will terminate
  * this method.
- * * [repeat] - If specified, it will continue to flush any new deferred
+ * * [repeatLater] - If specified, it will continue to flush any new deferred
  * function (registered via [defer] when flusing existing deferred functions).
- * Default: false
+ * Before continue, it will wait the duration specified in [repeatLater].
+ * Default: null (not to repeat).
  */
 Future flushDefers({void onAction(key, bool end),
-    void onError(ex, StackTrace st), bool repeat: false})
-=> _deferrer.flush(onAction, onError, repeat);
+    void onError(ex, StackTrace st), Duration repeatLater})
+=> _deferrer.flush(onAction, onError, repeatLater);
 
 /** Configures how to execute a deferred task.
  * 
@@ -110,10 +111,12 @@ class _Deferrer {
   }
 
   Future flush(void onAction(key, bool end), void onError(ex, StackTrace st),
-      bool repeat) {
-    final ops = <Future>[];
+      Duration repeatLater) {
+    if (_defers.isEmpty) return new Future.value();
+
     final defers = _defers;
     _defers = HashMap<dynamic, _DeferInfo>();
+    final ops = <Future>[];
 
     for (final key in defers.keys) {
       try {
@@ -148,9 +151,10 @@ class _Deferrer {
 
     //Let them run in parallel to avoid one blocks the other
     Future result = Future.wait(ops);
-    if (repeat)
-      result = result.then((_)
-          => _defers.isNotEmpty ? flush(onAction, onError, true): null);
+    if (repeatLater != null)
+      result = result.then(
+          (_) => new Future.delayed(repeatLater,
+            () => flush(onAction, onError, repeatLater)));
     return result;
   }
 
@@ -161,4 +165,4 @@ class _Deferrer {
         executor != null ? executor(key, di.task): di.task();
   });
 }
-final _Deferrer _deferrer = _Deferrer();
+final _deferrer = _Deferrer();
