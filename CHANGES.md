@@ -1,5 +1,9 @@
 #Rikulo Commons Changes
 
+##3.1.3
+
+* The signature of flushDefers() was changed. Use `repeatLater: Duration.zero` instead of `repeat: true`.
+
 ##3.1.0
 
 * `Browser.dart` not supported.
