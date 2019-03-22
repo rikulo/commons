@@ -42,7 +42,7 @@ void main() {
         "firstName": "Bill",
         "lastName": "Gates",
         "age": "32" //test coercion
-      });
+      }) as User;
 
       expect(user.firstName, "Bill");
       expect(user.lastName, "Gates");
@@ -57,7 +57,7 @@ void main() {
         "manager.firstName": "John",
         "manager.lastName": "Kyle",
         "manager.manager.firstName": "Boss"
-      });
+      }) as User;
 
       expect(user.firstName, "Bill");
       expect(user.lastName, "Gates");
@@ -74,7 +74,7 @@ void main() {
         "nonExisting": "Gates",
         "level1.level2": 123,
         "age": "32" //test coercion
-      }, silent: true);
+      }, silent: true) as User;
 
       expect(user.firstName, "Bill");
       expect(user.lastName, isNull);
@@ -94,7 +94,7 @@ void main() {
         validated.add(field);
       }, onSetterError: (obj, field, value, error) {
         setterFailed.add(field);
-      }, silent: true);
+      }, silent: true) as User;
 
       expect(user.firstName, "Bill");
       expect(user.lastName, "Gates");

@@ -149,9 +149,8 @@ class _Deferrer {
       }
     }
 
-    //Let them run in parallel to avoid one blocks the other
-    Future result = Future.wait(ops);
-    if (repeatLater != null)
+    Future result = Future.wait(ops); //wait => run in parallel
+    if (repeatLater != null) //spec: null => not repeat
       result = result.then(
           (_) => new Future.delayed(repeatLater,
             () => flush(onAction, onError, repeatLater)));
