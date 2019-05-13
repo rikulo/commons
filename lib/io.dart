@@ -14,6 +14,7 @@ import "package:charcode/ascii.dart";
 
 import "async.dart";
 import "convert.dart";
+import "util.dart" show isHttpStatusOK;
 
 part "src/io/http_wrapper.dart";
 part "src/io/iosink_wrapper.dart";

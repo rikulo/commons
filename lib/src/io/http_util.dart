@@ -3,6 +3,87 @@
 // Author: tomyeh
 part of rikulo_io;
 
+/// The cookie's name for holding Dart session ID.
+const String dartSessionId = "DARTSESSID";
+
+/// Sends an Ajax request to the given [url].
+/// It returns the data received, or null if error.
+/// 
+/// To send data in `List<int>, pass it via [data].
+/// To send in String, pass it via [body].
+///
+/// * [onStatusCode] used to retrieve the status code.
+/// Ignored if not specified.
+/// Note: [onStatusCode] can return a boolean to indicate whether
+/// the status code represents a successfully request.
+/// If it returns `null` or this method is not specified,
+/// we assume a value between 200 and 299 is a successfully request.
+Future<List<int>> ajax(Uri url, {String method: "GET",
+    List<int> data, String body, Map<String, String> headers,
+    bool onStatusCode(int statusCode)}) async {
+  final client = new HttpClient();
+  try {
+    final xhr = await client.openUrl(method, url);
+    if (headers != null) {
+      final xhrheaders = xhr.headers;
+      headers.forEach(xhrheaders.add);
+    }
+
+    if (data != null) xhr.add(data);
+    if (body != null) xhr.write(body);
+
+    final resp = await xhr.close(),
+      statusCode = resp.statusCode;
+
+    if (!(onStatusCode?.call(statusCode) ?? isHttpStatusOK(statusCode)))
+      return null;
+
+    final result = <int>[];
+    await resp.listen(result.addAll).asFuture();
+    return result;
+  } finally {
+    try {
+      client.close();
+    } catch (_) {
+    }
+  }
+}
+
+/// Sends an Ajax request to the given [url] using the POST method.
+Future<List<int>> postAjax(Uri url, {
+    List<int> data, String body, Map<String, String> headers,
+    bool onStatusCode(int statusCode)})
+=> ajax(url, method: "POST", data: data, body: body,
+    headers: headers, onStatusCode: onStatusCode);
+
+/// Sends an Ajax request to the given [url] using the PUT method.
+Future<List<int>> putAjax(Uri url, {
+    List<int> data, String body, Map<String, String> headers,
+    bool onStatusCode(int statusCode)})
+=> ajax(url, method: "PUT", data: data, body: body,
+    headers: headers, onStatusCode: onStatusCode);
+
+/// Sends an Ajax request to the given [url] using the DELETE method.
+Future<List<int>> deleteAjax(Uri url, {
+    List<int> data, String body, Map<String, String> headers,
+    bool onStatusCode(int statusCode)})
+=> ajax(url, method: "DELETE", data: data, body: body,
+    headers: headers, onStatusCode: onStatusCode);
+
+/// Sends an Ajax request to the given [url] using the HEAD method.
+Future<List<int>> headAjax(Uri url, {
+    List<int> data, String body, Map<String, String> headers,
+    bool onStatusCode(int statusCode)})
+=> ajax(url, method: "HEAD", data: data, body: body,
+    headers: headers, onStatusCode: onStatusCode);
+
+/// Sends an Ajax request to the given [url] using the PATCH method.
+Future<List<int>> patchAjax(Uri url, {
+    List<int> data, String body, Map<String, String> headers,
+    bool onStatusCode(int statusCode)})
+=> ajax(url, method: "PATCH", data: data, body: body,
+    headers: headers, onStatusCode: onStatusCode);
+
 /**
  * HTTP related utilities
  */

@@ -33,3 +33,6 @@ typedef Map<K, V> AsMap<K, V>();
 /** A function that returns a list.
  */
 typedef List<T> AsList<T>();
+
+/// Tests whether the status code is a successfully response.
+bool isHttpStatusOK(int status) => status >= 200 && status < 300;
