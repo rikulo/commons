@@ -21,4 +21,4 @@ done
 rm -rf out/*
 popd
 
-dart --enable-type-checks --enable-asserts test/run_all.dart $@
+dart --enable-asserts test/run_all.dart $@
