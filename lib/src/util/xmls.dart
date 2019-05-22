@@ -7,67 +7,113 @@ part of rikulo_util;
  * XML Utilities.
  */
 class XmlUtil {
-  static final RegExp
-    _reEncode   = RegExp(r'[<>&"]'),
-    _reEncodeP  = RegExp(r'[<>&" \t]'),
-    _reEncodeL  = RegExp(r'[<>&"\r\n]'),
-    _reEncodePL = RegExp(r'[<>&" \t\r\n]'),
-    _reEncodeS  = RegExp(r'([ \t])+|[<>&"]'),
-    _reEncodeSL = RegExp(r'([ \t])+|[<>&"\r\n]');
-  static const Map<String, String> _encs =
-      {'<': '&lt;', '>': '&gt;', '&': '&amp;', '"': "&quot;",
-       '\n': '<br/>\n', '\r': '',
-       ' ' : "&nbsp;", '\t': '&nbsp;&nbsp;&nbsp;&nbsp;'};
-
-  static String _encMapper(Match m) => _encs[m.group(0)];
-  static String _encMapperS(Match m) {
-    final String val = m.group(0);
-    int count = 0;
-    for (int i = val.length; --i >= 0;)
-      switch (val[i]) {
-        case ' ':
-          ++count;
-          break;
-        case '\t':
-          count += 4;
-          break;
-      }
-    if (count == 0)
-      return _encMapper(m);
-    if (count == 1)
-      return ' ';
-
-    final StringBuffer buf = StringBuffer();
-    while (--count > 0)
-      buf.write('&nbsp;');
-    buf.write(' '); //better to line-break here if any
-    return buf.toString();
-  }
-
   /** Encodes the string to a valid XML string.
    *
-   * + [txt] is the text to encode.
+   * + [value] is the text to encode.
    * + [pre] - whether to replace whitespace with &nbsp;
    * + [space] - whether to keep the space but still able to break
    * lines. If [pre] is true, [space] is ignored.
    * + [multiLine] - whether to replace linefeed with <br/>
+   * + [entity] - whether [value] might contain XML entities, such as `&#8214;`
+   * and `&quot;`. If true, it won't encode it if an entity is found.
+   * If true, you can escape with a backslash, such as `\&amp;`. So, it won't
+   * be treated as a XML entity.
+   * Note: backslash won't be handled specially if false.
+   * Default: false.
    */
-  static String encode(String txt,
-  {bool multiLine: false, bool pre: false, bool space: false}) {
-    if (txt == null) return null; //as it is
+  static String encode(String value, {bool multiLine: false, bool pre: false,
+      bool space: false, bool entity: false}) {
+    final len = value?.length ?? 0;
+    if (len == 0) return value; //as it is
 
-    return txt.replaceAllMapped(
-      multiLine ?
-        pre ? _reEncodePL: space ? _reEncodeSL:_reEncodeL:
-        pre ? _reEncodeP: space ? _reEncodeS: _reEncode,
-      space ? _encMapperS: _encMapper);
+    final buf = new StringBuffer();
+    int i = 0, j = 0;
+    void flush(String text, [int end]) {
+      buf..write(value.substring(j, end ?? i))
+        ..write(text);
+      j = i + 1;
+    }
+
+    for (bool escape = false; i < len; ++i) {
+      final cc = value.codeUnitAt(i);
+      if (entity) {
+        if (escape) {
+          escape = false;
+          if (cc == $amp) {
+            flush('&amp;', i - 1);
+            continue;
+          } else if (cc == $backslash) {
+            flush('');
+            continue;
+          }
+          //fall thru
+        } else if (cc == $amp) {
+          final m = _reXmlEntity.matchAsPrefix(value, i);
+          if (m != null) i = m.end - 1; //put entity to output directly
+          else flush('&amp;');
+          continue;
+        } else if (cc == $backslash) {
+          escape = true;
+          continue;
+        }
+        //fall thru
+      }
+
+      var replace = _encBasic[cc];
+      if (replace == null) {
+        if (multiLine) replace = _encLine[cc];
+
+        if (replace == null && (pre || space)) {
+          var count = _encSpace[cc];
+          if (count != null) {
+            int k;
+            if (!pre) { //pre has higher priority than space
+            //convert consecutive whitespaces to &nbsp; plus a space
+              for (k = i; ++k < len;) {
+                final diff = _encSpace[value.codeUnitAt(k)];
+                if (diff == null) break;
+                count += diff;
+              }
+              if (--count == 0) //we'll add extra space if pre at the end
+                continue; //if single space, no special handling (optimize)
+            }
+
+            flush('');
+
+            while (--count >= 0)
+              buf.write('&nbsp;');
+
+            if (!pre) {
+              buf.write(' '); //a space for line-break here
+              i = (j = k) - 1;
+            }
+            continue;
+          }
+        }
+      }
+
+      if (replace != null) flush(replace);
+    }
+
+    if (buf.isEmpty) return value;
+    flush('');
+    return buf.toString();
   }
+  static const _encBasic = const <int, String> {
+    $lt: '&lt;', $gt: '&gt;', $amp: '&amp;', $quot: "&quot;",
+  };
+  static const _encLine = const <int, String> {
+    $lf: '<br/>\n', $cr: '',
+  };
+  static const _encSpace = const <int, int> {
+    $space: 1, $tab: 4,
+  };
 
-  static final RegExp _reDecode = RegExp(r"&([a-z]+|#x?[0-9a-f]+);",
-    caseSensitive: false);
-  static const Map<String, String>
-    _decs = <String, String> {
-      'lt': '<', 'gt': '>', 'amp': '&', 'quot': '"', 'nbsp': ' '};
+  static final _reXmlEntity =
+      RegExp(r"&([a-z0-9]+|#[0-9]+|#[x][a-f0-9]+);", caseSensitive: false);
+  static const _decs = <String, String> {
+      'lt': '<', 'gt': '>', 'amp': '&', 'quot': '"', 'nbsp': ' '
+  };
 
   static String _decMapper(Match m) {
     final String key = m.group(1).toLowerCase();
@@ -93,6 +139,6 @@ class XmlUtil {
   static String decode(String txt) {
     if (txt == null) return null; //as it is
 
-    return txt.replaceAllMapped(_reDecode, _decMapper);
+    return txt.replaceAllMapped(_reXmlEntity, _decMapper);
   }
 }

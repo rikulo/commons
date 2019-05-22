@@ -1,8 +1,12 @@
 # Rikulo Commons Changes
 
+### 3.2.1
+
+* `XmlUtil.encode()` supports the `entity` parameter to escape XML entities.
+
 ### 3.2.0
 
-* ajax() added to simplify HTTP request at server side or flutter.
+* `ajax()` added to simplify HTTP request at server side or flutter.
 
 ### 3.1.3
 

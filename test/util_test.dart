@@ -32,9 +32,19 @@ void main() {
       "&lt;abc<br/>\nanother line");
     expect(XmlUtil.encode("<abc> </abc>\ta", pre: true),
       "&lt;abc&gt;&nbsp;&lt;/abc&gt;&nbsp;&nbsp;&nbsp;&nbsp;a");
+    expect(XmlUtil.encode("a ", space: true), "a ");
+    expect(XmlUtil.encode("a   ", space: true), "a&nbsp;&nbsp; ");
+
+    expect(XmlUtil.encode(r"&amp;"), r"&amp;amp;");
+    expect(XmlUtil.encode(r"&amp;", entity: true), r"&amp;");
+    expect(XmlUtil.encode(r"\&amp;&#123;", entity: true), r"&amp;amp;&#123;");
+    expect(XmlUtil.encode(r"\\&amp;&#X123A;\&#123;", entity: true), r"\&amp;&#X123A;&amp;#123;");
+    expect(XmlUtil.encode(r"&amp;\a", entity: true), r"&amp;\a");
+
     expect(XmlUtil.decode("&lt;abc&GT; and &amp;"), '<abc> and &');
 
-    expect(XmlUtil.encode("<abc de  f   \ng", space: true), "&lt;abc de&nbsp; f&nbsp;&nbsp; \ng");
+    expect(XmlUtil.encode("<abc de  f   \ng", space: true),
+      "&lt;abc de&nbsp; f&nbsp;&nbsp; \ng");
     expect(XmlUtil.encode("<abc de  f   \ngg", space: true, multiLine: true),
       "&lt;abc de&nbsp; f&nbsp;&nbsp; <br/>\ngg");
 
