@@ -1,5 +1,9 @@
 # Rikulo Commons Changes
 
+### 3.2.1+1
+
+* Prepare for upcoming breaking changes to `HttpRequest` in the Dart SDK.
+
 ### 3.2.1
 
 * `XmlUtil.encode()` supports the `entity` parameter to escape XML entities.

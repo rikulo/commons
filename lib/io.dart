@@ -8,6 +8,7 @@ import "dart:io";
 import "dart:async";
 import "dart:collection" show HashMap;
 import "dart:convert";
+import 'dart:typed_data';
 
 import "package:mime/mime.dart" show lookupMimeType;
 import "package:charcode/ascii.dart";

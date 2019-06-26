@@ -6,11 +6,11 @@ part of rikulo_io;
 /**
  * The HTTP request wrapper.
  */
-class HttpRequestWrapper extends StreamWrapper<List<int>> implements HttpRequest {
-  HttpRequestWrapper(HttpRequest origin): super(origin);
+class HttpRequestWrapper implements HttpRequest {
+  HttpRequestWrapper(this.origin);
 
-  @override
-  HttpRequest get origin => super.origin as HttpRequest;
+  /// The origin stream
+  final HttpRequest origin;
 
   @override
   int get contentLength => origin.contentLength;
@@ -39,6 +39,245 @@ class HttpRequestWrapper extends StreamWrapper<List<int>> implements HttpRequest
 
   @override
   String toString() => origin.toString();
+
+  @override
+  StreamSubscription<Uint8List> listen(
+    void Function(Uint8List event) onData, {
+    Function onError,
+    void Function() onDone,
+    bool cancelOnError,
+  }) {
+    return origin.transform(const _ToUint8List()).listen(
+      onData,
+      onError: onError,
+      cancelOnError: cancelOnError,
+    );
+  }
+
+  @override
+  Future<bool> any(bool Function(Uint8List element) test) {
+    return origin.transform(const _ToUint8List()).any(test);
+  }
+
+  @override
+  Stream<Uint8List> asBroadcastStream({
+    void Function(StreamSubscription<Uint8List> subscription) onListen,
+    void Function(StreamSubscription<Uint8List> subscription) onCancel,
+  }) {
+    return origin
+        .transform(const _ToUint8List())
+        .asBroadcastStream(onListen: onListen, onCancel: onCancel);
+  }
+
+  @override
+  Stream<E> asyncExpand<E>(Stream<E> Function(Uint8List event) convert) {
+    return origin.transform(const _ToUint8List()).asyncExpand<E>(convert);
+  }
+
+  @override
+  Stream<E> asyncMap<E>(FutureOr<E> Function(Uint8List event) convert) {
+    return origin.transform(const _ToUint8List()).asyncMap<E>(convert);
+  }
+
+  @override
+  Stream<R> cast<R>() {
+    return origin.cast<R>();
+  }
+
+  @override
+  Future<bool> contains(Object needle) {
+    return origin.contains(needle);
+  }
+
+  @override
+  Stream<Uint8List> distinct([bool Function(Uint8List previous, Uint8List next) equals]) {
+    return origin.transform(const _ToUint8List()).distinct(equals);
+  }
+
+  @override
+  Future<E> drain<E>([E futureValue]) {
+    return origin.drain<E>(futureValue);
+  }
+
+  @override
+  Future<Uint8List> elementAt(int index) {
+    return origin.transform(const _ToUint8List()).elementAt(index);
+  }
+
+  @override
+  Future<bool> every(bool Function(Uint8List element) test) {
+    return origin.transform(const _ToUint8List()).every(test);
+  }
+
+  @override
+  Stream<S> expand<S>(Iterable<S> Function(Uint8List element) convert) {
+    return origin.transform(const _ToUint8List()).expand(convert);
+  }
+
+  @override
+  Future<Uint8List> get first => origin.transform(const _ToUint8List()).first;
+
+  @override
+  Future<Uint8List> firstWhere(
+    bool Function(Uint8List element) test, {
+    List<int> Function() orElse,
+  }) {
+    return origin.transform(const _ToUint8List()).firstWhere(test, orElse: () {
+      return Uint8List.fromList(orElse());
+    });
+  }
+
+  @override
+  Future<S> fold<S>(
+      S initialValue, S Function(S previous, Uint8List element) combine) {
+    return origin.transform(const _ToUint8List()).fold<S>(initialValue, combine);
+  }
+
+  @override
+  Future<dynamic> forEach(void Function(Uint8List element) action) {
+    return origin.transform(const _ToUint8List()).forEach(action);
+  }
+
+  @override
+  Stream<Uint8List> handleError(
+    Function onError, {
+    bool Function(dynamic error) test,
+  }) {
+    return origin.transform(const _ToUint8List()).handleError(onError, test: test);
+  }
+
+  @override
+  bool get isBroadcast => origin.isBroadcast;
+
+  @override
+  Future<bool> get isEmpty => origin.isEmpty;
+
+  @override
+  Future<String> join([String separator = '']) {
+    return origin.join(separator);
+  }
+
+  @override
+  Future<Uint8List> get last => origin.transform(const _ToUint8List()).last;
+
+  @override
+  Future<Uint8List> lastWhere(
+    bool Function(Uint8List element) test, {
+    List<int> Function() orElse,
+  }) {
+    return origin.transform(const _ToUint8List()).lastWhere(test, orElse: () {
+      return Uint8List.fromList(orElse());
+    });
+  }
+
+  @override
+  Future<int> get length => origin.length;
+
+  @override
+  Stream<S> map<S>(S Function(Uint8List event) convert) {
+    return origin.transform(const _ToUint8List()).map<S>(convert);
+  }
+
+  @override
+  Future<dynamic> pipe(StreamConsumer<List<int>> streamConsumer) {
+    return origin.pipe(streamConsumer);
+  }
+
+  @override
+  Future<Uint8List> reduce(
+      List<int> Function(Uint8List previous, Uint8List element) combine) {
+    return origin.transform(const _ToUint8List()).reduce((p, e) => Uint8List.fromList(combine(p, e))
+    );
+  }
+
+  @override
+  Future<Uint8List> get single => origin.transform(const _ToUint8List()).single;
+
+  @override
+  Future<Uint8List> singleWhere(
+    bool Function(Uint8List element) test, {
+    List<int> Function() orElse,
+  }) {
+    return origin.transform(const _ToUint8List()).singleWhere(test, orElse: () {
+      return Uint8List.fromList(orElse());
+    });
+  }
+
+  @override
+  Stream<Uint8List> skip(int count) {
+    return origin.transform(const _ToUint8List()).skip(count);
+  }
+
+  @override
+  Stream<Uint8List> skipWhile(bool Function(Uint8List element) test) {
+    return origin.transform(const _ToUint8List()).skipWhile(test);
+  }
+
+  @override
+  Stream<Uint8List> take(int count) {
+    return origin.transform(const _ToUint8List()).take(count);
+  }
+
+  @override
+  Stream<Uint8List> takeWhile(bool Function(Uint8List element) test) {
+    return origin.transform(const _ToUint8List()).takeWhile(test);
+  }
+
+  @override
+  Stream<Uint8List> timeout(
+    Duration timeLimit, {
+    void Function(EventSink<Uint8List> sink) onTimeout,
+  }) {
+    return origin.transform(const _ToUint8List()).timeout(timeLimit, onTimeout: onTimeout);
+  }
+
+  @override
+  Future<List<Uint8List>> toList() {
+    return origin.transform(const _ToUint8List()).toList();
+  }
+
+  @override
+  Future<Set<Uint8List>> toSet() {
+    return origin.transform(const _ToUint8List()).toSet();
+  }
+
+  @override
+  Stream<S> transform<S>(StreamTransformer<List<int>, S> streamTransformer) {
+    return origin.transform<S>(streamTransformer);
+  }
+
+  @override
+  Stream<Uint8List> where(bool Function(Uint8List event) test) {
+    return origin.transform(const _ToUint8List()).where(test);
+  }
+}
+
+class _ToUint8List extends Converter<List<int>, Uint8List> {
+  const _ToUint8List();
+
+  @override
+  Uint8List convert(List<int> input) => Uint8List.fromList(input);
+
+  @override
+  Sink<List<int>> startChunkedConversion(Sink<Uint8List> sink) {
+    return _Uint8ListConversionSink(sink);
+  }
+}
+
+class _Uint8ListConversionSink implements Sink<List<int>> {
+  const _Uint8ListConversionSink(this._target);
+
+  final Sink<Uint8List> _target;
+
+  @override
+  void add(List<int> data) {
+    _target.add(Uint8List.fromList(data));
+  }
+
+  @override
+  void close() {
+    _target.close();
+  }
 }
 
 /**
