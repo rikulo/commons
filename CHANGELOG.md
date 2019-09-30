@@ -1,5 +1,9 @@
 # Rikulo Commons Changes
 
+### 3.3.0
+
+* Upgrade to Dart 2.5 or later
+
 ### 3.2.1+1
 
 * Prepare for upcoming breaking changes to `HttpRequest` in the Dart SDK.
