@@ -32,6 +32,11 @@ void defer(key, FutureOr task(), {Duration min: const Duration(seconds: 1), Dura
   _deferrer.run(key, task, min, max);
 }
 
+/// Cancels the deferred execution of the given [key].
+void cancelDeferred(key) {
+  _deferrer.cancel(key);
+}
+
 /** Force all deferred task (queued by [defer]) to execute.
  * If the task given in [defer] returns an instance of Future, this method
  * will wait until it completes.
@@ -91,7 +96,7 @@ class _Deferrer {
   _Executor executor;
 
   void run(key, FutureOr task(), Duration min, Duration max) {
-    final _DeferInfo di = _defers[key];
+    final di = _defers[key];
     if (di == null) {
       _defers[key] = _DeferInfo(_startTimer(key, min), task);
       return;
@@ -108,6 +113,11 @@ class _Deferrer {
       _defers.remove(key);
       Timer.run(task);
     }
+  }
+
+  void cancel(key) {
+    final di = _defers.remove(key);
+    if (di != null) di.timer.cancel();
   }
 
   Future flush(void onAction(key, bool end), void onError(ex, StackTrace st),

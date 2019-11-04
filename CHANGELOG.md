@@ -1,5 +1,9 @@
 # Rikulo Commons Changes
 
+### 3.3.1
+
+* `cancelDeferred()` added.
+
 ### 3.3.0
 
 * Upgrade to Dart 2.5 or later
