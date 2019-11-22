@@ -12,7 +12,10 @@ main() {
     test("defer 1", () {
       int count = 0;
       for (int i = 0; i < 10; ++i)
-        defer("foo", () {++count;}, min: const Duration(milliseconds: 100));
+        defer("foo", (key) {
+          assert(key == "foo");
+          ++count;
+        }, min: const Duration(milliseconds: 100));
       return Future.delayed(const Duration(milliseconds: 200), () {
         expect(count, 1); //shall be only once
       });
@@ -21,8 +24,11 @@ main() {
       int count = 0, loop = 5;
       void add() {
         Future.delayed(const Duration(milliseconds: 30), () {
-          defer("foo", () {++count;}, min: const Duration(milliseconds: 50),
-            max: const Duration(milliseconds: 100));
+          defer("foo", (key) {
+            assert(key == "foo");
+            ++count;
+          }, min: const Duration(milliseconds: 50),
+             max: const Duration(milliseconds: 100));
           if (--loop >= 0)
             add();
         });

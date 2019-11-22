@@ -1,5 +1,9 @@
 # Rikulo Commons Changes
 
+### 4.0.0
+
+* `defer()`'s `task` callback takes the key as the argument. It helps to reuse the same closure for different keys.
+
 ### 3.3.1
 
 * `cancelDeferred()` added.

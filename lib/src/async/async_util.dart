@@ -11,14 +11,14 @@ part of rikulo_async;
  * not to execute them all but only the once for a while (because of costly).
  * For example,
  *
- *     defer("cur.task", () {
+ *     defer("cur.task", (key) {
  *       currentUser.save(["task"]); //a costly operation
  *     }, min: const Duration(seconds: 1), max: const Duration(seconds: 10));
  *     //then, it executes not faster than once per 10s,
  *     //and no later than 100s
  *
- * * [key] - used to identify [task]. If [key] is the same, we consider
- * the task is the same. If different, they are handled separately.
+ * * [key] - used to identify [task]. If both [categoryKey] and [key] are
+ * the same, we consider the task is the same. If different, they are handled separately.
  * * [task] - the task. It can return `void`, `null` or an instance of [Future]
  * * [min] - specifies the minimal duration that the
  * given task will be executed. In short, the task will be invoked
@@ -28,21 +28,25 @@ part of rikulo_async;
  * will be execute at least [max] milliseconds later even if there are
  * following invocations with the same key.
  */
-void defer(key, FutureOr task(), {Duration min: const Duration(seconds: 1), Duration max}) {
-  _deferrer.run(key, task, min, max);
+void defer<T>(T key, FutureOr task(T key),
+    {Duration min: const Duration(seconds: 1), Duration max,
+     String categoryKey}) {
+  _deferrer.run(key, task, min, max, categoryKey);
 }
 
 /// Cancels the deferred execution of the given [key].
-void cancelDeferred(key) {
-  _deferrer.cancel(key);
-}
+/// Returns true if the task is not yet executed.
+bool cancelDeferred(key, {String categoryKey})
+=> _deferrer.cancel(key, categoryKey);
 
 /** Force all deferred task (queued by [defer]) to execute.
  * If the task given in [defer] returns an instance of Future, this method
  * will wait until it completes.
  * 
- * * [onAction] - (optional) If specified, it is called when
- * an action starts or finishes (end=true).
+ * * [onActionStart] - (optional) If specified, it is called when
+ * an action starts.
+ * * [onActionDone] - (optional) If specified, it is called when
+ * an action has been done.
  * * [onError] - (optional) used to process the error thrown by a deferred task.
  * If not specified, the exception won't be caught and will terminate
  * this method.
@@ -51,33 +55,37 @@ void cancelDeferred(key) {
  * Before continue, it will wait the duration specified in [repeatLater].
  * Default: null (not to repeat).
  */
-Future flushDefers({void onAction(key, bool end),
+FutureOr flushDefers({void onActionStart(key, String categoryKey),
+    void onActionDone(key, String categoryKey),
     void onError(ex, StackTrace st), Duration repeatLater})
-=> _deferrer.flush(onAction, onError, repeatLater);
+=> _deferrer.flush(onActionStart, onActionDone, onError, repeatLater);
 
 /** Configures how to execute a deferred task.
  * 
- * Note: `onAction` and `onError` are available if it is caused by
+ * Note: `onActionDone` and `onError` are available if it is caused by
  * the invocation of [flushDefers]. That is, they are passed from
  * the arguments when calling [flushDefers].
  * 
  * * [executor] - if specified, it is used to execute [task].
  * Otherwise, [task] was called directly.
+ * 
+ * Note: the signature of `task`: `FutureOr task(key)`.
+ * Thus, you must pass `key` to it when calling `task(key)`.
  */
 void configureDefers(
-    {FutureOr executor(key, FutureOr task(),
-        {void onAction(), void onError(ex, StackTrace st)})}) {
+    {FutureOr executor(key, Function task,
+        {void onActionDone(), void onError(ex, StackTrace st)})}) {
   _deferrer.executor = executor;
 }
 
-typedef FutureOr _Task();
-typedef FutureOr _Executor(key, FutureOr task(),
-    {void onAction(), void onError(ex, StackTrace st)});
+//typedef FutureOr _Task<T>(T key);
+typedef FutureOr _Executor(key, Function task,
+    {void onActionDone(), void onError(ex, StackTrace st)});
 
-class _DeferInfo {
+class _DeferInfo<T> {
   Timer timer;
   final DateTime _startAt;
-  _Task task;
+  Function/*_Task<T>*/ task; //due to Dart's limitation, use Function here
 
   _DeferInfo(this.timer, this.task): _startAt = DateTime.now();
 
@@ -91,14 +99,29 @@ class _DeferInfo {
   }
 }
 
+class _DeferKey<T> {
+  final T key;
+  final String categoryKey;
+
+  _DeferKey(this.key, this.categoryKey);
+
+  @override
+  int get hashCode => key.hashCode + categoryKey.hashCode; //key can be null...
+  @override
+  bool operator==(o)
+  => o is _DeferKey && o.key == key && o.categoryKey == categoryKey;
+}
+
 class _Deferrer {
-  Map<dynamic, _DeferInfo> _defers = HashMap<dynamic, _DeferInfo>();
+  var _defers = HashMap<_DeferKey, _DeferInfo>();
   _Executor executor;
 
-  void run(key, FutureOr task(), Duration min, Duration max) {
-    final di = _defers[key];
+  void run<T>(T key, FutureOr task(T key), Duration min, Duration max,
+      String categoryKey) {
+    final dfkey = new _DeferKey(key, categoryKey);
+    final di = _defers[dfkey] as _DeferInfo<T>;
     if (di == null) {
-      _defers[key] = _DeferInfo(_startTimer(key, min), task);
+      _defers[dfkey] = _DeferInfo<T>(_startTimer(dfkey, min), task);
       return;
     }
 
@@ -107,50 +130,58 @@ class _Deferrer {
     final delay = di.getDelay(min, max);
     if (delay != null) {
       di..task = task
-        ..timer = _startTimer(key, delay);
+        ..timer = _startTimer(dfkey, delay);
     } else {
       //force to run (even in a very busy environment)
-      _defers.remove(key);
-      Timer.run(task);
+      _defers.remove(dfkey);
+      Timer.run(() => task(key));
     }
   }
 
-  void cancel(key) {
-    final di = _defers.remove(key);
-    if (di != null) di.timer.cancel();
+  bool cancel(key, String categoryKey) {
+    final di = _defers.remove(new _DeferKey(key, categoryKey));
+    if (di == null) return false;
+
+    di.timer.cancel();
+    return true;
   }
 
-  Future flush(void onAction(key, bool end), void onError(ex, StackTrace st),
+  FutureOr flush(void onActionStart(key, String categoryKey),
+      void onActionDone(key, String categoryKey),
+      void onError(ex, StackTrace st),
       Duration repeatLater) {
-    if (_defers.isEmpty) return new Future.value();
+    if (_defers.isEmpty) return null;
 
     final defers = _defers;
-    _defers = HashMap<dynamic, _DeferInfo>();
+    _defers = HashMap<_DeferKey, _DeferInfo>();
     final ops = <Future>[];
 
-    for (final key in defers.keys) {
+    for (final dfkey in defers.keys) {
       try {
-        final di = defers[key];
+        final di = defers[dfkey];
         di.timer.cancel();
 
-        onAction?.call(key, false);
+        final key = dfkey.key,
+          categoryKey = dfkey.categoryKey;
+        onActionStart?.call(key, categoryKey);
  
         if (executor != null) {
           final op = executor(key, di.task, onError: onError,
-              onAction: onAction == null ? null: () => onAction(key, true));
+              onActionDone: onActionDone == null ?
+                null: () => onActionDone(key, categoryKey));
           if (op is Future) ops.add(op);
 
         } else {
-          var op = di.task();
+          var op = di.task(key);
           if (op is Future) {
             Future ft = op;
-            if (onAction != null)
-              ft = ft.then((_) => onAction(key, true));
+            if (onActionDone != null)
+              ft = ft.then((_) => onActionDone(key, categoryKey));
             if (onError != null)
               ft = ft.catchError(onError);
             ops.add(ft);
           } else {
-            onAction?.call(key, true);
+            onActionDone?.call(key, categoryKey);
           }
         }
       } catch (ex, st) {
@@ -163,15 +194,15 @@ class _Deferrer {
     if (repeatLater != null) //spec: null => not repeat
       result = result.then(
           (_) => new Future.delayed(repeatLater,
-            () => flush(onAction, onError, repeatLater)));
+            () => flush(onActionStart, onActionDone, onError, repeatLater)));
     return result;
   }
 
-  Timer _startTimer(key, Duration min)
+  Timer _startTimer(_DeferKey dfkey, Duration min)
   => Timer(min, () {
-    final di = _defers.remove(key);
+    final di = _defers.remove(dfkey);
     return di == null ? null:
-        executor != null ? executor(key, di.task): di.task();
+        executor != null ? executor(dfkey.key, di.task): di.task(dfkey.key);
   });
 }
 final _deferrer = _Deferrer();
