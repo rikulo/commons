@@ -21,12 +21,15 @@ part of rikulo_async;
  * the same, we consider the task is the same. If different, they are handled separately.
  * * [task] - the task. It can return `void`, `null` or an instance of [Future]
  * * [min] - specifies the minimal duration that the
- * given task will be executed. In short, the task will be invoked
- * [min] milliseconds later if no following invocation with the same key.
+ * given task will be executed. You can't specify null here. Default: 1 second.
+ * That is, the task will be invoked [min] milliseconds later
+ * if no following invocation with the same key.
  * * [max] - specifies the maximal duration that
- * the given task will be executed. If given (i.e., not null), [task]
+ * the given task will be executed. Default: null.
+ * If specified, [task]
  * will be execute at least [max] milliseconds later even if there are
  * following invocations with the same key.
+ * If not specified, it will keep waiting.
  */
 void defer<T>(T key, FutureOr task(T key),
     {Duration min: const Duration(seconds: 1), Duration max,
@@ -93,7 +96,7 @@ class _DeferInfo<T> {
     if (max != null) {
       final remaining = max - DateTime.now().difference(_startAt);
       if (remaining < min)
-        return remaining > Duration.zero ? remaining: null;
+        return remaining > Duration.zero ? remaining: Duration.zero;
     }
     return min;
   }
@@ -115,27 +118,20 @@ class _DeferKey<T> {
 class _Deferrer {
   var _defers = HashMap<_DeferKey, _DeferInfo>();
   _Executor executor;
+  final _runnings = <Future>[];
 
   void run<T>(T key, FutureOr task(T key), Duration min, Duration max,
       String categoryKey) {
-    final dfkey = new _DeferKey(key, categoryKey);
-    final di = _defers[dfkey] as _DeferInfo<T>;
+    final dfkey = new _DeferKey(key, categoryKey),
+      di = _defers[dfkey] as _DeferInfo<T>;
     if (di == null) {
       _defers[dfkey] = _DeferInfo<T>(_startTimer(dfkey, min), task);
       return;
     }
 
-    di.timer.cancel();
-
-    final delay = di.getDelay(min, max);
-    if (delay != null) {
-      di..task = task
-        ..timer = _startTimer(dfkey, delay);
-    } else {
-      //force to run (even in a very busy environment)
-      _defers.remove(dfkey);
-      Timer.run(() => task(key));
-    }
+    di..timer.cancel()
+      ..task = task
+      ..timer = _startTimer(dfkey, di.getDelay(min, max));
   }
 
   bool cancel(key, String categoryKey) {
@@ -150,11 +146,11 @@ class _Deferrer {
       void onActionDone(key, String categoryKey),
       void onError(ex, StackTrace st),
       Duration repeatLater) {
-    if (_defers.isEmpty) return null;
+    if (_defers.isEmpty && _runnings.isEmpty) return null;
 
-    final defers = _defers;
+    final ops = <Future>[],
+      defers = _defers;
     _defers = HashMap<_DeferKey, _DeferInfo>();
-    final ops = <Future>[];
 
     for (final dfkey in defers.keys) {
       try {
@@ -190,6 +186,7 @@ class _Deferrer {
       }
     }
 
+    ops.addAll(_runnings);
     Future result = Future.wait(ops); //wait => run in parallel
     if (repeatLater != null) //spec: null => not repeat
       result = result.then(
@@ -201,8 +198,23 @@ class _Deferrer {
   Timer _startTimer(_DeferKey dfkey, Duration min)
   => Timer(min, () {
     final di = _defers.remove(dfkey);
-    return di == null ? null:
-        executor != null ? executor(dfkey.key, di.task): di.task(dfkey.key);
+    return di == null ? null: _runInTimer(dfkey.key, di.task);
   });
+
+  /// Execute [task] in timer's callback.
+  /// It will put the returned [Future] instance into [_runnings],
+  /// so [flushDefers] will wait.
+  _runInTimer(key, Function task) async {
+    Future op;
+    try {
+      final r = executor != null ? executor(key, task): task(key);
+      if (r is Future) {
+        _runnings.add(op = r);
+        await op;
+      }
+    } finally {
+      if (op != null) _runnings.remove(op);
+    }
+  }
 }
 final _deferrer = _Deferrer();

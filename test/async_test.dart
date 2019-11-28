@@ -20,6 +20,7 @@ main() {
         expect(count, 1); //shall be only once
       });
     });
+
     test("defer 2", () {
       int count = 0, loop = 5;
       void add() {
@@ -37,6 +38,21 @@ main() {
 
       return Future.delayed(const Duration(milliseconds: 300), () {
         expect(count, 2);
+      });
+    });
+
+    test("flush defer", () {
+      int value = 0;
+      defer("foo", (_) {
+        return Future.delayed(const Duration(milliseconds: 300),
+          () => value = 1);
+      }, min: Duration.zero);
+
+      //Wait again, so the previous defer() will be fired
+      //before flushDefers() is called
+      return Future.delayed(const Duration(milliseconds: 10), () async {
+        await flushDefers();
+        expect(value, 1);
       });
     });
   });
