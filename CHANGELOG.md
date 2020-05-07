@@ -1,4 +1,8 @@
 # Rikulo Commons Changes
+### 4.0.1+1
+
+* Limit Dart SDK version for Dart 2.8 version breaking change.
+* add links to github repo in pubspec.yaml.
 
 ### 4.0.1
 
