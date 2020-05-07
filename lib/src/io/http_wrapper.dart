@@ -374,14 +374,17 @@ class HttpHeadersWrapper implements HttpHeaders {
   List<String> operator[](String name) => origin[name];
   @override
   String value(String name) => origin.value(name);
+
   @override
-  void add(String name, Object value) {
-    origin.add(name, value);
+  void add(String name, Object value, {bool preserveHeaderCase = false}) {
+    origin.add(name, value, preserveHeaderCase: preserveHeaderCase);
   }
+
   @override
-  void set(String name, Object value) {
-    origin.set(name, value);
+  void set(String name, Object value, {bool preserveHeaderCase = false}) {
+    origin.set(name, value, preserveHeaderCase: preserveHeaderCase);
   }
+
   @override
   void remove(String name, Object value) {
     origin.remove(name, value);

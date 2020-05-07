@@ -1,4 +1,8 @@
 # Rikulo Commons Changes
+### 4.1.0
+
+* Fix [#6](https://github.com/rikulo/commons/issues/6) The method 'HttpHeadersWrapper.set' has fewer named arguments than those of overridden method 'HttpHeaders.set'. [Dart 2.8]
+
 ### 4.0.1+1
 
 * Limit Dart SDK version for Dart 2.8 version breaking change.
