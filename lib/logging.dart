@@ -6,12 +6,11 @@ library rikulo_logging;
 import "dart:async" show Future;
 import "package:logging/logging.dart";
 
-/** A simple implementation of [LoggerHandler].
- * You can use it to configure your root logger,
- * such as
- *
- *     new Logger("myorg").onRecord.listen(simpleLoggerHandler);
- */
+/// A simple implementation of [Logger] handler.
+/// You can use it to configure your root logger,
+/// such as
+///
+///     new Logger("myorg").onRecord.listen(simpleLoggerHandler);
 void simpleLoggerHandler(LogRecord record) {
   //for better response time, do it async (since the onRecord stream is sync)
   Future(() {
