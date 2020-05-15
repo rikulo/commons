@@ -1,4 +1,9 @@
 # Rikulo Commons Changes
+
+### 4.1.1
+
+* Extension to support the comparators for `DateTime`, such as `<`, `>`, and `-`.
+
 ### 4.1.0
 
 * Fix [#6](https://github.com/rikulo/commons/issues/6) The method 'HttpHeadersWrapper.set' has fewer named arguments than those of overridden method 'HttpHeaders.set'. [Dart 2.8]

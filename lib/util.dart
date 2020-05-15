@@ -36,3 +36,20 @@ typedef List<T> AsList<T>();
 
 /// Tests whether the status code is a successfully response.
 bool isHttpStatusOK(int status) => status >= 200 && status < 300;
+
+/// Extension for [DateTime] supporting `<`, `>` ...
+///
+/// If you don't like it, you can hide it from importing:
+/// 
+///     import "package:rikulo_commons/util.dart" hide DateTimeComparator
+extension DateTimeComparator on DateTime {
+  bool operator<(DateTime o) => this.isBefore(o);
+  bool operator<=(DateTime o) => !this.isAfter(o);
+  bool operator>(DateTime o) => this.isAfter(o);
+  bool operator>=(DateTime o) => !this.isBefore(o);
+
+  DateTime operator-(Duration diff) => this.subtract(diff);
+  DateTime operator+(Duration diff) => this.add(diff);
+
+  Duration operator | (DateTime o) => this.difference(o);
+}

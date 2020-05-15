@@ -64,4 +64,17 @@ void main() {
 
     expect("ab\nde f".indexOf(regexWhitespaces), 2);
   });
+
+  test("DateTimeComparator", () {
+    final d1 = new DateTime(2020, 5, 1),
+      d2 = DateTime(2020, 5, 2);
+    expect(d1 < d2, true);
+    expect(d1 <= d2, true);
+    expect(d1 < d1, false);
+    expect(d1 <= d1, true);
+    expect(d1 == d1, true);
+    expect(d2 > d1, true);
+    expect(d2 - Duration(hours: 24), d1);
+    expect(d2 | d1, Duration(hours: 24));
+  });
 }
