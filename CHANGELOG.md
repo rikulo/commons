@@ -1,7 +1,8 @@
 # Rikulo Commons Changes
 
-### 4.1.2
+### 4.1.3
 
+* The `maxBusy` setting was introduced to `configureDefers`.
 * The following `defer()` will wait for the executing one to complete.
 
 ### 4.1.1

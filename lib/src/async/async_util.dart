@@ -71,14 +71,21 @@ FutureOr flushDefers({void onActionStart(key, String categoryKey),
  * 
  * * [executor] - if specified, it is used to execute [task].
  * Otherwise, [task] was called directly.
+ * * [maxBusy] - how long to wait before forcing a new execution to start.
+ * Default: null (forever).
+ * When a task is about to execute, we'll check if the previous execution
+ * is done. If not, it will wait the time specified in [maxBusy].
  * 
  * Note: the signature of `task`: `FutureOr task(key)`.
  * Thus, you must pass `key` to it when calling `task(key)`.
  */
 void configureDefers(
     {FutureOr executor(key, Function task,
-        {void onActionDone(), void onError(ex, StackTrace st)})}) {
-  _deferrer.executor = executor;
+        {void onActionDone(), void onError(ex, StackTrace st)}),
+     Duration maxBusy}) {
+  _deferrer
+    ..executor = executor
+    ..maxBusy = maxBusy;
 }
 
 //typedef FutureOr _Task<T>(T key);
@@ -87,14 +94,14 @@ typedef FutureOr _Executor(key, Function task,
 
 class _DeferInfo<T> {
   Timer timer;
-  final DateTime _startAt;
+  final DateTime startAt;
   Function/*_Task<T>*/ task; //due to Dart's limitation, use Function here
 
-  _DeferInfo(this.timer, this.task): _startAt = DateTime.now();
+  _DeferInfo(this.timer, this.task): startAt = DateTime.now();
 
   Duration getDelay(Duration min, Duration max) {
     if (max != null) {
-      final remaining = max - DateTime.now().difference(_startAt);
+      final remaining = max - DateTime.now().difference(startAt);
       if (remaining < min)
         return remaining > Duration.zero ? remaining: Duration.zero;
     }
@@ -120,6 +127,7 @@ class _DeferKey<T> {
 class _Deferrer {
   var _defers = HashMap<_DeferKey, _DeferInfo>();
   _Executor executor;
+  Duration maxBusy;
   final _runnings = <Future>[],
     _busy = new HashSet<_DeferKey>();
 
@@ -202,7 +210,8 @@ class _Deferrer {
   => Timer(min, () async {
     final di = _defers.remove(dfkey);
     if (di == null) return;
-    if (_busy.contains(dfkey)) {
+    if (_busy.contains(dfkey)
+    && (maxBusy == null || DateTime.now().difference(di.startAt) < maxBusy)) {
       _defers[dfkey] = di; //put back
       di.timer = _startTimer(dfkey, //do it again later
           min < const Duration(milliseconds: 100) ?
