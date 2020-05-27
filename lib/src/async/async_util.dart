@@ -113,12 +113,15 @@ class _DeferKey<T> {
   @override
   bool operator==(o)
   => o is _DeferKey && o.key == key && o.categoryKey == categoryKey;
+  @override
+  String toString() => "[$key, $categoryKey]";
 }
 
 class _Deferrer {
   var _defers = HashMap<_DeferKey, _DeferInfo>();
   _Executor executor;
-  final _runnings = <Future>[];
+  final _runnings = <Future>[],
+    _busy = new HashSet<_DeferKey>();
 
   void run<T>(T key, FutureOr task(T key), Duration min, Duration max,
       String categoryKey) {
@@ -196,25 +199,30 @@ class _Deferrer {
   }
 
   Timer _startTimer(_DeferKey dfkey, Duration min)
-  => Timer(min, () {
+  => Timer(min, () async {
     final di = _defers.remove(dfkey);
-    return di == null ? null: _runInTimer(dfkey.key, di.task);
-  });
+    if (di == null) return;
+    if (_busy.contains(dfkey)) {
+      _defers[dfkey] = di; //put back
+      _startTimer(dfkey, min); //do it again later
+      return;
+    }
 
-  /// Execute [task] in timer's callback.
-  /// It will put the returned [Future] instance into [_runnings],
-  /// so [flushDefers] will wait.
-  _runInTimer(key, Function task) async {
     Future op;
+    _busy.add(dfkey);
     try {
-      final r = executor != null ? executor(key, task): task(key);
+      final key = dfkey.key,
+        task = di.task,
+        r = executor != null ? executor(key, task): task(key);
       if (r is Future) {
         _runnings.add(op = r);
         await op;
       }
     } finally {
       if (op != null) _runnings.remove(op);
+      _busy.remove(dfkey);
     }
-  }
+  });
+
 }
 final _deferrer = _Deferrer();

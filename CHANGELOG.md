@@ -1,5 +1,9 @@
 # Rikulo Commons Changes
 
+### 4.1.2
+
+* The following `defer()` will wait for the executing one to complete.
+
 ### 4.1.1
 
 * Extension to support the comparators for `DateTime`, such as `<`, `>`, and `-`.
