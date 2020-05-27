@@ -204,7 +204,9 @@ class _Deferrer {
     if (di == null) return;
     if (_busy.contains(dfkey)) {
       _defers[dfkey] = di; //put back
-      _startTimer(dfkey, min); //do it again later
+      di.timer = _startTimer(dfkey, //do it again later
+          min < const Duration(milliseconds: 100) ?
+            const Duration(milliseconds: 100): min);
       return;
     }
 
