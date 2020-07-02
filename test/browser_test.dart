@@ -103,6 +103,10 @@ main() {
 "Xiaomi_MDT2_TD-LTE/V1 Linux/3.18.31 Android/7.1 Release/5.15.2017 "
 "Browser/AppleWebKit537.36 Mobile Safari/537.36 System/Android 7.1 XiaoMi/MiuiBrowser/8.7.7":
   [isWebkit, 537.36],
+
+//New Edge
+newEdge:
+  [isChrome, 83.0],
       };
 
       for (final ua in uas.keys) {
@@ -111,9 +115,17 @@ main() {
         final List result = uas[ua];
         result[0](browser, result[1]);
       }
+
+      var browser = _Browser(newEdge);
+      expect(browser.edge, isFalse);
+      expect(browser.webkit, isTrue);
     });
   });
 }
+
+const newEdge =
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+  "Chrome/83.0.4103.116 Safari/537.36 Edg/83.0.478.45";
 
 class _Browser extends Browser {
   @override
