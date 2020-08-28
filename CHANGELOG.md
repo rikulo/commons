@@ -1,5 +1,9 @@
 # Rikulo Commons Changes
 
+### 4.2.0
+
+* `ajax`/`head`/`post`: The `onResponse` argument is supported, and the `onStatusCode` argument deprecated.
+
 ### 4.1.3
 
 * The `maxBusy` setting was introduced to `configureDefers`.

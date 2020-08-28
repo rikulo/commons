@@ -11,16 +11,19 @@ const String dartSessionId = "DARTSESSID";
 /// 
 /// To send data in `List<int>, pass it via [data].
 /// To send in String, pass it via [body].
-///
-/// * [onStatusCode] used to retrieve the status code.
+/// 
+/// * [onResponse] used to retrieve the status code
+/// and/or the response's headers.
 /// Ignored if not specified.
-/// Note: [onStatusCode] can return a boolean to indicate whether
-/// the status code represents a successfully request.
-/// If it returns `null` or this method is not specified,
-/// we assume a value between 200 and 299 is a successfully request.
+/// It can return false to indicate the request fails. Then [ajax]
+/// will return null.
+/// If not specified or it returns true, it continues if
+/// [isHttpStatusOK] is true.
 Future<List<int>> ajax(Uri url, {String method: "GET",
     List<int> data, String body, Map<String, String> headers,
-    bool onStatusCode(int statusCode)}) async {
+    @deprecated
+    bool onStatusCode(int statusCode),
+    bool onResponse(HttpClientResponse response)}) async {
   final client = new HttpClient();
   try {
     final xhr = await client.openUrl(method, url);
@@ -35,7 +38,7 @@ Future<List<int>> ajax(Uri url, {String method: "GET",
     final resp = await xhr.close(),
       statusCode = resp.statusCode;
 
-    if (!(onStatusCode?.call(statusCode) ?? isHttpStatusOK(statusCode))) {
+    if (!(onResponse?.call(resp) ?? onStatusCode?.call(statusCode) ?? isHttpStatusOK(statusCode))) {
       resp.listen(_ignore).asFuture().catchError(_voidCatch);
         //need to pull out response.body. Or, it will never ends (memory leak)
       return null;
@@ -57,37 +60,47 @@ void _voidCatch(ex) {}
 /// Sends an Ajax request to the given [url] using the POST method.
 Future<List<int>> postAjax(Uri url, {
     List<int> data, String body, Map<String, String> headers,
-    bool onStatusCode(int statusCode)})
+    @deprecated
+    bool onStatusCode(int statusCode),
+    bool onResponse(HttpClientResponse response)})
 => ajax(url, method: "POST", data: data, body: body,
-    headers: headers, onStatusCode: onStatusCode);
+    headers: headers, onStatusCode: onStatusCode, onResponse: onResponse);
 
 /// Sends an Ajax request to the given [url] using the PUT method.
 Future<List<int>> putAjax(Uri url, {
     List<int> data, String body, Map<String, String> headers,
-    bool onStatusCode(int statusCode)})
+    @deprecated
+    bool onStatusCode(int statusCode),
+    bool onResponse(HttpClientResponse response)})
 => ajax(url, method: "PUT", data: data, body: body,
-    headers: headers, onStatusCode: onStatusCode);
+    headers: headers, onStatusCode: onStatusCode, onResponse: onResponse);
 
 /// Sends an Ajax request to the given [url] using the DELETE method.
 Future<List<int>> deleteAjax(Uri url, {
     List<int> data, String body, Map<String, String> headers,
-    bool onStatusCode(int statusCode)})
+    @deprecated
+    bool onStatusCode(int statusCode),
+    bool onResponse(HttpClientResponse response)})
 => ajax(url, method: "DELETE", data: data, body: body,
-    headers: headers, onStatusCode: onStatusCode);
+    headers: headers, onStatusCode: onStatusCode, onResponse: onResponse);
 
 /// Sends an Ajax request to the given [url] using the HEAD method.
 Future<List<int>> headAjax(Uri url, {
     List<int> data, String body, Map<String, String> headers,
-    bool onStatusCode(int statusCode)})
+    @deprecated
+    bool onStatusCode(int statusCode),
+    bool onResponse(HttpClientResponse response)})
 => ajax(url, method: "HEAD", data: data, body: body,
-    headers: headers, onStatusCode: onStatusCode);
+    headers: headers, onStatusCode: onStatusCode, onResponse: onResponse);
 
 /// Sends an Ajax request to the given [url] using the PATCH method.
 Future<List<int>> patchAjax(Uri url, {
     List<int> data, String body, Map<String, String> headers,
-    bool onStatusCode(int statusCode)})
+    @deprecated
+    bool onStatusCode(int statusCode),
+    bool onResponse(HttpClientResponse response)})
 => ajax(url, method: "PATCH", data: data, body: body,
-    headers: headers, onStatusCode: onStatusCode);
+    headers: headers, onStatusCode: onStatusCode, onResponse: onResponse);
 
 /**
  * HTTP related utilities
