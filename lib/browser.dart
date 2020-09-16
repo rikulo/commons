@@ -8,7 +8,7 @@ library rikulo_browser;
  */
 abstract class Browser {
   // all RegExp shall be lower case here
-  static final RegExp _rwebkit = RegExp(r"(webkit)[ /]?([0-9]+[0-9.]*)"),
+  static final _rwebkit = RegExp(r"(webkit)[ /]?([0-9]+[0-9.]*)"),
     _rsafari = RegExp(r"(version)/([\w.]+).*safari"),
     _rchrome = RegExp(r"(chrome|crios)[ /]([\w.]+)"),
     _redge = RegExp(r"(edge)/([\w.]+)"),
@@ -17,10 +17,9 @@ abstract class Browser {
     _rfirefox = RegExp(r"(firefox)/([\w.]+)"),
     _ropera = RegExp(r"(opera)(?:.*version)?[ /]([\w.]+)"),
     _riOS = RegExp(r"os[ /]([\w_]+) like mac os"),
-    _rmacOS = RegExp(r"mac os "),
     _randroid = RegExp(r"android[ /]([\w.]+)");
 
-  /** The browser's name. */
+  /// The browser's name.
   String name;
   /** The browser's version.
    * 
@@ -32,27 +31,31 @@ abstract class Browser {
    */
   double version;
 
-  /** Whether it is Safari. */
+  /// Whether it is Safari.
   bool safari = false;
-  /** Whether it is Chrome. */
+  /// Whether it is Chrome.
   bool chrome = false;
-  /** Whether it is Edge. */
+  /// Whether it is Edge.
   bool edge = false;
-  /** Whether it is Internet Explorer. */
+  /// Whether it is Internet Explorer.
   bool ie = false;
-  /** Whether it is Firefox. */
+  /// Whether it is Firefox.
   bool firefox = false;
-  /** Whether it is WebKit-based. */
+  /// Whether it is WebKit-based.
   bool webkit = false;
-  /** Whether it is Opera. */
+  /// Whether it is Opera.
   bool opera = false;
 
-  /** Whether it is running on iOS. */
+  /// Whether it is running on iOS.
   bool iOS = false;
-  /** Whether it is running on Android. */
+  /// Whether it is running on Android.
   bool android = false;
-  /** Whether it is running on MacOS. */
+  /// Whether it is running on MacOS.
   bool macOS = false;
+  /// Whether it is runnon on Linux
+  bool linux = false;
+  /// Whether it is runnon on Windows
+  bool windows = false;
 
   /** Whehter it is running on a mobile device.
    * By mobile we mean the browser takes the full screen and non-sizable.
@@ -103,7 +106,11 @@ abstract class Browser {
       iOSVersion = parseVersion(m2.group(1), '_');
     } else {
       mobile = ua.indexOf("mobile") >= 0;
-      macOS = _rmacOS.hasMatch(ua);
+      macOS = ua.indexOf("mac os") >= 0;
+      if (!macOS) {
+        linux = ua.indexOf("linux") >= 0;
+        if (!linux) windows = ua.indexOf("windows") >= 0;
+      }
     }
     
     if (bm(_rwebkit)) {

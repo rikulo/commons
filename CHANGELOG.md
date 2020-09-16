@@ -1,5 +1,9 @@
 # Rikulo Commons Changes
 
+### 4.2.1
+
+* `Browser.linux` and `Browser.windows` added
+
 ### 4.2.0
 
 * `ajax`/`head`/`post`: The `onResponse` argument is supported, and the `onStatusCode` argument deprecated.

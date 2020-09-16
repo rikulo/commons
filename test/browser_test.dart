@@ -120,6 +120,33 @@ newEdge:
       expect(browser.edge, isFalse);
       expect(browser.webkit, isTrue);
     });
+
+    test("OS test", () {
+      for (final ua in [
+"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_6; en-en) AppleWebKit/533.19.4 (KHTML, like Gecko) Version/5.0.3 Safari/533.19.4",
+"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1.2 Safari/605.1.15",
+"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.78.2 (KHTML, like Gecko) Version/7.0.6 Safari/537.78.2"]) {
+        expect(_Browser(ua).macOS, isTrue);
+      }
+
+      for (final ua in [
+"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36",
+"Thunderstorm/1.0 (Linux)",
+"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/74.0.3729.157 Safari/537.36",
+"Opera/9.80 (Linux armv7l) Presto/2.12.407 Version/12.51 , D50u-D1-UHD/V1.5.16-UHD (Vizio, D50u-D1, Wireless)"]) {
+        //print(ua);
+        expect(_Browser(ua).linux, isTrue);
+      }
+
+      for (final ua in [
+"Mozilla/5.0 CK={} (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko",
+"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1",
+"Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.71 Safari/537.36",
+"Opera/9.80 (Windows Mobile; Opera Mini/5.1.21594/28.1977; U; en) Presto/2.8.119 Version/11.10"]) {
+        //print(ua);
+        expect(_Browser(ua).windows, isTrue);
+      }
+    });
   });
 }
 
