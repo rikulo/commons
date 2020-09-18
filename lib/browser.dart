@@ -105,11 +105,11 @@ abstract class Browser {
       mobile = iOS = true;
       iOSVersion = parseVersion(m2.group(1), '_');
     } else {
-      mobile = ua.indexOf("mobile") >= 0;
-      macOS = ua.indexOf("mac os") >= 0;
+      mobile = ua.contains("mobile");
+      macOS = ua.contains("mac os");
       if (!macOS) {
-        linux = ua.indexOf("linux") >= 0;
-        if (!linux) windows = ua.indexOf("windows") >= 0;
+        linux = ua.contains("linux");
+        if (!linux) windows = ua.contains("windows");
       }
     }
     

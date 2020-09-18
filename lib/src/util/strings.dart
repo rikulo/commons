@@ -33,7 +33,7 @@ class StringUtil {
         bool lower: false, bool whitespace: false, String match})
   => isCharCode(cc.codeUnitAt(0), digit: digit, upper: upper,
         lower: lower, whitespace: whitespace)
-      || (match != null && match.indexOf(cc) >= 0);
+      || (match != null && match.contains(cc));
 
   /**
    * Returns whether the character code matches the specified conditions.

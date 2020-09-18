@@ -82,7 +82,7 @@ class Color {
             hundredth[i] = arg.endsWith("%");
             if (hundredth[i])
               arg = arg.substring(0, arg.length - 1).trim();
-            val[i] = arg.indexOf('.') >= 0 ? double.parse(arg): int.parse(arg);
+            val[i] = arg.contains('.') ? double.parse(arg): int.parse(arg);
           }
 
           final type = colorCode.substring(0, k).trim().toLowerCase();

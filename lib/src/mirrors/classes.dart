@@ -229,7 +229,7 @@ class ClassUtil {
     if (targetClass == DOUBLE_MIRROR)
       return double.parse(sval);
     if (targetClass == NUM_MIRROR)
-      return sval.indexOf('.') >= 0 ? double.parse(sval): int.parse(sval);
+      return sval.contains('.') ? double.parse(sval): int.parse(sval);
     if (targetClass == DATE_TIME_MIRROR)
       return DateTime.parse(sval);
     if (targetClass == BOOL_MIRROR)
