@@ -11,15 +11,17 @@ abstract class Browser {
   static final _rwebkit = RegExp(r"(webkit)[ /]?([0-9]+[0-9.]*)"),
     _rsafari = RegExp(r"(version)/([\w.]+).*safari"),
     _rchrome = RegExp(r"(chrome|crios)[ /]([\w.]+)"),
-    _redge = RegExp(r"(edge)/([\w.]+)"),
     _rie = RegExp(r"(msie) ([\w.]+)"),
     _rie2 = RegExp(r"trident/.+(rv:)([\w.]+)"),
     _rfirefox = RegExp(r"(firefox)/([\w.]+)"),
     _ropera = RegExp(r"(opera)(?:.*version)?[ /]([\w.]+)"),
     _riOS = RegExp(r"os[ /]([\w_]+) like mac os"),
-    _randroid = RegExp(r"android[ /]([\w.]+)");
+    _randroid = RegExp(r"android[ /]([\w.]+)"),
+    _rlegEdge = RegExp(r"Edge/[1-9]"),
+    _rnewEdge = RegExp(r"Edg/[1-9]");
 
   /// The browser's name.
+  @deprecated
   String name;
   /** The browser's version.
    * 
@@ -35,8 +37,7 @@ abstract class Browser {
   bool safari = false;
   /// Whether it is Chrome.
   bool chrome = false;
-  /// Whether it is Edge.
-  bool edge = false;
+  /// Whether it is legacy Edge.
   /// Whether it is Internet Explorer.
   bool ie = false;
   /// Whether it is Firefox.
@@ -45,6 +46,17 @@ abstract class Browser {
   bool webkit = false;
   /// Whether it is Opera.
   bool opera = false;
+
+  @deprecated
+  bool get edge => legacyEdge;
+  /// Whether it is legacy Edge.
+  /// Note: if it is legacy Edge, we consider it as a variant
+  /// of Chrome, so [chrome] is also true but [version] is not correct.
+  bool get legacyEdge => _rlegEdge.hasMatch(userAgent);
+  /// Whether it is new Edge.
+  /// Note: if it is new Edge, we consider it as a variant
+  /// of Chrome, so [chrome] is also true,
+  bool get newEdge => _rnewEdge.hasMatch(userAgent);
 
   /// Whether it is running on iOS.
   bool iOS = false;
@@ -117,9 +129,7 @@ abstract class Browser {
       webkit = true;
       webkitVersion = version;
 
-      if (bm(_redge)) {
-        edge = true;
-      } else if (bm(_rchrome)) { //after edge
+      if (bm(_rchrome)) {
         chrome = true;
       } else if (bm(_rsafari)) { //after chrome
         safari = true;

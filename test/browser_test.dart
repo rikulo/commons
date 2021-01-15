@@ -11,25 +11,32 @@ main() {
     expect(browser.chrome, isTrue);
     expect(browser.webkit, isTrue);
     expect(browser.firefox, isFalse);
-    expect(browser.name, "chrome");
     expect(browser.version, version);
   }
-  void isEdge(Browser browser, num version) {
+  void isLegacyEdge(Browser browser, num version) {
     expect(browser.webkit, isTrue);
-    expect(browser.edge, isTrue);
+    expect(browser.legacyEdge, isTrue);
+    expect(browser.newEdge, isFalse);
     expect(browser.ie, isFalse); //Edge is not IE
-    expect(browser.chrome, isFalse);
+    //expect(browser.chrome, isFalse);
     expect(browser.firefox, isFalse);
-    expect(browser.name, "edge");
+    //expect(browser.version, version); //not correct; don't check
+  }
+  void isNewEdge(Browser browser, num version) {
+    expect(browser.webkit, isTrue);
+    expect(browser.newEdge, isTrue);
+    expect(browser.legacyEdge, isFalse);
+    expect(browser.ie, isFalse); //Edge is not IE
+    expect(browser.chrome, isTrue); //New Edge is also Chrome
+    expect(browser.firefox, isFalse);
     expect(browser.version, version);
   }
   void isIE(Browser browser, num version) {
     expect(browser.ie, isTrue);
-    expect(browser.edge, isFalse);
+    expect(browser.legacyEdge, isFalse);
     expect(browser.webkit, isFalse);
     expect(browser.chrome, isFalse);
     expect(browser.firefox, isFalse);
-    expect(browser.name, "ie");
     expect(browser.version, version);
   }
   void isSafari(Browser browser, num version) {
@@ -37,7 +44,6 @@ main() {
     expect(browser.webkit, isTrue);
     expect(browser.chrome, isFalse);
     expect(browser.firefox, isFalse);
-    expect(browser.name, "safari");
     expect(browser.version, version);
   }
   void isFirefox(Browser browser, num version) {
@@ -45,7 +51,6 @@ main() {
     expect(browser.webkit, isFalse);
     expect(browser.chrome, isFalse);
     expect(browser.firefox, isTrue);
-    expect(browser.name, "firefox");
     expect(browser.version, version);
   }
   void isOpera(Browser browser, num version) {
@@ -53,7 +58,6 @@ main() {
     expect(browser.webkit, isFalse);
     expect(browser.ie, isFalse);
     expect(browser.opera, isTrue);
-    expect(browser.name, "opera");
     expect(browser.version, version);
   }
   void isWebkit(Browser browser, num version) {
@@ -87,7 +91,9 @@ main() {
   [isIE, 10.06],
 
 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246":
-  [isEdge, 12.246],
+  [isLegacyEdge, 12.246],
+"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.74 Safari/537.36 Edg/79.0.309.43":
+  [isNewEdge, 79.0],
 
 "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1":
   [isFirefox, 40.01],
@@ -117,7 +123,7 @@ newEdge:
       }
 
       var browser = _Browser(newEdge);
-      expect(browser.edge, isFalse);
+      expect(browser.legacyEdge, isFalse);
       expect(browser.webkit, isTrue);
     });
 

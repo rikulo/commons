@@ -1,5 +1,10 @@
 # Rikulo Commons Changes
 
+### 4.3.0
+
+* `Browser.legacyEdge` and `Browser.newEdge` are addded, and `Browser.name` and `Browser.edge` are deprecated.
+* Also, we also consider `Browser.newEdge` and `Browser.legacyEdge` as a variant of Chrome, so `Browser.chrome` is also true in this case.
+
 ### 4.2.1
 
 * `Browser.linux` and `Browser.windows` added
