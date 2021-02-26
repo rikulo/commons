@@ -2,8 +2,6 @@
 //History: Mon, Sep 03, 2012  02:51:12 PM
 // Author: hernichen
 
-
-
 part of rikulo_mirrors;
 
 final ClassMirror

@@ -2,8 +2,6 @@
 //History: Sat Jun 27 23:11:53 CST 2015
 // Author: tomyeh
 
-// @dart=2.9
-
 library rikulo_html;
 
 import "dart:html";
@@ -26,31 +24,31 @@ class NullNodeValidatorBuilder extends NullNodeValidator
   const NullNodeValidatorBuilder();
 
   @override
-  void allowNavigation([UriPolicy uriPolicy]) {}
+  void allowNavigation([UriPolicy? uriPolicy]) {}
   @override
-  void allowImages([UriPolicy uriPolicy]) {}
+  void allowImages([UriPolicy? uriPolicy]) {}
   @override
   void allowTextElements() {}
   @override
-  void allowInlineStyles({String tagName}) {}
+  void allowInlineStyles({String? tagName}) {}
   @override
-  void allowHtml5({UriPolicy uriPolicy}) {}
+  void allowHtml5({UriPolicy? uriPolicy}) {}
   @override
   void allowSvg() {}
   @override
   void allowCustomElement(String tagName,
-      {UriPolicy uriPolicy,
-      Iterable<String> attributes,
-      Iterable<String> uriAttributes}) {}
+      {UriPolicy? uriPolicy,
+      Iterable<String>? attributes,
+      Iterable<String>? uriAttributes}) {}
   @override
   void allowTagExtension(String tagName, String baseName,
-      {UriPolicy uriPolicy,
-      Iterable<String> attributes,
-      Iterable<String> uriAttributes}) {}
+      {UriPolicy? uriPolicy,
+      Iterable<String>? attributes,
+      Iterable<String>? uriAttributes}) {}
   @override
-  void allowElement(String tagName, {UriPolicy uriPolicy,
-    Iterable<String> attributes,
-    Iterable<String> uriAttributes}) {}
+  void allowElement(String tagName, {UriPolicy? uriPolicy,
+    Iterable<String>? attributes,
+    Iterable<String>? uriAttributes}) {}
   @override
   void allowTemplating() {}
   @override

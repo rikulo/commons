@@ -2,8 +2,6 @@
 //History: Mon, Feb 04, 2013  3:45:08 PM
 // Author: tomyeh
 
-// @dart=2.9
-
 library rikulo_async;
 
 //!!Note: don't import dart:io since this lib might be used at client!!//

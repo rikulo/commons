@@ -1,6 +1,7 @@
 //Copyright (C) 2013 Potix Corporation. All Rights Reserved.
 //History: Tue, Feb 26, 2013 11:09:11 AM
 // Author: tomyeh
+
 part of rikulo_io;
 
 /** The IOSink wrapper.

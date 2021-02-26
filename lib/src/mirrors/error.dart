@@ -2,8 +2,6 @@
 //History: Mon, Sep 03, 2012  13:02:31 PM
 // Author: hernichen
 
-
-
 part of rikulo_mirrors;
 
 /// Exception thrown because of non-existing class

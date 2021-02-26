@@ -2,8 +2,6 @@
 //History: Tue, Sep 4, 2012 12:43:16 AM
 //Author: simonpai
 
-
-
 part of rikulo_util;
 
 /** An RGB based color object. The toString method returns a CSS-compatible color value.

@@ -2,8 +2,6 @@
 //History: Tue, Jun 05, 2012  9:16:58 AM
 // Author: tomyeh
 
-
-
 part of rikulo_util;
 
 /** List utilities.
@@ -52,7 +50,7 @@ class ListUtil {
 
   /** Returns the hash code of the given list
    */
-  static int getHashCode(Iterable iterable) {
+  static int getHashCode(Iterable? iterable) {
     final int prime = 31;
     int code = 0;
     if (iterable != null) {

@@ -2,8 +2,6 @@
 //History: Tue, Feb 26, 2013 11:05:45 AM
 // Author: tomyeh
 
-// @dart=2.9
-
 part of rikulo_async;
 
 ///A Stream wrapper
@@ -18,12 +16,12 @@ class StreamWrapper<T> implements Stream<T> {
   bool get isBroadcast => origin.isBroadcast;
   @override
   Stream<T> asBroadcastStream({
-    void onListen(StreamSubscription<T> subscription),
-    void onCancel(StreamSubscription<T> subscription)})
+    void onListen(StreamSubscription<T> subscription)?,
+    void onCancel(StreamSubscription<T> subscription)?})
     => origin.asBroadcastStream(onListen: onListen, onCancel: onCancel);
   @override
-  StreamSubscription<T> listen(void onData(T event),
-  { Function onError, void onDone(), bool cancelOnError})
+  StreamSubscription<T> listen(void onData(T event)?,
+  { Function? onError, void onDone()?, bool? cancelOnError})
   => origin.listen(onData, onError: onError, onDone: onDone, cancelOnError: cancelOnError);
   @override
   Stream<T> where(bool test(T event)) => origin.where(test); 
@@ -33,10 +31,10 @@ class StreamWrapper<T> implements Stream<T> {
   Stream<E> asyncMap<E>(FutureOr<E> convert(T event))
   => origin.asyncMap(convert);
   @override
-  Stream<E> asyncExpand<E>(Stream<E> convert(T event))
+  Stream<E> asyncExpand<E>(Stream<E>? convert(T event))
   => origin.asyncExpand(convert);
   @override
-  Stream<T> handleError(Function handle, { bool test(error) })
+  Stream<T> handleError(Function handle, { bool test(error)? })
   => origin.handleError(handle, test: test);
   @override
   Stream<S> expand<S>(Iterable<S> convert(T value)) => origin.expand(convert);
@@ -51,7 +49,7 @@ class StreamWrapper<T> implements Stream<T> {
   Future<S> fold<S>(S initialValue, S combine(S previous, T element))
   => origin.fold(initialValue, combine);
   @override
-  Future<bool> contains(Object match) => origin.contains(match);
+  Future<bool> contains(Object? match) => origin.contains(match);
   @override
   Future forEach(void action(T element)) => origin.forEach(action);
   @override
@@ -67,7 +65,7 @@ class StreamWrapper<T> implements Stream<T> {
   @override
   Future<Set<T>> toSet() => origin.toSet();
   @override
-  Future<E> drain<E>([E futureValue]) => origin.drain(futureValue);
+  Future<E> drain<E>([E? futureValue]) => origin.drain(futureValue);
   @override
   Stream<T> take(int count) => origin.take(count);
   @override
@@ -77,7 +75,7 @@ class StreamWrapper<T> implements Stream<T> {
   @override
   Stream<T> skipWhile(bool test(T value)) => origin.skipWhile(test);
   @override
-  Stream<T> distinct([bool equals(T previous, T next)]) => origin.distinct(equals);
+  Stream<T> distinct([bool equals(T previous, T next)?]) => origin.distinct(equals);
   @override
   Future<T> get first => origin.first;
   @override
@@ -85,20 +83,20 @@ class StreamWrapper<T> implements Stream<T> {
   @override
   Future<T> get single => origin.single;
   @override
-  Future<T> firstWhere(bool test(T element), {T orElse()})
+  Future<T> firstWhere(bool test(T element), {T orElse()?})
   => origin.firstWhere(test, orElse: orElse);
   @override
-  Future<T> lastWhere(bool test(T element), {T orElse()})
+  Future<T> lastWhere(bool test(T element), {T orElse()?})
   => origin.lastWhere(test, orElse: orElse);
   @override
-  Future<T> singleWhere(bool test(T element), {T orElse()})
+  Future<T> singleWhere(bool test(T element), {T orElse()?})
   => origin.singleWhere(test, orElse: orElse);
   @override
   Future<T> elementAt(int index) => origin.elementAt(index);
   @override
   Future<String> join([String separator = ""]) => origin.join(separator);
   @override
-  Stream<T> timeout(Duration timeLimit, {void onTimeout(EventSink<T> sink)})
+  Stream<T> timeout(Duration timeLimit, {void onTimeout(EventSink<T> sink)?})
   => origin.timeout(timeLimit, onTimeout: onTimeout);
 
   @override

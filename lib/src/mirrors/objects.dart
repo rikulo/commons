@@ -2,8 +2,6 @@
 //History: Tue, Feb 19, 2013 12:33:05 PM
 // Author: tomyeh
 
-
-
 part of rikulo_mirrors;
 
 /**

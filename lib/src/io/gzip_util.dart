@@ -1,6 +1,7 @@
 //Copyright (C) 2013 Potix Corporation. All Rights Reserved.
 //History: Fri, Jun 21, 2013  5:32:15 PM
 // Author: tomyeh
+
 part of rikulo_io;
 
 /** Deflates a list of bytes with GZIP.

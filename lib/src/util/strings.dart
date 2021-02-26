@@ -2,8 +2,6 @@
 //History: Sun Jan 15 11:04:13 TST 2012
 // Author: tomyeh
 
-
-
 part of rikulo_util;
 
 const _whitespacesA = const <int>[

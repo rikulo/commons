@@ -2,8 +2,6 @@
 //History: Tue, Sep 11, 2012 12:00:59 PM
 // Author: tomyeh
 
-
-
 part of rikulo_util;
 
 /**

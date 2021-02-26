@@ -2,8 +2,6 @@
 //History: Tue, Feb 19, 2013  5:33:00 PM
 // Author: tomyeh
 
-
-
 library test_inject;
 
 import 'dart:mirrors';

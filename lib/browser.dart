@@ -2,8 +2,6 @@
 //History: Mon, Mar 12, 2012  9:26:04 AM
 // Author: tomyeh
 
-// @dart=2.9
-
 library rikulo_browser;
 
 /**
@@ -25,7 +23,7 @@ abstract class Browser {
 
   /// The browser's name.
   @deprecated
-  String name;
+  String? name;
   /** The browser's version.
    * 
    * Note: if the subversion is a single digit, it will be considered
@@ -34,7 +32,7 @@ abstract class Browser {
    * (not `12.1`). Thus, [version] of *12.10* is larger than that of *12.2*
    * as expected.
    */
-  double version;
+  double? version;
 
   /// Whether it is Safari.
   bool safari = false;
@@ -77,20 +75,20 @@ abstract class Browser {
    * If false, the browser is assumed to run on a desktop and
    * it can be resized by the user.
    */
-  bool mobile;
+  bool? mobile;
 
   /** The webkit's version if this is a webkit-based browser, or null
    * if it is not webkit-based. Note: Safari, Chrome and Edge are all
    * Webkit-based.
    */
-  double webkitVersion;
+  double? webkitVersion;
 
   /** The version of iOS if it is running on iOS, or null if not.
    */
-  double iOSVersion;
+  double? iOSVersion;
   /** The version of Android if it is running on Android, or null if not.
    */
-  double androidVersion;
+  double? androidVersion;
 
   Browser() {
     _initBrowserInfo();
@@ -105,20 +103,20 @@ abstract class Browser {
       final m = regex.firstMatch(ua);
       if (m != null) {
         name = m.group(1);
-        version = parseVersion(m.group(2));
+        version = parseVersion(m.group(2)!);
         return true;
       }
       return false;
     }
 
     // os detection
-    Match m2;
+    Match? m2;
     if ((m2 = _randroid.firstMatch(ua)) != null) {
       mobile = android = true;
-      androidVersion = parseVersion(m2.group(1));
+      androidVersion = parseVersion(m2!.group(1)!);
     } else if ((m2 = _riOS.firstMatch(ua)) != null) {
       mobile = iOS = true;
-      iOSVersion = parseVersion(m2.group(1), '_');
+      iOSVersion = parseVersion(m2!.group(1)!, '_');
     } else {
       mobile = ua.contains("mobile");
       macOS = ua.contains("mac os");
