@@ -182,17 +182,21 @@ class _OnDemandMap<K, V> implements Map<K,V> {
 
   _OnDemandMap(AsMap<K, V> this._creator);
 
-  Map<K, V>? _init() => _map != null ? _map: (_map = _creator());
+  Map<K, V> _init() {
+    final m = _map;
+    if (m != null) return m;
+    return  _map = _creator();
+  } 
 
   @override
   V?  operator[](Object? key) => _map != null ? _map![key as K]: null;
   @override
   void operator[]=(K key, V value) {
-    _init()![key] = value;
+    _init()[key] = value;
   }
   @override
   void addAll(Map<K, V> other) {
-    _init()!.addAll(other);
+    _init().addAll(other);
   }
   @override
   void clear() {
@@ -217,7 +221,7 @@ class _OnDemandMap<K, V> implements Map<K,V> {
   @override
   int get length => _map != null ? _map!.length: 0;
   @override
-  V putIfAbsent(K key, V ifAbsent()) => _init()!.putIfAbsent(key, ifAbsent);
+  V putIfAbsent(K key, V ifAbsent()) => _init().putIfAbsent(key, ifAbsent);
   @override
   V? remove(Object? key) => _map != null ? _map!.remove(key): null;
   @override
@@ -225,23 +229,23 @@ class _OnDemandMap<K, V> implements Map<K,V> {
 
   @override
   void addEntries(Iterable<MapEntry<K, V>> newEntries)
-  => _init()!.addEntries(newEntries);
+  => _init().addEntries(newEntries);
   @override
   Map<K2, V2> map<K2, V2>(MapEntry<K2, V2> f(K key, V value))
   => _map != null ? _map!.map(f): {};
   @override
-  Map<RK, RV> cast<RK, RV>() => _init()!.cast();
+  Map<RK, RV> cast<RK, RV>() => _init().cast();
   @override
   void removeWhere(bool predicate(K key, V value)) {
     if (_map != null) _map!.removeWhere(predicate);
   }
   @override
   V update(K key, V update(V value), {V ifAbsent()?})
-  => _init()!.update(key, update, ifAbsent: ifAbsent);
+  => _init().update(key, update, ifAbsent: ifAbsent);
   @override
   void updateAll(V update(K key, V value)) {
     if (_map != null) _map!.updateAll(update);
   }
   @override
-  Iterable<MapEntry<K, V>> get entries => _init()!.entries;
+  Iterable<MapEntry<K, V>> get entries => _init().entries;
 }
