@@ -1,6 +1,9 @@
 //Copyright (C) 2013 Potix Corporation. All Rights Reserved.
 //History: Wed, Apr 10, 2013  5:37:47 PM
 // Author: tomyeh
+
+
+
 library test_http;
 
 import "dart:async";
@@ -43,13 +46,13 @@ main() {
     });
 
     test("contentType", () {
-      ContentType ctype = getContentType("html");
+      ContentType ctype = getContentType("html")!;
       expect(ctype, isNotNull);
       expect(ctype.charset, "utf-8");
       expect(identical(ctype, parseContentType(ctype.toString())), isTrue);
       expect(identical(ctype, ContentType.parse(ctype.toString())), isFalse);
 
-      expect(getContentType("jpg").charset, isNull);
+      expect(getContentType("jpg")!.charset, isNull);
     });
  });
 }

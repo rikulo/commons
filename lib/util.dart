@@ -1,5 +1,6 @@
 //Copyright (C) 2012 Potix Corporation. All Rights Reserved.
 //Feb. 04, 2012
+
 library rikulo_util;
 
 //don't include dart:html since this library is designed to work

@@ -1,6 +1,9 @@
 //Copyright (C) 2012 Potix Corporation. All Rights Reserved.
 //History: Tue, Sep 11, 2012 12:00:59 PM
 // Author: tomyeh
+
+
+
 part of rikulo_util;
 
 /**
@@ -23,12 +26,13 @@ class XmlUtil {
    */
   static String encode(String value, {bool multiLine: false, bool pre: false,
       bool space: false, bool entity: false}) {
-    final len = value?.length ?? 0;
+    final len = value.length;
     if (len == 0) return value; //as it is
 
     final buf = new StringBuffer();
-    int i = 0, j = 0;
-    void flush(String text, [int end]) {
+    int i = 0;
+    int j = 0;
+    void flush(String text, [int? end]) {
       buf..write(value.substring(j, end ?? i))
         ..write(text);
       j = i + 1;
@@ -64,9 +68,10 @@ class XmlUtil {
         if (multiLine) replace = _encLine[cc];
 
         if (replace == null && (pre || space)) {
-          var count = _encSpace[cc];
-          if (count != null) {
-            int k;
+          var countNullable = _encSpace[cc];
+          if (countNullable != null) {
+            var count = countNullable;
+            late int k;
             if (!pre) { //pre has higher priority than space
             //convert consecutive whitespaces to &nbsp; plus a space
               for (k = i; ++k < len;) {
@@ -116,8 +121,8 @@ class XmlUtil {
   };
 
   static String _decMapper(Match m) {
-    final String key = m.group(1).toLowerCase();
-    final String mapped = _decs[key];
+    final String key = m.group(1)!.toLowerCase();
+    final String? mapped = _decs[key];
     if (mapped != null)
       return mapped;
 
@@ -128,7 +133,7 @@ class XmlUtil {
               "0x${key.substring(2)}": key.substring(1))]);
     }
 
-    return m.group(0);
+    return m.group(0)!;
   }
 
   /** Decodes the XML string into a normal string.
@@ -136,7 +141,7 @@ class XmlUtil {
    *
    * + [txt] is the text to decode.
    */
-  static String decode(String txt) {
+  static String? decode(String? txt) {
     if (txt == null) return null; //as it is
 
     return txt.replaceAllMapped(_reXmlEntity, _decMapper);

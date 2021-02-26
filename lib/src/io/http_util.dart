@@ -19,11 +19,11 @@ const String dartSessionId = "DARTSESSID";
 /// will return null.
 /// If not specified or it returns true, it continues if
 /// [isHttpStatusOK] is true.
-Future<List<int>> ajax(Uri url, {String method: "GET",
-    List<int> data, String body, Map<String, String> headers,
+Future<List<int>?> ajax(Uri url, {String method: "GET",
+    List<int>? data, String? body, Map<String, String>? headers,
     @deprecated
-    bool onStatusCode(int statusCode),
-    bool onResponse(HttpClientResponse response)}) async {
+    bool onStatusCode(int statusCode)?,
+    bool onResponse(HttpClientResponse response)?}) async {
   final client = new HttpClient();
   try {
     final xhr = await client.openUrl(method, url);
@@ -35,8 +35,8 @@ Future<List<int>> ajax(Uri url, {String method: "GET",
     if (data != null) xhr.add(data);
     if (body != null) xhr.write(body);
 
-    final resp = await xhr.close(),
-      statusCode = resp.statusCode;
+    final resp = await xhr.close();
+    final statusCode = resp.statusCode;
 
     if (!(onResponse?.call(resp) ?? onStatusCode?.call(statusCode) ?? isHttpStatusOK(statusCode))) {
       resp.listen(_ignore).asFuture().catchError(_voidCatch);
@@ -58,47 +58,47 @@ void _ignore(List<int> data) {}
 void _voidCatch(ex) {}
 
 /// Sends an Ajax request to the given [url] using the POST method.
-Future<List<int>> postAjax(Uri url, {
-    List<int> data, String body, Map<String, String> headers,
+Future<List<int>?> postAjax(Uri url, {
+    List<int>? data, String? body, Map<String, String>? headers,
     @deprecated
-    bool onStatusCode(int statusCode),
-    bool onResponse(HttpClientResponse response)})
+    bool onStatusCode(int statusCode)?,
+    bool onResponse(HttpClientResponse response)?})
 => ajax(url, method: "POST", data: data, body: body,
     headers: headers, onStatusCode: onStatusCode, onResponse: onResponse);
 
 /// Sends an Ajax request to the given [url] using the PUT method.
-Future<List<int>> putAjax(Uri url, {
-    List<int> data, String body, Map<String, String> headers,
+Future<List<int>?> putAjax(Uri url, {
+    List<int>? data, String? body, Map<String, String>? headers,
     @deprecated
-    bool onStatusCode(int statusCode),
-    bool onResponse(HttpClientResponse response)})
+    bool onStatusCode(int statusCode)?,
+    bool onResponse(HttpClientResponse response)?})
 => ajax(url, method: "PUT", data: data, body: body,
     headers: headers, onStatusCode: onStatusCode, onResponse: onResponse);
 
 /// Sends an Ajax request to the given [url] using the DELETE method.
-Future<List<int>> deleteAjax(Uri url, {
-    List<int> data, String body, Map<String, String> headers,
+Future<List<int>?> deleteAjax(Uri url, {
+    List<int>? data, String? body, Map<String, String>? headers,
     @deprecated
-    bool onStatusCode(int statusCode),
-    bool onResponse(HttpClientResponse response)})
+    bool onStatusCode(int statusCode)?,
+    bool onResponse(HttpClientResponse response)?})
 => ajax(url, method: "DELETE", data: data, body: body,
     headers: headers, onStatusCode: onStatusCode, onResponse: onResponse);
 
 /// Sends an Ajax request to the given [url] using the HEAD method.
-Future<List<int>> headAjax(Uri url, {
-    List<int> data, String body, Map<String, String> headers,
+Future<List<int>?> headAjax(Uri url, {
+    List<int>? data, String? body, Map<String, String>? headers,
     @deprecated
-    bool onStatusCode(int statusCode),
-    bool onResponse(HttpClientResponse response)})
+    bool onStatusCode(int statusCode)?,
+    bool onResponse(HttpClientResponse response)?})
 => ajax(url, method: "HEAD", data: data, body: body,
     headers: headers, onStatusCode: onStatusCode, onResponse: onResponse);
 
 /// Sends an Ajax request to the given [url] using the PATCH method.
-Future<List<int>> patchAjax(Uri url, {
-    List<int> data, String body, Map<String, String> headers,
+Future<List<int>?> patchAjax(Uri url, {
+    List<int>? data, String? body, Map<String, String>? headers,
     @deprecated
-    bool onStatusCode(int statusCode),
-    bool onResponse(HttpClientResponse response)})
+    bool onStatusCode(int statusCode)?,
+    bool onResponse(HttpClientResponse response)?})
 => ajax(url, method: "PATCH", data: data, body: body,
     headers: headers, onStatusCode: onStatusCode, onResponse: onResponse);
 
@@ -116,7 +116,7 @@ class HttpUtil {
    *       request, new Map.from(request.queryParameters));
    */
   static Future<Map<String, String>> decodePostedParameters(
-      Stream<List<int>> request, [Map<String, String> parameters]) async
+      Stream<List<int>> request, [Map<String, String>? parameters]) async
   => decodeQuery(await readAsString(request), parameters);
 
   /** Decodes the query string into a map of name-value pairs (aka., parameters).
@@ -126,13 +126,14 @@ class HttpUtil {
    * If null, this method will instantiate a new map.
    */
   static Map<String, String> decodeQuery(
-      String queryString, [Map<String, String> parameters]) {
+      String queryString, [Map<String, String>? parameters]) {
     if (parameters == null)
       parameters = <String, String>{};
 
     int i = 0, len = queryString.length;
     while (i < len) {
-      int j = i, iEquals;
+      int j = i;
+      int? iEquals;
       for (; j < len; ++j) {
         final cc = queryString.codeUnitAt(j);
         if (cc == $equal)
@@ -167,9 +168,9 @@ class HttpUtil {
         buf.write('&');
       buf..write(Uri.encodeQueryComponent(name))..write('=');
       final value = parameters[name];
-      final String sval = value != null ? value.toString(): null;
+      final String? sval = value != null ? value.toString(): null;
       if (sval?.isNotEmpty == true)
-        buf.write(Uri.encodeQueryComponent(sval));
+        buf.write(Uri.encodeQueryComponent(sval!));
     }
     return buf.toString();
   }

@@ -28,7 +28,7 @@ class IOSinkWrapper extends StreamConsumerWrapper<List<int>> implements IOSink {
     origin.add(data);
   }
   @override
-  void addError(error, [StackTrace stackTrace]) {
+  void addError(error, [StackTrace? stackTrace]) {
     origin.addError(error, stackTrace);
   }
 
@@ -44,7 +44,7 @@ class IOSinkWrapper extends StreamConsumerWrapper<List<int>> implements IOSink {
 
   //StringSink//
   @override
-  void write(Object obj) {
+  void write(Object? obj) {
     origin.write(obj);
   }
   @override
@@ -52,7 +52,7 @@ class IOSinkWrapper extends StreamConsumerWrapper<List<int>> implements IOSink {
     origin.writeAll(objects, separator);
   }
   @override
-  void writeln([Object obj = ""])  {
+  void writeln([Object? obj = ""])  {
     origin.writeln(obj);
   }
   @override

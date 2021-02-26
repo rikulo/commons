@@ -1,6 +1,9 @@
 //Copyright (C) 2013 Potix Corporation. All Rights Reserved.
 //History: Wed, Mar 27, 2013  9:19:55 AM
 // Author: tomyeh
+
+
+
 library test_async;
 
 import "dart:async";
@@ -12,7 +15,7 @@ main() {
     test("defer 1", () {
       int count = 0;
       for (int i = 0; i < 10; ++i)
-        defer("foo", (key) {
+        defer("foo", (dynamic key) {
           assert(key == "foo");
           ++count;
         }, min: const Duration(milliseconds: 100));
@@ -25,7 +28,7 @@ main() {
       int count = 0, loop = 5;
       void add() {
         Future.delayed(const Duration(milliseconds: 30), () {
-          defer("foo", (key) {
+          defer("foo", (dynamic key) {
             assert(key == "foo");
             ++count;
           }, min: const Duration(milliseconds: 50),
@@ -43,7 +46,7 @@ main() {
 
     test("flush defer", () {
       int value = 0;
-      defer("foo", (_) {
+      defer("foo", (dynamic _) {
         return Future.delayed(const Duration(milliseconds: 300),
           () => value = 1);
       }, min: Duration.zero);

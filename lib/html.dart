@@ -1,6 +1,9 @@
 //Copyright (C) 2015 Potix Corporation. All Rights Reserved.
 //History: Sat Jun 27 23:11:53 CST 2015
 // Author: tomyeh
+
+// @dart=2.9
+
 library rikulo_html;
 
 import "dart:html";

@@ -1,6 +1,9 @@
 //Copyright (C) 2013 Potix Corporation. All Rights Reserved.
 //History: Tue, Feb 19, 2013  5:33:00 PM
 // Author: tomyeh
+
+
+
 library test_inject;
 
 import 'dart:mirrors';
@@ -8,24 +11,24 @@ import 'package:test/test.dart';
 import "package:rikulo_commons/mirrors.dart";
 
 class User {
-  User({this.firstName, String lastName, this.manager}): _lastName = lastName;
+  User({this.firstName, String? lastName, this.manager}): _lastName = lastName;
 
-  String firstName, _lastName;
+  String? firstName, _lastName;
 
-  void set lastName(String name) {
+  void set lastName(String? name) {
     _lastName = name;
   }
-  String get lastName => _lastName;
+  String? get lastName => _lastName;
 
-  int age;
+  int? age;
   @override
   String toString() => "User($firstName $lastName, $age)";
-  User manager;
+  User? manager;
 
   void set wrong(bool wrong) => throw "not callable";
-  User get getterOnly => null;
-  User get wrongUser => null;
-  void set wrongUser(User user) => throw "not callable";
+  User? get getterOnly => null;
+  User? get wrongUser => null;
+  void set wrongUser(User? user) => throw "not callable";
 }
 
 void main() {
@@ -63,9 +66,9 @@ void main() {
       expect(user.lastName, "Gates");
       expect(user.age, 32);
       expect(user.manager, isNotNull);
-      expect(user.manager.firstName, "John");
-      expect(user.manager.lastName, "Kyle");
-      expect(user.manager.manager.firstName, "Boss");
+      expect(user.manager!.firstName, "John");
+      expect(user.manager!.lastName, "Kyle");
+      expect(user.manager!.manager!.firstName, "Boss");
     });
 
     test("inject non-existing", () {

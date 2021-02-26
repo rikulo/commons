@@ -1,6 +1,9 @@
 //Copyright (C) 2013 Potix Corporation. All Rights Reserved.
 //History: Fri, Jun 14, 2013  9:59:15 AM
 // Author: tomyeh
+
+// @dart=2.9
+
 library rikulo_logging;
 
 import "dart:async" show Future;

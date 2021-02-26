@@ -1,6 +1,9 @@
 //Copyright (C) 2012 Potix Corporation. All Rights Reserved.
 //History: Mon, Mar 12, 2012  9:26:04 AM
 // Author: tomyeh
+
+// @dart=2.9
+
 library rikulo_browser;
 
 /**

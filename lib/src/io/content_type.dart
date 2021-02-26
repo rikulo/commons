@@ -15,13 +15,13 @@ part of rikulo_io;
  * Notice: as shown, if the format is text (such as `"text/plain"` and `"text/css"`),
  * the encoding is default to UTF8 (i.e., `charset=utf-8` will be appended).
  */
-ContentType getContentType(String extension) {
+ContentType? getContentType(String extension) {
   assert(!extension.startsWith('.'));
-  ContentType ctype = _ctypes[extension];
+  ContentType? ctype = _ctypes[extension];
   if (ctype != null)
     return ctype;
 
-  String mime = lookupMimeType(".$extension");
+  String? mime = lookupMimeType(".$extension");
   if (mime == null)
     return null;
 
@@ -58,14 +58,14 @@ void addContentType(String extension, String contentType) {
  * Thus, the performance is little better.
  */
 ContentType parseContentType(String value) {
-  final ContentType ctype = _rawCtypes[value];
+  final ContentType? ctype = _rawCtypes[value];
   return ctype != null ? ctype: ContentType.parse(value);
 }
 
 ///extension => ContentType
 final _ctypes = HashMap<String, ContentType>();
 ///value => ContentType
-final _rawCtypes = HashMap<String, ContentType>();
+final _rawCtypes = HashMap<String?, ContentType>();
 
 bool _isTextType(String mime)
 => mime.startsWith("text/")

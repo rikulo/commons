@@ -7,7 +7,7 @@ part of rikulo_io;
  */
 List<int> gzip(List<int> bytes, {int level: 6}) {
   final output = <int>[];
-  var error;
+  Object? error;
   var controller = StreamController<List<int>>(sync: true);
   controller.stream
     .transform(ZLibEncoder(level: level))
@@ -15,7 +15,9 @@ List<int> gzip(List<int> bytes, {int level: 6}) {
       onError: (e) => error = e);
   controller.add(bytes);
   controller.close();
-  if (error != null) throw error;
+  if (error != null) {
+    throw error as Object;
+  }
   return output; //note: it is done synchronously
 }
 
@@ -28,7 +30,7 @@ List<int> gzipString(String string, {Encoding encoding: utf8, int level: 6})
  */
 List<int> ungzip(List<int> bytes) {
   final output = <int>[];
-  var error;
+  Object? error;
   var controller = StreamController<List<int>>(sync: true);
   controller.stream
     .transform(ZLibDecoder())
@@ -36,7 +38,9 @@ List<int> ungzip(List<int> bytes) {
       onError: (e) => error = e);
   controller.add(bytes);
   controller.close();
-  if (error != null) throw error;
+  if (error != null) {
+    throw error as Object;
+  }
   return output; //note: it is done synchronously
 }
 

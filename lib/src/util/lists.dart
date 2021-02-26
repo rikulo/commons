@@ -1,6 +1,9 @@
 //Copyright (C) 2012 Potix Corporation. All Rights Reserved.
 //History: Tue, Jun 05, 2012  9:16:58 AM
 // Author: tomyeh
+
+
+
 part of rikulo_util;
 
 /** List utilities.
@@ -27,14 +30,14 @@ class ListUtil {
 	 * * [equal] - the closure to compare elements in the given lists.
    * If omitted, it compares each item in the list with `identical()`.
    */
-  static bool equalsEach(List al, bl, [bool equal(a, b)]) {
+  static bool equalsEach(List al, bl, [bool equal(a, b)?]) {
     if (identical(al, bl))
       return true;
     if (!(bl is List))
       return false;
 
-    final bl2 = bl as List,
-    	length = al.length;
+    final bl2 = bl;
+    final length = al.length;
     if (length != bl2.length)
       return false;
 

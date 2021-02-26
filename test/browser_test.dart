@@ -1,6 +1,9 @@
 //Copyright (C) 2013 Potix Corporation. All Rights Reserved.
 //History: Fri, May 24, 2013  2:19:40 PM
 // Author: tomyeh
+
+
+
 library test_browser;
 
 import 'package:test/test.dart';
@@ -118,7 +121,7 @@ newEdge:
       for (final ua in uas.keys) {
 //        print(ua);
         final browser = _Browser(ua);
-        final List result = uas[ua];
+        final List result = uas[ua]!;
         result[0](browser, result[1]);
       }
 
