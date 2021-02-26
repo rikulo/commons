@@ -23,7 +23,7 @@ abstract class Browser {
 
   /// The browser's name.
   @deprecated
-  String? name;
+  late String name;
   /** The browser's version.
    * 
    * Note: if the subversion is a single digit, it will be considered
@@ -32,7 +32,7 @@ abstract class Browser {
    * (not `12.1`). Thus, [version] of *12.10* is larger than that of *12.2*
    * as expected.
    */
-  double? version;
+  late double version;
 
   /// Whether it is Safari.
   bool safari = false;
@@ -75,7 +75,7 @@ abstract class Browser {
    * If false, the browser is assumed to run on a desktop and
    * it can be resized by the user.
    */
-  bool? mobile;
+  late bool mobile;
 
   /** The webkit's version if this is a webkit-based browser, or null
    * if it is not webkit-based. Note: Safari, Chrome and Edge are all
@@ -102,7 +102,7 @@ abstract class Browser {
     bool bm(RegExp regex) {
       final m = regex.firstMatch(ua);
       if (m != null) {
-        name = m.group(1);
+        name = m.group(1)!;
         version = parseVersion(m.group(2)!);
         return true;
       }
