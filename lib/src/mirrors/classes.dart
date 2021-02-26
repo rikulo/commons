@@ -31,19 +31,21 @@ class ClassUtil {
    */
   static ClassMirror forName(String qname) {
     final splited = _splitQualifiedName(qname);
-    
-    final LibraryMirror lib =
-      currentMirrorSystem().findLibrary(Symbol(splited["lib"]!));
+   
     try {
+      final LibraryMirror lib =
+        currentMirrorSystem().findLibrary(Symbol(splited["lib"]!));
+
       final klass = lib.declarations[Symbol(splited["class"]!)];
-      if (klass is ClassMirror)
+
+      if (klass is ClassMirror){
         return klass;
-    } catch (e){
-    } finally {
-      // Through if klass is not ClassMirror or if exception was thrown by 
-      // currentMirrorSystem().findLibrary()
+      }
+    } catch  (e){
+      // findLibrary now throws if the symbol isn't there.
       throw NoSuchClassError(qname);
-    }
+    } 
+    throw NoSuchClassError(qname);
   }
 
   /**
