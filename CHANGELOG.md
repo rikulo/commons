@@ -1,5 +1,9 @@
 # Rikulo Commons Changes
 
+###
+
+* Migrate to null safe dart
+
 ### 4.3.0
 
 * `Browser.legacyEdge` and `Browser.newEdge` are addded, and `Browser.name` and `Browser.edge` are deprecated.
