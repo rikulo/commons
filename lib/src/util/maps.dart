@@ -176,76 +176,72 @@ class MapWrapper<K, V> implements Map<K,V> {
   => this == o || origin == o || (o is MapWrapper && o.origin == origin);
 }
 
+@Deprecated('Use: late Map<K,V> = creator(); instead')
 class _OnDemandMap<K, V> implements Map<K,V> {
   final AsMap<K, V> _creator;
-  Map<K, V>? _map;
+  late Map<K, V> _map = _creator();
 
   _OnDemandMap(AsMap<K, V> this._creator);
 
-  Map<K, V> _init() {
-    final m = _map;
-    if (m != null) return m;
-    return  _map = _creator();
-  } 
 
   @override
-  V?  operator[](Object? key) => _map != null ? _map![key as K]: null;
+  V?  operator[](Object? key) => _map[key as K];
   @override
   void operator[]=(K key, V value) {
-    _init()[key] = value;
+    _map[key] = value;
   }
   @override
   void addAll(Map<K, V> other) {
-    _init().addAll(other);
+    _map.addAll(other);
   }
   @override
   void clear() {
-    if (_map != null) _map!.clear();
+     _map.clear();
   }
   @override
-  bool containsKey(Object? key) => _map != null && _map!.containsKey(key);
+  bool containsKey(Object? key) =>  _map.containsKey(key);
   @override
-  bool containsValue(Object? value) => _map != null && _map!.containsValue(value);
+  bool containsValue(Object? value) =>  _map.containsValue(value);
   @override
   void forEach(void f(K key, V value)) {
-    if (_map != null) _map!.forEach(f);
+    _map.forEach(f);
   }
   @override
-  Iterable<K> get keys => _map != null ? _map!.keys: const [];
+  Iterable<K> get keys => _map.keys;
   @override
-  Iterable<V> get values => _map != null ? _map!.values: const [];
+  Iterable<V> get values => _map.values;
   @override
-  bool get isEmpty => _map == null || _map!.isEmpty;
+  bool get isEmpty =>  _map.isEmpty;
   @override
   bool get isNotEmpty => !isEmpty;
   @override
-  int get length => _map != null ? _map!.length: 0;
+  int get length => _map.length;
   @override
-  V putIfAbsent(K key, V ifAbsent()) => _init().putIfAbsent(key, ifAbsent);
+  V putIfAbsent(K key, V ifAbsent()) => _map.putIfAbsent(key, ifAbsent);
   @override
-  V? remove(Object? key) => _map != null ? _map!.remove(key): null;
+  V? remove(Object? key) => _map.remove(key);
   @override
-  String toString() => (_map ?? const {}).toString();
+  String toString() => _map.toString();
 
   @override
   void addEntries(Iterable<MapEntry<K, V>> newEntries)
-  => _init().addEntries(newEntries);
+  => _map.addEntries(newEntries);
   @override
   Map<K2, V2> map<K2, V2>(MapEntry<K2, V2> f(K key, V value))
-  => _map != null ? _map!.map(f): {};
+  => _map.map(f);
   @override
-  Map<RK, RV> cast<RK, RV>() => _init().cast();
+  Map<RK, RV> cast<RK, RV>() => _map.cast();
   @override
   void removeWhere(bool predicate(K key, V value)) {
-    if (_map != null) _map!.removeWhere(predicate);
+    _map.removeWhere(predicate);
   }
   @override
   V update(K key, V update(V value), {V ifAbsent()?})
-  => _init().update(key, update, ifAbsent: ifAbsent);
+  => _map.update(key, update, ifAbsent: ifAbsent);
   @override
   void updateAll(V update(K key, V value)) {
-    if (_map != null) _map!.updateAll(update);
+    _map.updateAll(update);
   }
   @override
-  Iterable<MapEntry<K, V>> get entries => _init().entries;
+  Iterable<MapEntry<K, V>> get entries => _map.entries;
 }

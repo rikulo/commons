@@ -39,7 +39,7 @@ class ClassUtil {
       if (klass is ClassMirror){
         return klass;
       }
-    } catch  (e){
+    } catch (e){
       // findLibrary now throws if the symbol isn't there.
       throw NoSuchClassError(qname);
     } 

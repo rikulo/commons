@@ -74,7 +74,7 @@ class _Stream<T> extends Stream<T> {
 
   @override
   StreamSubscription<T> listen(void onData(T event)?,
-      {Function? onError, void onDone()?, bool? cancelOnError})
+          {Function? onError, void onDone()?, bool? cancelOnError})
     => _StreamSubscription<T>(this._target, this._type, onData);
 }
 
@@ -87,9 +87,9 @@ class _CapturableStream<T> extends Stream<T> {
 
   @override
   StreamSubscription<T> listen(void onData(T event)?,
-      {Function? onError, void onDone()?, bool? cancelOnError})
+        {Function? onError, void onDone()?, bool? cancelOnError})
     => _CapturableStreamSubscription<T>(
-      this._target, this._type, onData, this._useCapture);
+          this._target, this._type, onData, this._useCapture);
 }
 
 typedef void _OnData<T>(T event);
@@ -177,7 +177,8 @@ abstract class _StreamSubscriptionBase<T> extends StreamSubscription<T> {
 }
 
 class _StreamSubscription<T> extends _StreamSubscriptionBase<T> {
-  StreamTarget<T>? _target;
+  final StreamTarget<T> _target;
+  bool _wasCanceled = false;
 
   _StreamSubscription(this._target, String type, void onData(T event)?):
     super(type, onData);
@@ -187,25 +188,26 @@ class _StreamSubscription<T> extends _StreamSubscriptionBase<T> {
     super.cancel(); //always null
 
     // Clear out the target to indicate this is complete.
-    _target = null;
+    _wasCanceled = true;
     return Future.value();
   }
 
   @override
-  bool get _canceled => _target == null;
+  bool get _canceled => _wasCanceled;
   @override
   void _add() {
-    _target!.addEventListener(_type, _onData);
+    _target.addEventListener(_type, _onData);
   }
   @override
   void _remove() {
-    _target!.removeEventListener(_type, _onData);
+    _target.removeEventListener(_type, _onData);
   }
 }
 
 class _CapturableStreamSubscription<T> extends _StreamSubscriptionBase<T> {
-  CapturableStreamTarget<T>? _target;
+  final CapturableStreamTarget<T> _target;
   final bool _useCapture;
+  bool _wasCanceled = false;
 
   _CapturableStreamSubscription(this._target, String type, void onData(T event)?, this._useCapture):
     super(type, onData);
@@ -213,20 +215,19 @@ class _CapturableStreamSubscription<T> extends _StreamSubscriptionBase<T> {
   @override
   Future cancel() {
     super.cancel(); //always null
-
+    _wasCanceled = true;
     // Clear out the target to indicate this is complete.
-    _target = null;
     return Future.value();
   }
 
   @override
-  bool get _canceled => _target == null;
+  bool get _canceled => _wasCanceled;
   @override
   void _add() {
-    _target!.addEventListener(_type, _onData, useCapture: _useCapture);
+    _target.addEventListener(_type, _onData, useCapture: _useCapture);
   }
   @override
   void _remove() {
-    _target!.removeEventListener(_type, _onData, useCapture: _useCapture);
+    _target.removeEventListener(_type, _onData, useCapture: _useCapture);
   }
 }
