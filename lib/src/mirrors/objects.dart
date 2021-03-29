@@ -1,11 +1,13 @@
 //Copyright (C) 2013 Potix Corporation. All Rights Reserved.
 //History: Tue, Feb 19, 2013 12:33:05 PM
 // Author: tomyeh
+
 part of rikulo_mirrors;
 
 /**
  * Object utilities used with mirrors.
  */
+@deprecated
 class ObjectUtil {
   /** Injects the given values into the given object.
    *
@@ -31,10 +33,10 @@ class ObjectUtil {
    * * Returns [instance]
    */
   static inject(instance, Map<String, dynamic> values,
-      {coerce(value, ClassMirror targetClass),
-      void onCoerceError(o, String field, value, ClassMirror targetClass, error),
-      void onSetterError(o, String field, value, error),
-      void validate(o, String field, value),
+      {coerce(value, ClassMirror targetClass)?,
+      void onCoerceError(o, String field, value, ClassMirror targetClass, error)?,
+      void onSetterError(o, String field, value, error)?,
+      void validate(o, String field, value)?,
       bool silent: false}) {
     l_keys:
     for (var key in values.keys) {
@@ -85,10 +87,10 @@ class ObjectUtil {
     return o3;
   }
   static void _inject(instance, String name, value,
-      coerce(o, ClassMirror tClass),
-      void onCoerceError(o, String field, value, ClassMirror tClass, err),
-      void onSetterError(o, String field, value, err),
-      void validate(o, String field, value),
+      coerce(o, ClassMirror tClass)?,
+      void onCoerceError(o, String field, value, ClassMirror tClass, err)?,
+      void onSetterError(o, String field, value, err)?,
+      void validate(o, String field, value)?,
       bool silent) {
     final clz = ClassUtil.getSetterType(reflect(instance).type, name);
     if (clz == null) { //not found
@@ -115,8 +117,8 @@ class ObjectUtil {
     if (validate != null)
       validate(instance, name, value);
 
-    final om = reflect(instance),
-      symbol = Symbol(name);
+    final om = reflect(instance);
+    final symbol = Symbol(name);
     if (onSetterError != null) {
       try {
         om.setField(symbol, value);

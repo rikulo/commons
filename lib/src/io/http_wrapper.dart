@@ -27,7 +27,7 @@ class HttpRequestWrapper implements HttpRequest {
   @override
   List<Cookie> get cookies => origin.cookies;
   @override
-  X509Certificate get certificate => origin.certificate;
+  X509Certificate? get certificate => origin.certificate;
   @override
   HttpSession get session => origin.session;
   @override
@@ -35,17 +35,17 @@ class HttpRequestWrapper implements HttpRequest {
   @override
   String get protocolVersion => origin.protocolVersion;
   @override
-  HttpConnectionInfo get connectionInfo => origin.connectionInfo;
+  HttpConnectionInfo? get connectionInfo => origin.connectionInfo;
 
   @override
   String toString() => origin.toString();
 
   @override
   StreamSubscription<Uint8List> listen(
-    void Function(Uint8List event) onData, {
-    Function onError,
-    void Function() onDone,
-    bool cancelOnError,
+    void Function(Uint8List event)? onData, {
+    Function? onError,
+    void Function()? onDone,
+    bool? cancelOnError,
   }) => origin.listen(onData,
       onError: onError, onDone: onDone, cancelOnError: cancelOnError);
 
@@ -55,12 +55,12 @@ class HttpRequestWrapper implements HttpRequest {
 
   @override
   Stream<Uint8List> asBroadcastStream({
-    void Function(StreamSubscription<Uint8List> subscription) onListen,
-    void Function(StreamSubscription<Uint8List> subscription) onCancel,
+    void Function(StreamSubscription<Uint8List> subscription)? onListen,
+    void Function(StreamSubscription<Uint8List> subscription)? onCancel,
   }) => origin.asBroadcastStream(onListen: onListen, onCancel: onCancel);
 
   @override
-  Stream<E> asyncExpand<E>(Stream<E> Function(Uint8List event) convert)
+  Stream<E> asyncExpand<E>(Stream<E>? Function(Uint8List event) convert)
   => origin.asyncExpand(convert);
 
   @override
@@ -71,14 +71,14 @@ class HttpRequestWrapper implements HttpRequest {
   Stream<R> cast<R>() => origin.cast<R>();
 
   @override
-  Future<bool> contains(Object needle) => origin.contains(needle);
+  Future<bool> contains(Object? needle) => origin.contains(needle);
 
   @override
-  Stream<Uint8List> distinct([bool Function(Uint8List previous, Uint8List next) equals])
+  Stream<Uint8List> distinct([bool Function(Uint8List previous, Uint8List next)? equals])
   => origin.distinct(equals);
 
   @override
-  Future<E> drain<E>([E futureValue]) => origin.drain<E>(futureValue);
+  Future<E> drain<E>([E? futureValue]) => origin.drain<E>(futureValue);
 
   @override
   Future<Uint8List> elementAt(int index) => origin.elementAt(index);
@@ -97,7 +97,7 @@ class HttpRequestWrapper implements HttpRequest {
   @override
   Future<Uint8List> firstWhere(
     bool Function(Uint8List element) test, {
-    Uint8List Function() orElse,
+    Uint8List Function()? orElse,
   }) => origin.firstWhere(test, orElse: orElse);
 
   @override
@@ -112,7 +112,7 @@ class HttpRequestWrapper implements HttpRequest {
   @override
   Stream<Uint8List> handleError(
     Function onError, {
-    bool Function(dynamic error) test,
+    bool Function(dynamic error)? test,
   }) => origin.handleError(onError, test: test);
 
   @override
@@ -130,7 +130,7 @@ class HttpRequestWrapper implements HttpRequest {
   @override
   Future<Uint8List> lastWhere(
     bool Function(Uint8List element) test, {
-    Uint8List Function() orElse,
+    Uint8List Function()? orElse,
   }) => origin.lastWhere(test, orElse: orElse);
 
   @override
@@ -155,7 +155,7 @@ class HttpRequestWrapper implements HttpRequest {
   @override
   Future<Uint8List> singleWhere(
     bool Function(Uint8List element) test, {
-    Uint8List Function() orElse,
+    Uint8List Function()? orElse,
   }) => origin.singleWhere(test, orElse: orElse);
 
   @override
@@ -175,7 +175,7 @@ class HttpRequestWrapper implements HttpRequest {
   @override
   Stream<Uint8List> timeout(
     Duration timeLimit, {
-    void Function(EventSink<Uint8List> sink) onTimeout,
+    void Function(EventSink<Uint8List> sink)? onTimeout,
   }) => origin.timeout(timeLimit, onTimeout: onTimeout);
 
   @override
@@ -231,9 +231,9 @@ class HttpResponseWrapper extends IOSinkWrapper implements HttpResponse {
   }
 
   @override
-  Duration get deadline => origin.deadline;
+  Duration? get deadline => origin.deadline;
   @override
-  void set deadline(Duration deadline) {
+  void set deadline(Duration? deadline) {
     origin.deadline = deadline;
   }
 
@@ -256,7 +256,7 @@ class HttpResponseWrapper extends IOSinkWrapper implements HttpResponse {
   Future<Socket> detachSocket({bool writeHeaders: true})
   => origin.detachSocket(writeHeaders: writeHeaders);
   @override
-  HttpConnectionInfo get connectionInfo => origin.connectionInfo;
+  HttpConnectionInfo? get connectionInfo => origin.connectionInfo;
 }
 
 /** A skeletal implementation for buffered HTTP response,
@@ -280,8 +280,8 @@ abstract class AbstractBufferedResponse extends HttpResponseWrapper {
 
   //Used for implementing [close] and [done]//
   Completer get _closer
-  => _$closer != null ? _$closer: (_$closer = Completer());
-  Completer _$closer;
+  => _$closer ?? (_$closer = Completer());
+  Completer? _$closer;
 
   @override
   Future addStream(Stream<List<int>> stream) {
@@ -308,7 +308,7 @@ abstract class AbstractBufferedResponse extends HttpResponseWrapper {
     }
   }
   @override
-  void writeln([Object obj = ""]) {
+  void writeln([Object? obj = ""]) {
     write(obj);
     write("\n");
   }
@@ -331,7 +331,7 @@ class StringBufferedResponse extends AbstractBufferedResponse {
     buffer.write(encoding.decode(data));
   }
   @override
-  void write(Object obj) {
+  void write(Object? obj) {
     buffer.write(obj);
   }
 }
@@ -350,7 +350,7 @@ class BufferedResponse extends AbstractBufferedResponse {
     buffer.addAll(data);
   }
   @override
-  void write(Object obj) {
+  void write(Object? obj) {
     if (obj is num) {
       buffer.add(obj.toInt());
     } else {
@@ -371,9 +371,9 @@ class HttpHeadersWrapper implements HttpHeaders {
   HttpHeadersWrapper(this.origin);
 
   @override
-  List<String> operator[](String name) => origin[name];
+  List<String>? operator[](String name) => origin[name];
   @override
-  String value(String name) => origin.value(name);
+  String? value(String name) => origin.value(name);
 
   @override
   void add(String name, Object value, {bool preserveHeaderCase = false}) {
@@ -402,39 +402,39 @@ class HttpHeadersWrapper implements HttpHeaders {
     origin.noFolding(name);
   }
   @override
-  DateTime get date => origin.date;
+  DateTime? get date => origin.date;
   @override
-  void set date(DateTime date) {
+  void set date(DateTime? date) {
     origin.date = date;
   }
   @override
-  DateTime get expires => origin.expires;
+  DateTime? get expires => origin.expires;
   @override
-  void set expires(DateTime expires) {
+  void set expires(DateTime? expires) {
     origin.expires = expires;
   }
   @override
-  DateTime get ifModifiedSince => origin.ifModifiedSince;
+  DateTime? get ifModifiedSince => origin.ifModifiedSince;
   @override
-  void set ifModifiedSince(DateTime ifModifiedSince) {
+  void set ifModifiedSince(DateTime? ifModifiedSince) {
     origin.ifModifiedSince = ifModifiedSince;
   }
   @override
-  String get host => origin.host;
+  String? get host => origin.host;
   @override
-  void set host(String host) {
+  void set host(String? host) {
     origin.host = host;
   }
   @override
-  int get port => origin.port;
+  int? get port => origin.port;
   @override
-  void set port(int port) {
+  void set port(int? port) {
     origin.port = port;
   }
   @override
-  ContentType get contentType => origin.contentType;
+  ContentType? get contentType => origin.contentType;
   @override
-  void set contentType(ContentType contentType) {
+  void set contentType(ContentType? contentType) {
     origin.contentType = contentType;
   }
   @override

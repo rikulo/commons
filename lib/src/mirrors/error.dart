@@ -5,6 +5,7 @@
 part of rikulo_mirrors;
 
 /// Exception thrown because of non-existing class
+@deprecated
 class NoSuchClassError implements Exception {
   final message;
   const NoSuchClassError([this.message]);
@@ -14,6 +15,7 @@ class NoSuchClassError implements Exception {
 }
 
 /// Exception thrown because of failed to coerce an object to the target type.
+@deprecated
 class CoercionError implements Exception {
   final message;
   final targetType;

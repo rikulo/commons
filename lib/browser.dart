@@ -20,9 +20,6 @@ abstract class Browser {
     _rlegEdge = RegExp(r"Edge/[1-9]"),
     _rnewEdge = RegExp(r"Edg/[1-9]");
 
-  /// The browser's name.
-  @deprecated
-  String name;
   /** The browser's version.
    * 
    * Note: if the subversion is a single digit, it will be considered
@@ -31,7 +28,7 @@ abstract class Browser {
    * (not `12.1`). Thus, [version] of *12.10* is larger than that of *12.2*
    * as expected.
    */
-  double version;
+  late double version;
 
   /// Whether it is Safari.
   bool safari = false;
@@ -47,8 +44,6 @@ abstract class Browser {
   /// Whether it is Opera.
   bool opera = false;
 
-  @deprecated
-  bool get edge => legacyEdge;
   /// Whether it is legacy Edge.
   /// Note: if it is legacy Edge, we consider it as a variant
   /// of Chrome, so [chrome] is also true but [version] is not correct.
@@ -74,20 +69,20 @@ abstract class Browser {
    * If false, the browser is assumed to run on a desktop and
    * it can be resized by the user.
    */
-  bool mobile;
+  late bool mobile;
 
   /** The webkit's version if this is a webkit-based browser, or null
    * if it is not webkit-based. Note: Safari, Chrome and Edge are all
    * Webkit-based.
    */
-  double webkitVersion;
+  double? webkitVersion;
 
   /** The version of iOS if it is running on iOS, or null if not.
    */
-  double iOSVersion;
+  double? iOSVersion;
   /** The version of Android if it is running on Android, or null if not.
    */
-  double androidVersion;
+  double? androidVersion;
 
   Browser() {
     _initBrowserInfo();
@@ -101,21 +96,20 @@ abstract class Browser {
     bool bm(RegExp regex) {
       final m = regex.firstMatch(ua);
       if (m != null) {
-        name = m.group(1);
-        version = parseVersion(m.group(2));
+        version = parseVersion(m.group(2)!);
         return true;
       }
       return false;
     }
 
     // os detection
-    Match m2;
+    Match? m2;
     if ((m2 = _randroid.firstMatch(ua)) != null) {
       mobile = android = true;
-      androidVersion = parseVersion(m2.group(1));
+      androidVersion = parseVersion(m2!.group(1)!);
     } else if ((m2 = _riOS.firstMatch(ua)) != null) {
       mobile = iOS = true;
-      iOSVersion = parseVersion(m2.group(1), '_');
+      iOSVersion = parseVersion(m2!.group(1)!, '_');
     } else {
       mobile = ua.contains("mobile");
       macOS = ua.contains("mac os");
@@ -133,19 +127,16 @@ abstract class Browser {
         chrome = true;
       } else if (bm(_rsafari)) { //after chrome
         safari = true;
-        name = "safari";
       }
       //opera, firefox for iOS all based on ApplieWebKit, but
       //we consider them as webkit (than firefox or opera)
     } else if (bm(_rie) || bm(_rie2)) {
       ie = true;
-      name = "ie";
     } else if (bm(_ropera)) {
       opera = true;
     } else if (bm(_rfirefox)) { //after opera
       firefox = true;
     } else {
-      name = "";
       version = 1.0;
     }
   }

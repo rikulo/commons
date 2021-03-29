@@ -1,5 +1,11 @@
 # Rikulo Commons Changes
 
+### 5.0.0
+
+* Migrate to Dart 2.12 (null safety)
+* Clean up deprecated methods: `Browser.edge`, `Browser.name` and the `onStatusCode` argument of Ajax utilities.
+* Deprecate mirrors related utilities.
+
 ### 4.3.0
 
 * `Browser.legacyEdge` and `Browser.newEdge` are addded, and `Browser.name` and `Browser.edge` are deprecated.

@@ -4,6 +4,7 @@
 
 part of rikulo_mirrors;
 
+@deprecated
 final ClassMirror
   LIST_MIRROR = ClassUtil.forName("dart.core.List"),
   MAP_MIRROR = ClassUtil.forName("dart.core.Map"),
@@ -15,11 +16,12 @@ final ClassMirror
   OBJECT_MIRROR = ClassUtil.forName("dart.core.Object"),
   INT_MIRROR = ClassUtil.forName("dart.core.int"),
     //in later sdk, it is not the same as reflect(0).type
-  NUM_MIRROR = INT_MIRROR.superclass,
+  NUM_MIRROR = INT_MIRROR.superclass!,
   DOUBLE_MIRROR = ClassUtil.forName("dart.core.double"),
   BOOL_MIRROR = reflect(false).type;
 
 /** Utility class used with Mirror. */
+@deprecated
 class ClassUtil {
   /**
    * Return the ClassMirror of the qualified class name
@@ -29,14 +31,15 @@ class ClassUtil {
    */
   static ClassMirror forName(String qname) {
     final splited = _splitQualifiedName(qname);
-    if (splited != null) {
-      final LibraryMirror lib =
-        currentMirrorSystem().findLibrary(Symbol(splited["lib"]));
-      if (lib != null) {
-        final klass = lib.declarations[Symbol(splited["class"])];
-        if (klass is ClassMirror)
-          return klass;
-      }
+   
+    try {
+      final lib = currentMirrorSystem().findLibrary(Symbol(splited["lib"]!)),
+        klass = lib.declarations[Symbol(splited["class"]!)];
+      if (klass is ClassMirror)
+        return klass;
+    } catch (e) {
+      // findLibrary now throws if the symbol isn't there.
+      throw NoSuchClassError(qname);
     }
     throw NoSuchClassError(qname);
   }
@@ -62,7 +65,7 @@ class ClassUtil {
       if (isAssignableFrom(tgt, inf))
         return true; //recursive
 
-    return isAssignableFrom(tgt, src.superclass); //recursive
+    return isAssignableFrom(tgt, src.superclass!); //recursive
   }
 
   /**
@@ -95,7 +98,7 @@ class ClassUtil {
   static bool isInstance(ClassMirror classMirror, instance)
     => isAssignableFrom(classMirror, reflect(instance).type);
 
-  static Map<String, String> _splitQualifiedName(String qname) {
+  static Map<String, String?> _splitQualifiedName(String qname) {
     int j = qname.lastIndexOf(".");
     return j < 1 || j >= (qname.length - 1) ?
       {"lib" : null, "class" : qname} :
@@ -126,7 +129,7 @@ class ClassUtil {
    * + [namedArgs] - the optional named arguments. Ignored if the method is a getter or setter.
    */
   static invoke(instance, MethodMirror method, List params,
-      [Map<String, dynamic> namedArgs])
+      [Map<String, dynamic>? namedArgs])
     => invokeByMirror(reflect(instance), method, params, namedArgs);
   /**
    * Invoke a method of the specified ObjectMirror.
@@ -137,14 +140,14 @@ class ClassUtil {
    * + [namedArgs] - the optional named arguments. Ignored if the method is a getter or setter.
    */
   static invokeByMirror(ObjectMirror instance, MethodMirror method,
-      List params, [Map<String, dynamic> namedArgs]) {
+      List params, [Map<String, dynamic>? namedArgs]) {
     InstanceMirror result;
     if (method.isGetter) {
       result = instance.getField(method.simpleName);
     } else if (method.isSetter) {
       result = instance.setField(method.simpleName, params[0]);
     } else {
-      result = instance.invoke(method.simpleName, params, _toNamedParams(namedArgs));
+      result = instance.invoke(method.simpleName, params, _toNamedParams(namedArgs) ?? const <Symbol, dynamic>{});
     }
     return result.reflectee;
   }
@@ -157,7 +160,7 @@ class ClassUtil {
    * + [namedArgs] - the optional named arguments.
    */
   static apply(Function function, List params,
-      [Map<String, dynamic> namedArgs])
+      [Map<String, dynamic>? namedArgs])
     => applyByMirror(reflect(function) as ClosureMirror, params, namedArgs);
   /**
    * apply a closure mirror.
@@ -167,11 +170,11 @@ class ClassUtil {
    * + [namedArgs] - the optional named arguments.
    */
   static applyByMirror(ClosureMirror function, List params,
-      [Map<String, dynamic> namedArgs])
-    => function.apply(params, _toNamedParams(namedArgs)).reflectee;
+      [Map<String, dynamic>? namedArgs])
+    => function.apply(params, _toNamedParams(namedArgs) ?? const <Symbol, dynamic>{}).reflectee;
 
   ///Converts a map of named parameters to Symbol for synchronous invocation
-  static Map<Symbol, dynamic> _toNamedParams(Map<String, dynamic> namedArgs) {
+  static Map<Symbol, dynamic>? _toNamedParams(Map<String, dynamic>? namedArgs) {
     if (namedArgs != null) {
       final nargs = HashMap<Symbol, dynamic>();
       namedArgs.forEach((k,v) => nargs[Symbol(k)] = v);
@@ -206,7 +209,7 @@ class ClassUtil {
    * It throws [CoercionError] if failed to coerce.
    */
   static coerce(instance, ClassMirror targetClass,
-      {coerce(o, ClassMirror tClass)}) {
+      {coerce(o, ClassMirror tClass)?}) {
     if (coerce != null) {
       final o = coerce(instance, targetClass);
       if (o != null)
@@ -241,7 +244,7 @@ class ClassUtil {
   /** Returns the class mirror of the given field (including setter), or null
    * if no such field nor setter.
    */
-  static ClassMirror getSetterType(ClassMirror classMirror, String field) {
+  static ClassMirror? getSetterType(ClassMirror classMirror, String field) {
     var mtd = classMirror.declarations[Symbol("$field=")];
     if (mtd is MethodMirror)
       return mtd.parameters[0].type as ClassMirror;
@@ -252,7 +255,7 @@ class ClassUtil {
   /** Returns the class mirror of the given field (including getter), or null
    * if no such field nor getter.
    */
-  static ClassMirror getGetterType(ClassMirror classMirror, String field) {
+  static ClassMirror? getGetterType(ClassMirror classMirror, String field) {
     final mtd = classMirror.declarations[Symbol(field)];
     return mtd is MethodMirror ? mtd.returnType as ClassMirror:
         mtd is VariableMirror ? mtd.type as ClassMirror: null;

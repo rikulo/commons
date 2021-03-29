@@ -28,6 +28,7 @@ class User {
   void set wrongUser(User user) => throw "not callable";
 }
 
+@deprecated
 void main() {
   test("Class.forName", () {
     expect(INT_MIRROR, isNotNull);
