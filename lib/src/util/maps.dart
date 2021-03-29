@@ -24,10 +24,11 @@ class MapUtil {
 
   /** Copies the given map ([source]) to the destination ([dest]).
    */
-  static Map<K, V> copy<K, V>(Map<K, V> source, Map<K, V> dest, [bool filter(K key, V value)]) {
+  static Map<K, V?> copy<K, V>(Map<K, V?> source, Map<K, V?> dest,
+      [bool filter(K key, V? value)?]) {
     for (final key in source.keys) {
       final value = source[key];
-      if (filter != null || filter(key, value))
+      if (filter != null && filter(key, value))
         dest[key] = value;
     }
     return dest;
@@ -41,9 +42,9 @@ class MapUtil {
    * * [defaultValue] specifies the value to use if it is not specified
    * (i.e., no equal sign).
    */
-  static Map<String, String> parse(String data,
-      {bool backslash:true, String defaultValue}) {
-    final map = LinkedHashMap<String, String>();
+  static Map<String, String?> parse(String data,
+      {bool backslash:true, String? defaultValue}) {
+    final map = LinkedHashMap<String, String?>();
     for (int i = 0, len = data.length; i < len;) {
       i = StringUtil.skipWhitespaces(data, i);
       if (i >= len)
@@ -114,7 +115,7 @@ class MapWrapper<K, V> implements Map<K,V> {
   MapWrapper(Map<K, V> this.origin);
 
   @override
-  V  operator[](Object key) => origin[key];
+  V? operator[](Object? key) => origin[key];
   @override
   void operator[]=(K key, V value) {
     origin[key] = value;
@@ -128,9 +129,9 @@ class MapWrapper<K, V> implements Map<K,V> {
     origin.clear();
   }
   @override
-  bool containsKey(Object key) => origin.containsKey(key);
+  bool containsKey(Object? key) => origin.containsKey(key);
   @override
-  bool containsValue(Object value) => origin.containsValue(value);
+  bool containsValue(Object? value) => origin.containsValue(value);
   @override
   void forEach(void f(K key, V value)) {
     origin.forEach(f);
@@ -148,7 +149,7 @@ class MapWrapper<K, V> implements Map<K,V> {
   @override
   V putIfAbsent(K key, V ifAbsent()) => origin.putIfAbsent(key, ifAbsent);
   @override
-  V remove(Object key) => origin.remove(key);
+  V? remove(Object? key) => origin.remove(key);
 
   @override
   void addEntries(Iterable<MapEntry<K, V>> newEntries)
@@ -161,7 +162,7 @@ class MapWrapper<K, V> implements Map<K,V> {
   void removeWhere(bool predicate(K key, V value))
   => origin.removeWhere(predicate);
   @override
-  V update(K key, V update(V value), {V ifAbsent()})
+  V update(K key, V update(V value), {V ifAbsent()?})
   => origin.update(key, update, ifAbsent: ifAbsent);
   @override
   void updateAll(V update(K key, V value)) => origin.updateAll(update);
@@ -177,69 +178,70 @@ class MapWrapper<K, V> implements Map<K,V> {
 
 class _OnDemandMap<K, V> implements Map<K,V> {
   final AsMap<K, V> _creator;
-  Map<K, V> _map;
+  Map<K, V>? _map;
 
   _OnDemandMap(AsMap<K, V> this._creator);
 
-  Map<K, V> _init() => _map != null ? _map: (_map = _creator());
+  Map<K, V> _init() => _map ?? (_map = _creator());
 
   @override
-  V  operator[](Object key) => _map != null ? _map[key]: null;
+  V? operator[](Object? key) => _map?[key];
   @override
   void operator[]=(K key, V value) {
     _init()[key] = value;
   }
   @override
   void addAll(Map<K, V> other) {
-    _init().addAll(other);
+    if (other.isNotEmpty) _init().addAll(other);
   }
   @override
   void clear() {
-    if (_map != null) _map.clear();
+    _map?.clear();
   }
   @override
-  bool containsKey(Object key) => _map != null && _map.containsKey(key);
+  bool containsKey(Object? key) => _map?.containsKey(key) ?? false;
   @override
-  bool containsValue(Object value) => _map != null && _map.containsValue(value);
+  bool containsValue(Object? value) => _map?.containsValue(value) ?? false;
   @override
   void forEach(void f(K key, V value)) {
-    if (_map != null) _map.forEach(f);
+    _map?.forEach(f);
   }
   @override
-  Iterable<K> get keys => _map != null ? _map.keys: const [];
+  Iterable<K> get keys => _map?.keys ?? const [];
   @override
-  Iterable<V> get values => _map != null ? _map.values: const [];
+  Iterable<V> get values => _map?.values ?? const [];
   @override
-  bool get isEmpty => _map == null || _map.isEmpty;
+  bool get isEmpty => _map?.isEmpty ?? true;
   @override
   bool get isNotEmpty => !isEmpty;
   @override
-  int get length => _map != null ? _map.length: 0;
+  int get length => _map?.length ?? 0;
   @override
   V putIfAbsent(K key, V ifAbsent()) => _init().putIfAbsent(key, ifAbsent);
   @override
-  V remove(Object key) => _map != null ? _map.remove(key): null;
+  V? remove(Object? key) => _map?.remove(key);
   @override
   String toString() => (_map ?? const {}).toString();
 
   @override
-  void addEntries(Iterable<MapEntry<K, V>> newEntries)
-  => _init().addEntries(newEntries);
+  void addEntries(Iterable<MapEntry<K, V>> newEntries) {
+    if (newEntries.isNotEmpty) _init().addEntries(newEntries);
+  }
   @override
   Map<K2, V2> map<K2, V2>(MapEntry<K2, V2> f(K key, V value))
-  => _map != null ? _map.map(f): {};
+  => _map?.map(f) ?? {};
   @override
   Map<RK, RV> cast<RK, RV>() => _init().cast();
   @override
   void removeWhere(bool predicate(K key, V value)) {
-    if (_map != null) _map.removeWhere(predicate);
+    _map?.removeWhere(predicate);
   }
   @override
-  V update(K key, V update(V value), {V ifAbsent()})
+  V update(K key, V update(V value), {V ifAbsent()?})
   => _init().update(key, update, ifAbsent: ifAbsent);
   @override
   void updateAll(V update(K key, V value)) {
-    if (_map != null) _map.updateAll(update);
+    _map?.updateAll(update);
   }
   @override
   Iterable<MapEntry<K, V>> get entries => _init().entries;

@@ -134,7 +134,7 @@ class _Deferrer {
   void run<T>(T key, FutureOr task(T key), Duration min, Duration? max,
       String? categoryKey) {
     final dfkey = new _DeferKey(key, categoryKey),
-      di = _defers[dfkey] as _DeferInfo<T>;
+      di = _defers[dfkey] as _DeferInfo<T>?;
     if (di == null) {
       _defers[dfkey] = _DeferInfo<T>(_startTimer(dfkey, min), task);
       return;
@@ -230,7 +230,7 @@ class _Deferrer {
         await op;
       }
     } finally {
-      if (op != null) _runnings.remove(op!);
+      if (op != null) _runnings.remove(op);
       _busy.remove(dfkey);
     }
   });

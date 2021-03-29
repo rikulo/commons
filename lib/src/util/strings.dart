@@ -30,7 +30,7 @@ class StringUtil {
    * + [match] specifies a string of characters that are matched (aka., allowed).
    */
   static bool isChar(String cc, {bool digit: false, bool upper: false,
-        bool lower: false, bool whitespace: false, String match})
+        bool lower: false, bool whitespace: false, String? match})
   => isCharCode(cc.codeUnitAt(0), digit: digit, upper: upper,
         lower: lower, whitespace: whitespace)
       || (match != null && match.contains(cc));
@@ -68,7 +68,7 @@ class StringUtil {
    * Note: for better performance, it assumes there must be a character following a dash.
    */
   static String camelize(String name) {
-    StringBuffer sb;
+    StringBuffer? sb;
     int k = 0;
     for (int i = 0, len = name.length; i < len; ++i) {
       if (name.codeUnitAt(i) == $dash) {
@@ -84,7 +84,7 @@ class StringUtil {
    * For example, `backgroundColor' => `background-color`.
    */
   static String uncamelize(String name) {
-    StringBuffer sb;
+    StringBuffer? sb;
     int k = 0;
     for (int i = 0, len = name.length; i < len; ++i) {
       final cc = name.codeUnitAt(i);

@@ -23,12 +23,12 @@ class XmlUtil {
    */
   static String encode(String value, {bool multiLine: false, bool pre: false,
       bool space: false, bool entity: false}) {
-    final len = value?.length ?? 0;
+    final len = value.length;
     if (len == 0) return value; //as it is
 
     final buf = new StringBuffer();
     int i = 0, j = 0;
-    void flush(String text, [int end]) {
+    void flush(String text, [int? end]) {
       buf..write(value.substring(j, end ?? i))
         ..write(text);
       j = i + 1;
@@ -64,9 +64,10 @@ class XmlUtil {
         if (multiLine) replace = _encLine[cc];
 
         if (replace == null && (pre || space)) {
-          var count = _encSpace[cc];
-          if (count != null) {
-            int k;
+          var count$ = _encSpace[cc];
+          if (count$ != null) {
+            var count = count$;
+            late int k;
             if (!pre) { //pre has higher priority than space
             //convert consecutive whitespaces to &nbsp; plus a space
               for (k = i; ++k < len;) {
@@ -99,6 +100,13 @@ class XmlUtil {
     flush('');
     return buf.toString();
   }
+
+  /// Nullable version of [encode]
+  static String? encode$(String? value, {bool multiLine: false, bool pre: false,
+      bool space: false, bool entity: false})
+  => value == null ? value:
+      encode(value, multiLine: multiLine, pre: pre, space: space, entity: entity);
+
   static const _encBasic = const <int, String> {
     $lt: '&lt;', $gt: '&gt;', $amp: '&amp;', $quot: "&quot;",
   };
@@ -116,8 +124,8 @@ class XmlUtil {
   };
 
   static String _decMapper(Match m) {
-    final String key = m.group(1).toLowerCase();
-    final String mapped = _decs[key];
+    final key = m.group(1)!.toLowerCase();
+    final mapped = _decs[key];
     if (mapped != null)
       return mapped;
 
@@ -128,7 +136,7 @@ class XmlUtil {
               "0x${key.substring(2)}": key.substring(1))]);
     }
 
-    return m.group(0);
+    return m.group(0)!;
   }
 
   /** Decodes the XML string into a normal string.
@@ -136,9 +144,10 @@ class XmlUtil {
    *
    * + [txt] is the text to decode.
    */
-  static String decode(String txt) {
-    if (txt == null) return null; //as it is
+  static String decode(String value)
+  => value.replaceAllMapped(_reXmlEntity, _decMapper);
 
-    return txt.replaceAllMapped(_reXmlEntity, _decMapper);
-  }
+  /// Nullable version of [decode]
+  static String? decode$(String? value)
+  => value != null ? decode(value): null;
 }

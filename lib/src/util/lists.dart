@@ -27,14 +27,14 @@ class ListUtil {
 	 * * [equal] - the closure to compare elements in the given lists.
    * If omitted, it compares each item in the list with `identical()`.
    */
-  static bool equalsEach(List al, bl, [bool equal(a, b)]) {
+  static bool equalsEach(List al, bl, [bool equal(a, b)?]) {
     if (identical(al, bl))
       return true;
     if (!(bl is List))
       return false;
 
-    final bl2 = bl as List,
-    	length = al.length;
+    final bl2 = bl,
+      length = al.length;
     if (length != bl2.length)
       return false;
 
@@ -49,7 +49,7 @@ class ListUtil {
 
   /** Returns the hash code of the given list
    */
-  static int getHashCode(Iterable iterable) {
+  static int getHashCode(Iterable? iterable) {
     final int prime = 31;
     int code = 0;
     if (iterable != null) {

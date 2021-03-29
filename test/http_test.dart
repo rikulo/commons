@@ -43,13 +43,13 @@ main() {
     });
 
     test("contentType", () {
-      ContentType ctype = getContentType("html");
+      var ctype = getContentType("html")!;
       expect(ctype, isNotNull);
       expect(ctype.charset, "utf-8");
       expect(identical(ctype, parseContentType(ctype.toString())), isTrue);
       expect(identical(ctype, ContentType.parse(ctype.toString())), isFalse);
 
-      expect(getContentType("jpg").charset, isNull);
+      expect(getContentType("jpg")!.charset, isNull);
     });
  });
 }

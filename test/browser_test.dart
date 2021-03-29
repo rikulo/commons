@@ -118,7 +118,7 @@ newEdge:
       for (final ua in uas.keys) {
 //        print(ua);
         final browser = _Browser(ua);
-        final List result = uas[ua];
+        final result = uas[ua]!;
         result[0](browser, result[1]);
       }
 
