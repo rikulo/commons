@@ -1,5 +1,9 @@
 # Rikulo Commons Changes
 
+### 5.0.1
+
+* `Pair` and `Trio` added.
+
 ### 5.0.0
 
 * Migrate to Dart 2.12 (null safety)
