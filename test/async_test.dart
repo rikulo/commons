@@ -7,7 +7,7 @@ import "dart:async";
 import 'package:test/test.dart';
 import "package:rikulo_commons/async.dart";
 
-main() {
+void main() {
   group("async tests", () {
     test("defer 1", () {
       int count = 0;

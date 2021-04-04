@@ -18,7 +18,8 @@ part of rikulo_async;
  *     //and no later than 100s
  *
  * * [key] - used to identify [task]. If both [categoryKey] and [key] are
- * the same, we consider the task is the same. If different, they are handled separately.
+ * the same, we consider the task is the same.
+ * If different, they are handled separately.
  * * [task] - the task. It can return `void`, `null` or an instance of [Future]
  * * [min] - specifies the minimal duration that the
  * given task will be executed. You can't specify null here. Default: 1 second.
@@ -116,7 +117,7 @@ class _DeferKey<T> {
   _DeferKey(this.key, this.categoryKey);
 
   @override
-  int get hashCode => key.hashCode + categoryKey.hashCode; //key can be null...
+  int get hashCode => key.hashCode ^ categoryKey.hashCode; //key can be null...
   @override
   bool operator==(o)
   => o is _DeferKey && o.key == key && o.categoryKey == categoryKey;
@@ -172,8 +173,9 @@ class _Deferrer {
           categoryKey = dfkey.categoryKey;
         onActionStart?.call(key, categoryKey);
  
-        if (executor != null) {
-          final op = executor!(key, di.task, onError: onError,
+        final exec = executor;
+        if (exec != null) {
+          final op = exec(key, di.task, onError: onError,
               onActionDone: onActionDone == null ?
                 null: () => onActionDone(key, categoryKey));
           if (op is Future) ops.add(op);
@@ -224,7 +226,8 @@ class _Deferrer {
     try {
       final key = dfkey.key,
         task = di.task,
-        r = executor != null ? executor!(key, task): task(key);
+        exec = executor,
+        r = exec != null ? exec(key, task): task(key);
       if (r is Future) {
         _runnings.add(op = r);
         await op;

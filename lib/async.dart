@@ -11,3 +11,4 @@ import "dart:collection";
 part "src/async/stream_provider.dart";
 part "src/async/stream_wrapper.dart";
 part "src/async/async_util.dart";
+part "src/async/streams.dart";
