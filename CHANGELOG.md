@@ -1,5 +1,9 @@
 # Rikulo Commons Changes
 
+### 5.0.3
+
+* `InvokeUtil.invokeSafely` added.
+
 ### 5.0.2
 
 * `StreamUtil.first` added.

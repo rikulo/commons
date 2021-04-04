@@ -5,6 +5,7 @@ library rikulo_util;
 //don't include dart:html since this library is designed to work
 //at both client and server
 import "dart:math" show max, min;
+import "dart:async";
 import "dart:collection";
 import "package:charcode/ascii.dart";
 
@@ -14,6 +15,7 @@ part "src/util/lists.dart";
 part "src/util/maps.dart";
 part "src/util/color.dart";
 part "src/util/pair.dart";
+part "src/util/invokes.dart";
 
 /** A function that returns an integer.
  */

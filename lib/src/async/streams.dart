@@ -14,15 +14,8 @@ class StreamUtil {
           onDone: c.complete, cancelOnError: true);
     subscription.onData((data) {
       c.complete(data);
-      _cancelSafely(subscription);
+      InvokeUtil.invokeSafely(subscription.cancel);
     });
     return c.future;
-  }
-
-  static Future _cancelSafely(StreamSubscription subscription) async {
-    try {
-      await subscription.cancel();
-    } catch (_) {
-    }
   }
 }
