@@ -3,6 +3,8 @@
 ### 5.0.3
 
 * `InvokeUtil.invokeSafely` added.
+* `MapUtil.parse`'s `defaultValue` is an empty string.
+* Rename `LIST_MIRROR` and other mirrored types as static members of `Mirror`
 
 ### 5.0.2
 
@@ -16,7 +18,6 @@
 
 * Migrate to Dart 2.12 (null safety)
 * Clean up deprecated methods: `Browser.edge`, `Browser.name` and the `onStatusCode` argument of Ajax utilities.
-* Deprecate mirrors related utilities.
 
 ### 4.3.0
 

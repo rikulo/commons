@@ -4,24 +4,24 @@
 
 part of rikulo_mirrors;
 
-@deprecated
-final ClassMirror
-  LIST_MIRROR = ClassUtil.forName("dart.core.List"),
-  MAP_MIRROR = ClassUtil.forName("dart.core.Map"),
-  DATE_TIME_MIRROR = ClassUtil.forName("dart.core.DateTime"),
-  QUEUE_MIRROR = ClassUtil.forName("dart.collection.Queue"),
-  SET_MIRROR = ClassUtil.forName("dart.core.Set"),
-  STRING_MIRROR = ClassUtil.forName("dart.core.String"),
-    //in later sdk, it is not the same as reflect("").type
-  OBJECT_MIRROR = ClassUtil.forName("dart.core.Object"),
-  INT_MIRROR = ClassUtil.forName("dart.core.int"),
-    //in later sdk, it is not the same as reflect(0).type
-  NUM_MIRROR = INT_MIRROR.superclass!,
-  DOUBLE_MIRROR = ClassUtil.forName("dart.core.double"),
-  BOOL_MIRROR = reflect(false).type;
+class Mirror {
+  static final ClassMirror
+    List = ClassUtil.forName("dart.core.List"),
+    Map = ClassUtil.forName("dart.core.Map"),
+    DateTime = ClassUtil.forName("dart.core.DateTime"),
+    Queue = ClassUtil.forName("dart.collection.Queue"),
+    Set = ClassUtil.forName("dart.core.Set"),
+    String = ClassUtil.forName("dart.core.String"),
+      //in later sdk, it is not the same as reflect("").type
+    Object = ClassUtil.forName("dart.core.Object"),
+    int = ClassUtil.forName("dart.core.int"),
+      //in later sdk, it is not the same as reflect(0).type
+    num = int.superclass!,
+    double = ClassUtil.forName("dart.core.double"),
+    bool = reflect(false).type;
+}
 
-/** Utility class used with Mirror. */
-@deprecated
+/// Utility class used with Mirror.
 class ClassUtil {
   /**
    * Return the ClassMirror of the qualified class name
@@ -72,7 +72,7 @@ class ClassUtil {
    * Returns the generic element class of the collection class.
    */
   static ClassMirror getElementClassMirror(ClassMirror collection) {
-    int idx = isAssignableFrom(MAP_MIRROR, collection) ? 1 : 0;
+    int idx = isAssignableFrom(Mirror.Map, collection) ? 1 : 0;
     return _getElementClassMirror0(collection, idx);
   }
 
@@ -86,7 +86,7 @@ class ClassUtil {
 //TODO(henri): Dart have not implemented typeArguments!
 //    List<TypeMirror> vars = collection.typeArguments.getValues();
 //    return getCorrespondingClassMirror(vars[idx]);
-    return OBJECT_MIRROR;
+    return Mirror.Object;
   }
 
   /**
@@ -187,7 +187,7 @@ class ClassUtil {
    * Returns whether the specified class is the top class (no super class).
    */
   static bool isTopClass(ClassMirror classMirror)
-    => OBJECT_MIRROR.qualifiedName == classMirror.qualifiedName || "void" == classMirror.qualifiedName;
+    => Mirror.Object.qualifiedName == classMirror.qualifiedName || "void" == classMirror.qualifiedName;
 
   /**
    * Create a new instance of the specified class name.
@@ -223,19 +223,19 @@ class ClassUtil {
       return instance;
 
     var sval = instance.toString();
-    if (targetClass == STRING_MIRROR)
+    if (targetClass == Mirror.String)
       return sval;
     if (sval.isEmpty)
       return null;
-    if (targetClass == INT_MIRROR)
+    if (targetClass == Mirror.int)
       return int.parse(sval);
-    if (targetClass == DOUBLE_MIRROR)
+    if (targetClass == Mirror.double)
       return double.parse(sval);
-    if (targetClass == NUM_MIRROR)
+    if (targetClass == Mirror.num)
       return sval.contains('.') ? double.parse(sval): int.parse(sval);
-    if (targetClass == DATE_TIME_MIRROR)
+    if (targetClass == Mirror.DateTime)
       return DateTime.parse(sval);
-    if (targetClass == BOOL_MIRROR)
+    if (targetClass == Mirror.bool)
       return !sval.isEmpty && (sval = sval.toLowerCase()) != "false" && sval != "no"
         && sval != "off" && sval != "none";
     throw CoercionError(instance, targetClass);

@@ -42,9 +42,9 @@ class MapUtil {
    * * [defaultValue] specifies the value to use if it is not specified
    * (i.e., no equal sign).
    */
-  static Map<String, String?> parse(String data,
-      {bool backslash:true, String? defaultValue}) {
-    final map = LinkedHashMap<String, String?>();
+  static Map<String, String> parse(String data,
+      {bool backslash:true, String defaultValue: ""}) {
+    final map = LinkedHashMap<String, String>();
     for (int i = 0, len = data.length; i < len;) {
       i = StringUtil.skipWhitespaces(data, i);
       if (i >= len)

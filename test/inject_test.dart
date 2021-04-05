@@ -28,12 +28,11 @@ class User {
   void set wrongUser(User? user) => throw "not callable";
 }
 
-@deprecated
 void main() {
   test("Class.forName", () {
-    expect(INT_MIRROR, isNotNull);
-    expect(NUM_MIRROR, isNotNull);
-    expect(BOOL_MIRROR, ClassUtil.forName("dart.core.bool"));
+    expect(Mirror.int, isNotNull);
+    expect(Mirror.num, isNotNull);
+    expect(Mirror.bool, ClassUtil.forName("dart.core.bool"));
     expect(reflect(User()).type, ClassUtil.forName("test_inject.User"));
   });
 

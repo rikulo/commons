@@ -4,10 +4,7 @@
 
 part of rikulo_mirrors;
 
-/**
- * Object utilities used with mirrors.
- */
-@deprecated
+/// Object utilities used with mirrors.
 class ObjectUtil {
   /** Injects the given values into the given object.
    *
@@ -74,6 +71,7 @@ class ObjectUtil {
     }
     return instance;
   }
+
   ///Instantiates and injects automatically if a field is null.
   static _autoCreate(o2, String field) {
     final clz = ClassUtil.getSetterType(reflect(o2).type, field);
