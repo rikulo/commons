@@ -1,5 +1,10 @@
 # Rikulo Commons Changes
 
+### 4.3.1
+
+* `InvokeUtil.invokeSafely` added.
+* `StreamUtil.first` added.
+
 ### 4.3.0
 
 * `Browser.legacyEdge` and `Browser.newEdge` are addded, and `Browser.name` and `Browser.edge` are deprecated.
