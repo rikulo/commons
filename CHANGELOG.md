@@ -4,6 +4,7 @@
 
 * `InvokeUtil.invokeSafely` added.
 * `StreamUtil.first` added.
+* `Pair` and `Trio` added.
 
 ### 4.3.0
 

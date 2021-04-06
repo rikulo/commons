@@ -14,6 +14,7 @@ part "src/util/xmls.dart";
 part "src/util/lists.dart";
 part "src/util/maps.dart";
 part "src/util/color.dart";
+part "src/util/pair.dart";
 part "src/util/invokes.dart";
 
 /** A function that returns an integer.
