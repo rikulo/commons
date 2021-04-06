@@ -1,5 +1,9 @@
 # Rikulo Commons Changes
 
+### 4.3.2
+
+* `InvokeUtil.invokeSafelyWith` added.
+
 ### 4.3.1
 
 * `InvokeUtil.invokeSafely` added.
