@@ -6,8 +6,9 @@ library rikulo_async;
 //!!Note: don't import dart:io since this lib might be used at client!!//
 
 import "dart:async";
-import "dart:collection";
+//import "dart:collection";
+
+export "src/async/defer.dart";
 
 part "src/async/stream_provider.dart";
 part "src/async/stream_wrapper.dart";
-part "src/async/async_util.dart";
