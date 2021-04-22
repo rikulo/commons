@@ -21,8 +21,11 @@ class XmlUtil {
    * Note: backslash won't be handled specially if false.
    * Default: false.
    */
-  static String encode(String value, {bool multiLine: false, bool pre: false,
-      bool space: false, bool entity: false}) {
+  static T encode<T extends String?>(T value,
+      {bool multiLine: false, bool pre: false,
+       bool space: false, bool entity: false}) {
+    if (value == null) return null;
+
     final len = value.length;
     if (len == 0) return value; //as it is
 
@@ -101,12 +104,6 @@ class XmlUtil {
     return buf.toString();
   }
 
-  /// Nullable version of [encode]
-  static String? encode$(String? value, {bool multiLine: false, bool pre: false,
-      bool space: false, bool entity: false})
-  => value == null ? value:
-      encode(value, multiLine: multiLine, pre: pre, space: space, entity: entity);
-
   static const _encBasic = const <int, String> {
     $lt: '&lt;', $gt: '&gt;', $amp: '&amp;', $quot: "&quot;",
   };
@@ -144,10 +141,6 @@ class XmlUtil {
    *
    * + [txt] is the text to decode.
    */
-  static String decode(String value)
-  => value.replaceAllMapped(_reXmlEntity, _decMapper);
-
-  /// Nullable version of [decode]
-  static String? decode$(String? value)
-  => value != null ? decode(value): null;
+  static T decode<T extends String?>(T value)
+  => value == null ? null: value.replaceAllMapped(_reXmlEntity, _decMapper);
 }
