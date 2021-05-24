@@ -3,8 +3,8 @@
 [Rikulo Commons](https://github.com/rikulo/commons) is a collection of common reusable Dart classes and utilities.
 
 * [Repository](https://github.com/rikulo/commons)
-* [API Reference](http://www.dartdocs.org/documentation/rikulo_commons/5.0.3)
-* [Discussion](http://stackoverflow.com/questions/tagged/rikulo)
+* [API Reference](https://www.dartdocs.org/documentation/rikulo_commons/5.0.3)
+* [Discussion](https://stackoverflow.com/questions/tagged/rikulo)
 * [Issues](https://github.com/rikulo/commons/issues)
 
 Rikulo Commons is distributed under an Apache 2.0 License.
