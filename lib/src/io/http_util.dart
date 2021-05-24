@@ -102,8 +102,8 @@ class HttpUtil {
   /// If specified and the input is more than allowed, [PayloadException]
   /// will be thrown.
   static Future<Map<String, String>> decodePostedParameters(
-      Stream<List<int>> request, [Map<String, String>? parameters,
-      int? maxLength]) async
+      Stream<List<int>> request, {Map<String, String>? parameters,
+      int? maxLength}) async
   => decodeQuery(await readAsString(request, maxLength: maxLength), parameters);
 
   /** Decodes the query string into a map of name-value pairs (aka., parameters).
@@ -113,7 +113,7 @@ class HttpUtil {
    * If null, this method will instantiate a new map.
    */
   static Map<String, String> decodeQuery(
-      String queryString, [Map<String, String>? parameters]) {
+      String queryString, {Map<String, String>? parameters}) {
     if (parameters == null)
       parameters = <String, String>{};
 

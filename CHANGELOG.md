@@ -3,6 +3,7 @@
 ### 5.1.0
 
 * `readAsJson`, `readAsString` and `HttpUtil.decodePostedParameters` support `maxLength`
+* BREAK: `HttpUtil.decodePostedParameters` and `decodeQuery` use named parameters.
 
 ### 5.0.3
 
