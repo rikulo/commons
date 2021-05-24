@@ -1,5 +1,9 @@
 # Rikulo Commons Changes
 
+### 5.1.0
+
+* `readAsJson`, `readAsString` and `HttpUtil.decodePostedParameters` support `maxLength`
+
 ### 5.0.3
 
 * `InvokeUtil.invokeSafely` added.
@@ -18,6 +22,16 @@
 
 * Migrate to Dart 2.12 (null safety)
 * Clean up deprecated methods: `Browser.edge`, `Browser.name` and the `onStatusCode` argument of Ajax utilities.
+
+### 4.3.2
+
+* `InvokeUtil.invokeSafelyWith` added.
+
+### 4.3.1
+
+* `InvokeUtil.invokeSafely` added.
+* `StreamUtil.first` added.
+* `Pair` and `Trio` added.
 
 ### 4.3.0
 

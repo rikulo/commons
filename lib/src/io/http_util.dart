@@ -87,22 +87,24 @@ Future<List<int>?> patchAjax(Uri url, {
 => ajax(url, method: "PATCH", data: data, body: body,
     headers: headers, onResponse: onResponse);
 
-/**
- * HTTP related utilities
- */
+/// HTTP related utilities
 class HttpUtil {
-  /** Decodes the parameters of the POST request.
-   *
-   * * [parameters] - the map to put the decoded parameters into.
-   * If null, this method will instantiate a new map.
-   * To merge the parameters found in the query string, you can do:
-   *
-   *     final params = HttpUtil.decodePostedParameters(
-   *       request, new Map.from(request.queryParameters));
-   */
+  /// Decodes the parameters of the POST request.
+  ///
+  /// * [parameters] - the map to put the decoded parameters into.
+  /// If null, this method will instantiate a new map.
+  /// To merge the parameters found in the query string, you can do:
+  ///
+  ///     final params = HttpUtil.decodePostedParameters(
+  ///       request, new Map.from(request.queryParameters));
+  /// + [maxLength] the maximal allowed length.
+  /// If omitted, no limitation at all.
+  /// If specified and the input is more than allowed, [PayloadException]
+  /// will be thrown.
   static Future<Map<String, String>> decodePostedParameters(
-      Stream<List<int>> request, [Map<String, String>? parameters]) async
-  => decodeQuery(await readAsString(request), parameters);
+      Stream<List<int>> request, [Map<String, String>? parameters,
+      int? maxLength]) async
+  => decodeQuery(await readAsString(request, maxLength: maxLength), parameters);
 
   /** Decodes the query string into a map of name-value pairs (aka., parameters).
    *

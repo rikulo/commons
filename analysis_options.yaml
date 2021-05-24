@@ -3,6 +3,7 @@ analyzer:
      implicit-casts: false
   errors:
     todo: ignore
+    missing_return: ignore
 linter:
   rules:
     - annotate_overrides
@@ -11,3 +12,4 @@ linter:
     - constant_identifier_names
     #- unnecessary_new
     #- unnecessary_const
+    - unnecessary_await_in_return

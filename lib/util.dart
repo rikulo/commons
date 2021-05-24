@@ -4,6 +4,7 @@ library rikulo_util;
 
 //don't include dart:html since this library is designed to work
 //at both client and server
+import "dart:async";
 import "dart:math" show max, min;
 import "dart:async";
 import "dart:collection";

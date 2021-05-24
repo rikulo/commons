@@ -8,6 +8,8 @@ library rikulo_async;
 import "dart:async";
 //import "dart:collection";
 
+import "util.dart";
+
 export "src/async/defer.dart";
 
 import "util.dart" show InvokeUtil;
