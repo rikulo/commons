@@ -1,5 +1,9 @@
 # Rikulo Commons Changes
 
+### 4.3.3
+
+* `readAsJson`, `readAsString` and `HttpUtil.decodePostedParameters` support `maxLength`
+
 ### 4.3.2
 
 * `InvokeUtil.invokeSafelyWith` added.
