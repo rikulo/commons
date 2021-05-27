@@ -154,7 +154,7 @@ FutureOr flushDefers({void onActionStart(key, String categoryKey),
 void configureDefers(
     {FutureOr executor(key, Function task,
         {void onActionDone(), void onError(ex, StackTrace st)}),
-     Duration executable(), Duration maxBusy}) {
+     Duration executable(int runningCount), Duration maxBusy}) {
   _executor = executor;
   _executable = executable;
   _maxBusy = maxBusy;
@@ -207,7 +207,8 @@ Timer _startTimer(_DeferKey dfkey, Duration min) => Timer(min,
       deferAgain = min;
 
     if (deferAgain == null && _executable != null)
-      deferAgain = _executable();
+      deferAgain = _executable(_runnings.length);
+        //not _busy.length since only Future matters
 
     if (deferAgain != null) {
       _defers[dfkey] = di; //put back
@@ -218,7 +219,7 @@ Timer _startTimer(_DeferKey dfkey, Duration min) => Timer(min,
     }
 
     Future op;
-    _busy.add(dfkey);
+    _busy.add(dfkey); //add immediately since [task] may add it back
     try {
       final key = dfkey.key,
         task = di.task,
@@ -236,7 +237,7 @@ Timer _startTimer(_DeferKey dfkey, Duration min) => Timer(min,
 var _defers = HashMap<_DeferKey, _DeferInfo>();
 
 _Executor _executor;
-Duration Function() _executable;
+Duration Function(int runningCount) _executable;
 Duration _maxBusy;
 final _runnings = <Future>[],
   _busy = new HashSet<_DeferKey>();
