@@ -2,6 +2,7 @@
 
 ### 4.5.0
 
+* `configureDefers()` supports `executable` to slow down if the system is busy. 
 * BREAK CHANGE: `name` is removed from `Browser`
 * BREAK CHANGE: `onStatusCode` is remvoed from `ajax`
 

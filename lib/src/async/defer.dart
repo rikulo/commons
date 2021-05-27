@@ -137,7 +137,13 @@ FutureOr flushDefers({void onActionStart(key, String categoryKey),
  * 
  * * [executor] - if specified, it is used to execute [task].
  * Otherwise, [task] was called directly.
- * * [maxBusy] - how long to wait before forcing a new execution to start.
+ * * [executable] - if specified, it will be called before executing a task.
+ * And, if it returns null, the task will be executed as normal.
+ * On the other hand, if it returns a duration, `defer` will pause the given
+ * duration and then start over again.
+ * It is usually to defer the execution further when the system is busy.
+ * * [maxBusy] - how long to wait before forcing a new execution to start
+ * if there is an execution of the same [key] still executing.
  * Default: null (forever).
  * When a task is about to execute, we'll check if the previous execution
  * is done. If not, it will wait the time specified in [maxBusy].
@@ -148,8 +154,9 @@ FutureOr flushDefers({void onActionStart(key, String categoryKey),
 void configureDefers(
     {FutureOr executor(key, Function task,
         {void onActionDone(), void onError(ex, StackTrace st)}),
-     Duration maxBusy}) {
+     Duration executable(), Duration maxBusy}) {
   _executor = executor;
+  _executable = executable;
   _maxBusy = maxBusy;
 }
 
@@ -194,12 +201,19 @@ Timer _startTimer(_DeferKey dfkey, Duration min) => Timer(min,
     final di = _defers.remove(dfkey);
     if (di == null) return;
 
+    Duration deferAgain;
     if (_busy.contains(dfkey)
-    && (_maxBusy == null || DateTime.now().difference(di.startAt) < _maxBusy)) {
+    && (_maxBusy == null || DateTime.now().difference(di.startAt) < _maxBusy))
+      deferAgain = min;
+
+    if (deferAgain == null && _executable != null)
+      deferAgain = _executable();
+
+    if (deferAgain != null) {
       _defers[dfkey] = di; //put back
       di.timer = _startTimer(dfkey, //do it again later
-          min < const Duration(milliseconds: 100) ?
-            const Duration(milliseconds: 100): min);
+          deferAgain < const Duration(milliseconds: 100) ?
+            const Duration(milliseconds: 100): deferAgain);
       return;
     }
 
@@ -220,7 +234,9 @@ Timer _startTimer(_DeferKey dfkey, Duration min) => Timer(min,
   });
 
 var _defers = HashMap<_DeferKey, _DeferInfo>();
+
 _Executor _executor;
+Duration Function() _executable;
 Duration _maxBusy;
 final _runnings = <Future>[],
   _busy = new HashSet<_DeferKey>();
