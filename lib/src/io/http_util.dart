@@ -21,8 +21,6 @@ const String dartSessionId = "DARTSESSID";
 /// [isHttpStatusOK] is true.
 Future<List<int>> ajax(Uri url, {String method: "GET",
     List<int> data, String body, Map<String, String> headers,
-    @deprecated
-    bool onStatusCode(int statusCode),
     bool onResponse(HttpClientResponse response)}) async {
   final client = new HttpClient();
   try {
@@ -38,7 +36,7 @@ Future<List<int>> ajax(Uri url, {String method: "GET",
     final resp = await xhr.close(),
       statusCode = resp.statusCode;
 
-    if (!(onResponse?.call(resp) ?? onStatusCode?.call(statusCode) ?? isHttpStatusOK(statusCode))) {
+    if (!(onResponse?.call(resp) ?? isHttpStatusOK(statusCode))) {
       resp.listen(_ignore).asFuture().catchError(_voidCatch);
         //need to pull out response.body. Or, it will never ends (memory leak)
       return null;
@@ -60,47 +58,37 @@ void _voidCatch(ex) {}
 /// Sends an Ajax request to the given [url] using the POST method.
 Future<List<int>> postAjax(Uri url, {
     List<int> data, String body, Map<String, String> headers,
-    @deprecated
-    bool onStatusCode(int statusCode),
     bool onResponse(HttpClientResponse response)})
 => ajax(url, method: "POST", data: data, body: body,
-    headers: headers, onStatusCode: onStatusCode, onResponse: onResponse);
+    headers: headers, onResponse: onResponse);
 
 /// Sends an Ajax request to the given [url] using the PUT method.
 Future<List<int>> putAjax(Uri url, {
     List<int> data, String body, Map<String, String> headers,
-    @deprecated
-    bool onStatusCode(int statusCode),
     bool onResponse(HttpClientResponse response)})
 => ajax(url, method: "PUT", data: data, body: body,
-    headers: headers, onStatusCode: onStatusCode, onResponse: onResponse);
+    headers: headers, onResponse: onResponse);
 
 /// Sends an Ajax request to the given [url] using the DELETE method.
 Future<List<int>> deleteAjax(Uri url, {
     List<int> data, String body, Map<String, String> headers,
-    @deprecated
-    bool onStatusCode(int statusCode),
     bool onResponse(HttpClientResponse response)})
 => ajax(url, method: "DELETE", data: data, body: body,
-    headers: headers, onStatusCode: onStatusCode, onResponse: onResponse);
+    headers: headers, onResponse: onResponse);
 
 /// Sends an Ajax request to the given [url] using the HEAD method.
 Future<List<int>> headAjax(Uri url, {
     List<int> data, String body, Map<String, String> headers,
-    @deprecated
-    bool onStatusCode(int statusCode),
     bool onResponse(HttpClientResponse response)})
 => ajax(url, method: "HEAD", data: data, body: body,
-    headers: headers, onStatusCode: onStatusCode, onResponse: onResponse);
+    headers: headers, onResponse: onResponse);
 
 /// Sends an Ajax request to the given [url] using the PATCH method.
 Future<List<int>> patchAjax(Uri url, {
     List<int> data, String body, Map<String, String> headers,
-    @deprecated
-    bool onStatusCode(int statusCode),
     bool onResponse(HttpClientResponse response)})
 => ajax(url, method: "PATCH", data: data, body: body,
-    headers: headers, onStatusCode: onStatusCode, onResponse: onResponse);
+    headers: headers, onResponse: onResponse);
 
 /// HTTP related utilities
 class HttpUtil {

@@ -1,5 +1,10 @@
 # Rikulo Commons Changes
 
+### 4.5.0
+
+* BREAK CHANGE: `name` is removed from `Browser`
+* BREAK CHANGE: `onStatusCode` is remvoed from `ajax`
+
 ### 4.3.3
 
 * `readAsJson`, `readAsString` and `HttpUtil.decodePostedParameters` support `maxLength`

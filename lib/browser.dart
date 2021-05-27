@@ -3,9 +3,7 @@
 // Author: tomyeh
 library rikulo_browser;
 
-/**
- * The browser.
- */
+/// The browser.
 abstract class Browser {
   // all RegExp shall be lower case here
   static final _rwebkit = RegExp(r"(webkit)[ /]?([0-9]+[0-9.]*)"),
@@ -20,17 +18,13 @@ abstract class Browser {
     _rlegEdge = RegExp(r"Edge/[1-9]"),
     _rnewEdge = RegExp(r"Edg/[1-9]");
 
-  /// The browser's name.
-  @deprecated
-  String name;
-  /** The browser's version.
-   * 
-   * Note: if the subversion is a single digit, it will be considered
-   * as one hundredth (not tenth).
-   * For example, version *12.1* will be parsed to a value as `12.01`
-   * (not `12.1`). Thus, [version] of *12.10* is larger than that of *12.2*
-   * as expected.
-   */
+  /// The browser's version.
+  /// 
+  /// Note: if the subversion is a single digit, it will be considered
+  /// as one hundredth (not tenth).
+  /// For example, version *12.1* will be parsed to a value as `12.01`
+  /// (not `12.1`). Thus, [version] of *12.10* is larger than that of *12.2*
+  /// as expected.
   double version;
 
   /// Whether it is Safari.
@@ -101,7 +95,6 @@ abstract class Browser {
     bool bm(RegExp regex) {
       final m = regex.firstMatch(ua);
       if (m != null) {
-        name = m.group(1);
         version = parseVersion(m.group(2));
         return true;
       }
@@ -133,19 +126,16 @@ abstract class Browser {
         chrome = true;
       } else if (bm(_rsafari)) { //after chrome
         safari = true;
-        name = "safari";
       }
       //opera, firefox for iOS all based on ApplieWebKit, but
       //we consider them as webkit (than firefox or opera)
     } else if (bm(_rie) || bm(_rie2)) {
       ie = true;
-      name = "ie";
     } else if (bm(_ropera)) {
       opera = true;
     } else if (bm(_rfirefox)) { //after opera
       firefox = true;
     } else {
-      name = "";
       version = 1.0;
     }
   }
