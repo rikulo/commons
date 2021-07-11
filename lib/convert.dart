@@ -3,7 +3,7 @@
 // Author: tomyeh
 library rikulo_convert;
 
-import "dart:async" show Future, Stream;
+import "dart:async";
 import "dart:convert";
 import "dart:io";
 
@@ -18,7 +18,7 @@ Future<String> readAsString(Stream<List<int>> stream,
   final result = <int>[];
   await for (final data in stream) {
     if (maxLength != null && (data.length + result.length) > maxLength)
-      throw PayloadException("Too large");
+      throw PayloadException("Over $maxLength (${data.length} + ${result.length})");
     result.addAll(data);
   }
   return encoding.decode(result);
