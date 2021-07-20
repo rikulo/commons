@@ -53,10 +53,7 @@ Future<List<int>> ajax(Uri url, {String method: "GET",
     await resp.listen(result.addAll).asFuture();
     return result;
   } finally {
-    try {
-      client.close();
-    } catch (_) {
-    }
+    InvokeUtil.invokeSafely(client.close);
   }
 }
 void _ignore(List<int> data) {}
