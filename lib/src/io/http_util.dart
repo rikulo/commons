@@ -12,13 +12,20 @@ const String dartSessionId = "DARTSESSID";
 /// To send data in `List<int>, pass it via [data].
 /// To send in String, pass it via [body].
 /// 
-/// * [onResponse] used to retrieve the status code
-/// and/or the response's headers.
+/// * [onResponse] used to retrieve the status code,
+/// the response's headers, or force [ajax] to return the body.
 /// Ignored if not specified.
-/// It can return false to indicate the request fails. Then [ajax]
-/// will return null.
-/// If not specified or it returns true, it continues if
-/// [isHttpStatusOK] is true.
+/// 
+/// Notice that, by default, [ajax] returns null if the status code
+/// is not between 200 and 299 (see [isHttpStatusOK]). That is, by default,
+/// [ajax] ignores the body if the status code indicates an error.
+/// 
+/// If the error description will be in the request's body, you have
+/// to specify [onResponse] with a callback returning true.
+/// On the other hand, if [onResponse] returns false, [ajax] will ignore
+/// the body, and returns null.
+/// If [onResponse] returns null, it is handled as default (as described
+/// above).
 Future<List<int>?> ajax(Uri url, {String method: "GET",
     List<int>? data, String? body, Map<String, String>? headers,
     bool onResponse(HttpClientResponse response)?}) async {
@@ -104,7 +111,8 @@ class HttpUtil {
   static Future<Map<String, String>> decodePostedParameters(
       Stream<List<int>> request, {Map<String, String>? parameters,
       int? maxLength}) async
-  => decodeQuery(await readAsString(request, maxLength: maxLength), parameters);
+  => decodeQuery(await readAsString(request, maxLength: maxLength),
+        parameters: parameters);
 
   /** Decodes the query string into a map of name-value pairs (aka., parameters).
    *

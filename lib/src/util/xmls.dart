@@ -21,11 +21,16 @@ class XmlUtil {
    * Note: backslash won't be handled specially if false.
    * Default: false.
    */
-  static T encode<T extends String?>(T value,
+  static String? encode(String? value,
+      {bool multiLine: false, bool pre: false,
+       bool space: false, bool entity: false})
+  => value == null ? value:
+    encodeNS(value, multiLine: multiLine, pre: pre, space: space, entity: entity);
+
+  /// A null-safety version of [encode].
+  static String encodeNS(String value,
       {bool multiLine: false, bool pre: false,
        bool space: false, bool entity: false}) {
-    if (value == null) return null;
-
     final len = value.length;
     if (len == 0) return value; //as it is
 
@@ -141,6 +146,10 @@ class XmlUtil {
    *
    * + [txt] is the text to decode.
    */
-  static T decode<T extends String?>(T value)
-  => value == null ? null: value.replaceAllMapped(_reXmlEntity, _decMapper);
+  static String? decode(String? value)
+  => value == null ? null: decodeNS(value);
+
+  /// A null-safety version of [decode]
+  static String decodeNS(String value)
+  => value.replaceAllMapped(_reXmlEntity, _decMapper);
 }

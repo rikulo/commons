@@ -1,6 +1,22 @@
 # Rikulo Commons Changes
 
-### 5.1.0
+### 5.0.4
+
+* Merged changes of 4.6 into 5.0
+* `encodeNS` and `decodeNS` introduced. They're null-safety version of `encode` and `decode`
+
+### 4.6.0
+
+* BREAK CHANGE: `configureDefers()`'s `executor` argument's signature is changed.
+* BREAK CHANGE: `defer`'s `categoryKey` is renamed to `category`
+
+### 4.5.0
+
+* `configureDefers()` supports `executable` to slow down if the system is busy. 
+* BREAK CHANGE: `name` is removed from `Browser`
+* BREAK CHANGE: `onStatusCode` is removed from `ajax`
+
+### 4.3.3
 
 * `readAsJson`, `readAsString` and `HttpUtil.decodePostedParameters` support `maxLength`
 * BREAK: `HttpUtil.decodePostedParameters` and `decodeQuery` use named parameters.

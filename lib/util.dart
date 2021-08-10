@@ -6,7 +6,6 @@ library rikulo_util;
 //at both client and server
 import "dart:async";
 import "dart:math" show max, min;
-import "dart:async";
 import "dart:collection";
 import "package:charcode/ascii.dart";
 

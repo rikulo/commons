@@ -6,7 +6,7 @@ library rikulo_async.defer;
 import "dart:async";
 import "dart:collection";
 
-/** Defers the execution of a task.
+/** Defers the execution of a [task].
  * If the key is the same, the task in the second invocation will override
  * the previous. In other words, the previous task is canceled.
  *
@@ -20,7 +20,7 @@ import "dart:collection";
  *     //then, it executes not faster than once per 10s,
  *     //and no later than 100s
  *
- * * [key] - used to identify [task]. If both [categoryKey] and [key] are
+ * * [key] - used to identify [task]. If both [category] and [key] are
  * the same, we consider the task is the same.
  * If different, they are handled separately.
  * * [task] - the task. It can return `void`, `null` or an instance of [Future]
@@ -37,8 +37,8 @@ import "dart:collection";
  */
 void defer<T>(T key, FutureOr task(T key),
     {Duration min: const Duration(seconds: 1), Duration? max,
-     String? categoryKey}) {
-  final dfkey = new _DeferKey(key, categoryKey),
+     String? category}) {
+  final dfkey = new _DeferKey(key, category),
     di = _defers[dfkey] as _DeferInfo<T>?;
   if (di == null) {
     _defers[dfkey] = _DeferInfo<T>(_startTimer(dfkey, min), task);
@@ -51,8 +51,8 @@ void defer<T>(T key, FutureOr task(T key),
 
 /// Cancels the deferred execution of the given [key].
 /// Returns true if the task is not yet executed.
-bool cancelDeferred(key, {String? categoryKey}) {
-  final di = _defers.remove(new _DeferKey(key, categoryKey));
+bool cancelDeferred(key, {String? category}) {
+  final di = _defers.remove(new _DeferKey(key, category));
   if (di == null) return false;
 
   di.timer.cancel();
@@ -75,8 +75,8 @@ bool cancelDeferred(key, {String? categoryKey}) {
  * Before continue, it will wait the duration specified in [repeatLater].
  * Default: null (not to repeat).
  */
-FutureOr flushDefers({void onActionStart(key, String? categoryKey)?,
-    void onActionDone(key, String? categoryKey)?,
+FutureOr flushDefers({void onActionStart(key, String? category)?,
+    void onActionDone(key, String? category)?,
     void onError(ex, StackTrace st)?, Duration? repeatLater}) {
   if (_defers.isEmpty && _runnings.isEmpty) return null;
 
@@ -90,14 +90,14 @@ FutureOr flushDefers({void onActionStart(key, String? categoryKey)?,
       di.timer.cancel();
 
       final key = dfkey.key,
-        categoryKey = dfkey.categoryKey;
-      onActionStart?.call(key, categoryKey);
+        category = dfkey.category;
+      onActionStart?.call(key, category);
 
       final exec = _executor;
       if (exec != null) {
-        final op = exec(key, di.task, onError: onError,
+        final op = exec(key, di.task, category, onError: onError,
             onActionDone: onActionDone == null ?
-              null: () => onActionDone(key, categoryKey));
+              null: () => onActionDone(key, category));
         if (op is Future) ops.add(op);
 
       } else {
@@ -105,12 +105,12 @@ FutureOr flushDefers({void onActionStart(key, String? categoryKey)?,
         if (op is Future) {
           Future ft = op;
           if (onActionDone != null)
-            ft = ft.then((_) => onActionDone(key, categoryKey));
+            ft = ft.then((_) => onActionDone(key, category));
           if (onError != null)
             ft = ft.catchError(onError);
           ops.add(ft);
         } else {
-          onActionDone?.call(key, categoryKey);
+          onActionDone?.call(key, category);
         }
       }
     } catch (ex, st) {
@@ -139,7 +139,13 @@ FutureOr flushDefers({void onActionStart(key, String? categoryKey)?,
  * 
  * * [executor] - if specified, it is used to execute [task].
  * Otherwise, [task] was called directly.
- * * [maxBusy] - how long to wait before forcing a new execution to start.
+ * * [executable] - if specified, it will be called before executing a task.
+ * And, if it returns null, the task will be executed as normal.
+ * On the other hand, if it returns a duration, `defer` will pause the given
+ * duration and then start over again.
+ * It is usually to defer the execution further when the system is busy.
+ * * [maxBusy] - how long to wait before forcing a new execution to start
+ * if there is an execution of the same [key] still executing.
  * Default: null (forever).
  * When a task is about to execute, we'll check if the previous execution
  * is done. If not, it will wait the time specified in [maxBusy].
@@ -148,15 +154,16 @@ FutureOr flushDefers({void onActionStart(key, String? categoryKey)?,
  * Thus, you must pass `key` to it when calling `task(key)`.
  */
 void configureDefers(
-    {FutureOr executor(key, Function task,
+    {FutureOr executor(key, Function task, String? category,
         {void onActionDone()?, void onError(ex, StackTrace st)?})?,
-     Duration? maxBusy}) {
+     Duration executable(int runningCount)?, Duration? maxBusy}) {
   _executor = executor;
+  _executable = executable;
   _maxBusy = maxBusy;
 }
 
 //typedef FutureOr _Task<T>(T key);
-typedef FutureOr _Executor(key, Function task,
+typedef FutureOr _Executor(key, Function task, String? category,
     {void onActionDone()?, void onError(ex, StackTrace st)?});
 
 class _DeferInfo<T> {
@@ -178,17 +185,17 @@ class _DeferInfo<T> {
 
 class _DeferKey<T> {
   final T key;
-  final String? categoryKey;
+  final String? category;
 
-  _DeferKey(this.key, this.categoryKey);
+  _DeferKey(this.key, this.category);
 
   @override
-  int get hashCode => key.hashCode ^ categoryKey.hashCode; //key can be null...
+  int get hashCode => key.hashCode ^ category.hashCode; //key can be null...
   @override
   bool operator==(o)
-  => o is _DeferKey && o.key == key && o.categoryKey == categoryKey;
+  => o is _DeferKey && o.key == key && o.category == category;
   @override
-  String toString() => "[$key, $categoryKey]";
+  String toString() => "[$key, $category]";
 }
 
 Timer _startTimer(_DeferKey dfkey, Duration min) => Timer(min,
@@ -196,15 +203,26 @@ Timer _startTimer(_DeferKey dfkey, Duration min) => Timer(min,
     final di = _defers.remove(dfkey);
     if (di == null) return;
 
+    Duration? deferAgain;
     if (_busy.contains(dfkey)) {
       final mbusy = _maxBusy;
-      if (mbusy == null || DateTime.now().difference(di.startAt) < mbusy) {
-        _defers[dfkey] = di; //put back
-        di.timer = _startTimer(dfkey, //do it again later
-            min < const Duration(milliseconds: 100) ?
-              const Duration(milliseconds: 100): min);
-        return;
-      }
+      if (mbusy == null || DateTime.now().difference(di.startAt) < mbusy)
+        deferAgain = min;
+    }
+
+    if (deferAgain == null) {
+      final executable = _executable;
+      if (executable != null)
+        deferAgain = executable(_runnings.length);
+          //not _busy.length since only Future matters
+    }
+
+    if (deferAgain != null) {
+      _defers[dfkey] = di; //put back
+      di.timer = _startTimer(dfkey, //do it again later
+          deferAgain < const Duration(milliseconds: 100) ?
+            const Duration(milliseconds: 100): deferAgain);
+      return;
     }
 
     Future? op;
@@ -213,7 +231,7 @@ Timer _startTimer(_DeferKey dfkey, Duration min) => Timer(min,
       final key = dfkey.key,
         task = di.task,
         exec = _executor,
-        r = exec != null ? exec(key, task): task(key);
+        r = exec != null ? exec(key, task, dfkey.category): task(key);
       if (r is Future) {
         _runnings.add(op = r);
         await op;
@@ -226,6 +244,7 @@ Timer _startTimer(_DeferKey dfkey, Duration min) => Timer(min,
 
 var _defers = HashMap<_DeferKey, _DeferInfo>();
 _Executor? _executor;
+Duration Function(int runningCount)? _executable;
 Duration? _maxBusy;
 final _runnings = <Future>[],
   _busy = new HashSet<_DeferKey>();

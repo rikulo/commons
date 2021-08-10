@@ -3,9 +3,7 @@
 // Author: tomyeh
 library rikulo_browser;
 
-/**
- * The browser.
- */
+/// The browser.
 abstract class Browser {
   // all RegExp shall be lower case here
   static final _rwebkit = RegExp(r"(webkit)[ /]?([0-9]+[0-9.]*)"),
@@ -20,14 +18,13 @@ abstract class Browser {
     _rlegEdge = RegExp(r"Edge/[1-9]"),
     _rnewEdge = RegExp(r"Edg/[1-9]");
 
-  /** The browser's version.
-   * 
-   * Note: if the subversion is a single digit, it will be considered
-   * as one hundredth (not tenth).
-   * For example, version *12.1* will be parsed to a value as `12.01`
-   * (not `12.1`). Thus, [version] of *12.10* is larger than that of *12.2*
-   * as expected.
-   */
+  /// The browser's version.
+  /// 
+  /// Note: if the subversion is a single digit, it will be considered
+  /// as one hundredth (not tenth).
+  /// For example, version *12.1* will be parsed to a value as `12.01`
+  /// (not `12.1`). Thus, [version] of *12.10* is larger than that of *12.2*
+  /// as expected.
   late double version;
 
   /// Whether it is Safari.
