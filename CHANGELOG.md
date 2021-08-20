@@ -1,5 +1,9 @@
 # Rikulo Commons Changes
 
+### 4.6.1
+
+* `defer()` replaces the key, so the invocation of `task` will be the last key.
+
 ### 4.6.0
 
 * BREAK CHANGE: `configureDefers()`'s `executor` argument's signature is changed.

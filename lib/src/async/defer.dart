@@ -37,11 +37,12 @@ import "dart:collection";
 void defer<T>(T key, FutureOr task(T key),
     {Duration min: const Duration(seconds: 1), Duration max,
      String category}) {
-  final dfkey = new _DeferKey(key, category),
-    di = _defers[dfkey] as _DeferInfo<T>;
+  final dfkey = _DeferKey(key, category),
+    di = _defers.remove(dfkey) as _DeferInfo<T>;
   if (di == null) {
     _defers[dfkey] = _DeferInfo<T>(_startTimer(dfkey, min), task);
   } else {
+    _defers[dfkey] = di; //put back; remove-and-add, so dfkey is the last one
     di..timer.cancel()
       ..task = task
       ..timer = _startTimer(dfkey, di.getDelay(min, max));
@@ -51,7 +52,7 @@ void defer<T>(T key, FutureOr task(T key),
 /// Cancels the deferred execution of the given [key].
 /// Returns true if the task is not yet executed.
 bool cancelDeferred(key, {String category}) {
-  final di = _defers.remove(new _DeferKey(key, category));
+  final di = _defers.remove(_DeferKey(key, category));
   if (di == null) return false;
 
   di.timer.cancel();
@@ -122,7 +123,7 @@ FutureOr flushDefers({void onActionStart(key, String category),
 
   if (repeatLater != null) //spec: null => not repeat
     result = result.then(
-        (_) => new Future.delayed(repeatLater,
+        (_) => Future.delayed(repeatLater,
           () => flushDefers(onActionStart: onActionStart,
             onActionDone: onActionDone, onError: onError,
             repeatLater: repeatLater)));
@@ -241,4 +242,4 @@ _Executor _executor;
 Duration Function(int runningCount) _executable;
 Duration _maxBusy;
 final _runnings = <Future>[],
-  _busy = new HashSet<_DeferKey>();
+  _busy = HashSet<_DeferKey>();
