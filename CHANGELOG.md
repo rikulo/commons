@@ -1,9 +1,13 @@
 # Rikulo Commons Changes
 
-### 5.0.4
+### 5.0.5
 
 * Merged changes of 4.6 into 5.0
 * `encodeNS` and `decodeNS` introduced. They're null-safety version of `encode` and `decode`
+
+### 4.6.1
+
+* `defer()` replaces the key, so the invocation of `task` will be the last key.
 
 ### 4.6.0
 

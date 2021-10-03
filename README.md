@@ -9,8 +9,6 @@
 
 Rikulo Commons is distributed under an Apache 2.0 License.
 
-[![Build Status](https://drone.io/github.com/rikulo/commons/status.png)](https://drone.io/github.com/rikulo/commons/latest)
-
 ## Install
 
 Add this to your `pubspec.yaml` (or create it):
