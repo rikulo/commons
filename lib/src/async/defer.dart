@@ -157,7 +157,7 @@ FutureOr flushDefers({void onActionStart(key, String? category)?,
 void configureDefers(
     {FutureOr executor(key, Function task, String? category,
         {void onActionDone()?, void onError(ex, StackTrace st)?})?,
-     Duration executable(int runningCount)?, Duration? maxBusy}) {
+     Duration? executable(int runningCount)?, Duration? maxBusy}) {
   _executor = executor;
   _executable = executable;
   _maxBusy = maxBusy;
@@ -245,7 +245,7 @@ Timer _startTimer(_DeferKey dfkey, Duration min) => Timer(min,
 
 var _defers = HashMap<_DeferKey, _DeferInfo>();
 _Executor? _executor;
-Duration Function(int runningCount)? _executable;
+Duration? Function(int runningCount)? _executable;
 Duration? _maxBusy;
 final _runnings = <Future>[],
   _busy = HashSet<_DeferKey>();
