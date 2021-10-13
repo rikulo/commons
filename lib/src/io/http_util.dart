@@ -28,7 +28,7 @@ const String dartSessionId = "DARTSESSID";
 /// above).
 Future<List<int>?> ajax(Uri url, {String method: "GET",
     List<int>? data, String? body, Map<String, String>? headers,
-    bool onResponse(HttpClientResponse response)?}) async {
+    bool? onResponse(HttpClientResponse response)?}) async {
   final client = new HttpClient();
   try {
     final xhr = await client.openUrl(method, url);
@@ -62,35 +62,35 @@ void _voidCatch(ex) {}
 /// Sends an Ajax request to the given [url] using the POST method.
 Future<List<int>?> postAjax(Uri url, {
     List<int>? data, String? body, Map<String, String>? headers,
-    bool onResponse(HttpClientResponse response)?})
+    bool? onResponse(HttpClientResponse response)?})
 => ajax(url, method: "POST", data: data, body: body,
     headers: headers, onResponse: onResponse);
 
 /// Sends an Ajax request to the given [url] using the PUT method.
 Future<List<int>?> putAjax(Uri url, {
     List<int>? data, String? body, Map<String, String>? headers,
-    bool onResponse(HttpClientResponse response)?})
+    bool? onResponse(HttpClientResponse response)?})
 => ajax(url, method: "PUT", data: data, body: body,
     headers: headers, onResponse: onResponse);
 
 /// Sends an Ajax request to the given [url] using the DELETE method.
 Future<List<int>?> deleteAjax(Uri url, {
     List<int>? data, String? body, Map<String, String>? headers,
-    bool onResponse(HttpClientResponse response)?})
+    bool? onResponse(HttpClientResponse response)?})
 => ajax(url, method: "DELETE", data: data, body: body,
     headers: headers, onResponse: onResponse);
 
 /// Sends an Ajax request to the given [url] using the HEAD method.
 Future<List<int>?> headAjax(Uri url, {
     List<int>? data, String? body, Map<String, String>? headers,
-    bool onResponse(HttpClientResponse response)?})
+    bool? onResponse(HttpClientResponse response)?})
 => ajax(url, method: "HEAD", data: data, body: body,
     headers: headers, onResponse: onResponse);
 
 /// Sends an Ajax request to the given [url] using the PATCH method.
 Future<List<int>?> patchAjax(Uri url, {
     List<int>? data, String? body, Map<String, String>? headers,
-    bool onResponse(HttpClientResponse response)?})
+    bool? onResponse(HttpClientResponse response)?})
 => ajax(url, method: "PATCH", data: data, body: body,
     headers: headers, onResponse: onResponse);
 
