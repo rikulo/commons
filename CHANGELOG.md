@@ -1,5 +1,9 @@
 # Rikulo Commons Changes
 
+### 5.0.6
+
+* The constructors of HttpRequestWrapper, HttpResponseWrapper, HttpHeadersWrapper... accept `null` as `origin`.
+
 ### 5.0.5
 
 * Merged changes of 4.6 into 5.0

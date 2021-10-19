@@ -3,14 +3,22 @@
 // Author: tomyeh
 part of rikulo_io;
 
-/**
- * The HTTP request wrapper.
- */
+/// The HTTP request wrapper.
 class HttpRequestWrapper implements HttpRequest {
-  HttpRequestWrapper(this.origin);
+  /// Constructor.
+  /// 
+  /// - [origin]: the original request.
+  /// Note: it can be null. However, if null, you can't call
+  /// most of methods, including [origin].
+  /// It is design to make it easier to implement a *dummy* request.
+  HttpRequestWrapper(HttpRequest? origin): _origin = origin;
 
   /// The origin stream
-  final HttpRequest origin;
+  ///
+  /// Note: if you pass null to the constructor, calling this method
+  /// will throw NPE
+  HttpRequest get origin => _origin!;
+  HttpRequest? _origin;
 
   @override
   int get contentLength => origin.contentLength;
@@ -193,11 +201,15 @@ class HttpRequestWrapper implements HttpRequest {
   => origin.where(test);
 }
 
-/**
- * The HTTP response wrapper.
- */
+/// The HTTP response wrapper.
 class HttpResponseWrapper extends IOSinkWrapper implements HttpResponse {
-  HttpResponseWrapper(HttpResponse origin): super(origin);
+  /// Constructor.
+  /// 
+  /// - [origin]: the original response.
+  /// Note: it can be null. However, if null, you can't call
+  /// most of methods, including [origin].
+  /// It is design to make it easier to implement a *dummy* response.
+  HttpResponseWrapper(HttpResponse? origin): super(origin);
 
   @override
   HttpResponse get origin => super.origin as HttpResponse;
@@ -266,7 +278,7 @@ class HttpResponseWrapper extends IOSinkWrapper implements HttpResponse {
  * target, you need to override only [add] and [write].
  */
 abstract class AbstractBufferedResponse extends HttpResponseWrapper {
-  AbstractBufferedResponse(HttpResponse origin): super(origin);
+  AbstractBufferedResponse(HttpResponse? origin): super(origin);
 
   @override
   Future flush() => Future.value();
@@ -324,7 +336,7 @@ abstract class AbstractBufferedResponse extends HttpResponseWrapper {
 class StringBufferedResponse extends AbstractBufferedResponse {
   ///The buffer for holding the output (instead of [origin])
   final StringBuffer buffer;
-  StringBufferedResponse(HttpResponse origin, this.buffer): super(origin);
+  StringBufferedResponse(HttpResponse? origin, this.buffer): super(origin);
 
   @override
   void add(List<int> data) {
@@ -343,7 +355,7 @@ class BufferedResponse extends AbstractBufferedResponse {
   ///The buffer for holding the output (instead of [origin]).
   ///It is a list of bytes.
   final List<int> buffer;
-  BufferedResponse(HttpResponse origin, this.buffer): super(origin);
+  BufferedResponse(HttpResponse? origin, this.buffer): super(origin);
 
   @override
   void add(List<int> data) {
@@ -365,10 +377,20 @@ class BufferedResponse extends AbstractBufferedResponse {
  * The HTTP headers wrapper.
  */
 class HttpHeadersWrapper implements HttpHeaders {
-  ///The original HTTP headers
-  final HttpHeaders origin;
+  /// Constructor.
+  /// 
+  /// - [origin]: the original header.
+  /// Note: it can be null. However, if null, you can't call
+  /// most of methods, including [origin].
+  /// It is design to make it easier to implement a *dummy* header.
+  HttpHeadersWrapper(HttpHeaders? origin): _origin = origin;
 
-  HttpHeadersWrapper(this.origin);
+  /// The original HTTP headers
+  ///
+  /// Note: if you pass null to the constructor, calling this method
+  /// will throw NPE
+  HttpHeaders get origin => _origin!;
+  HttpHeaders? _origin;
 
   @override
   List<String>? operator[](String name) => origin[name];

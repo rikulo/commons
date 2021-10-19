@@ -5,11 +5,20 @@ part of rikulo_async;
 
 ///A Stream wrapper
 class StreamWrapper<T> implements Stream<T> {
-  StreamWrapper(Stream<T> origin): _origin = origin;
+  /// Constructor.
+  /// 
+  /// - [origin]: the original stream.
+  /// Note: it can be null. However, if null, you can't call
+  /// most of methods, including [origin].
+  /// It is design to make it easier to implement a *dummy* stream.
+  StreamWrapper(Stream<T>? origin): _origin = origin;
 
   ///The origin stream
-  Stream<T> get origin => _origin;
-  final Stream<T> _origin;
+  ///
+  /// Note: if you pass null to the constructor, calling this method
+  /// will throw NPE
+  Stream<T> get origin => _origin!;
+  final Stream<T>? _origin;
 
   @override
   bool get isBroadcast => origin.isBroadcast;
@@ -104,11 +113,20 @@ class StreamWrapper<T> implements Stream<T> {
 
 ///The StreamConsumer wrapper
 class StreamConsumerWrapper<S> implements StreamConsumer<S> {
-  StreamConsumerWrapper(StreamConsumer<S> origin): _origin = origin;
+  /// Constructor.
+  /// 
+  /// - [origin]: the original stream consumer.
+  /// Note: it can be null. However, if null, you can't call
+  /// most of methods, including [origin].
+  /// It is design to make it easier to implement a *dummy* stream consumer.
+  StreamConsumerWrapper(StreamConsumer<S>? origin): _origin = origin;
 
   ///The original stream consumer
-  StreamConsumer<S> get origin => _origin;
-  final StreamConsumer<S> _origin;
+  ///
+  /// Note: if you pass null to the constructor, calling this method
+  /// will throw NPE
+  StreamConsumer<S> get origin => _origin!;
+  final StreamConsumer<S>? _origin;
 
   @override
   Future addStream(Stream<S> stream) => origin.addStream(stream);

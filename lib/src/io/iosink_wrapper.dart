@@ -10,7 +10,13 @@ part of rikulo_io;
  * `add` and `write` methods (such as [writeln] and so on)
  */
 class IOSinkWrapper extends StreamConsumerWrapper<List<int>> implements IOSink {
-  IOSinkWrapper(IOSink origin) : super(origin);
+  /// Constructor.
+  /// 
+  /// - [origin]: the original sink.
+  /// Note: it can be null. However, if null, you can't call
+  /// most of methods, including [origin].
+  /// It is design to make it easier to implement a *dummy* sink.
+  IOSinkWrapper(IOSink? origin) : super(origin);
 
   @override
   IOSink get origin => super.origin as IOSink;
