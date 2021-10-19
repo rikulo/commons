@@ -18,7 +18,7 @@ class HttpRequestWrapper implements HttpRequest {
   /// Note: if you pass null to the constructor, calling this method
   /// will throw NPE
   HttpRequest get origin => _origin!;
-  HttpRequest? _origin;
+  final HttpRequest? _origin;
 
   @override
   int get contentLength => origin.contentLength;
@@ -390,7 +390,7 @@ class HttpHeadersWrapper implements HttpHeaders {
   /// Note: if you pass null to the constructor, calling this method
   /// will throw NPE
   HttpHeaders get origin => _origin!;
-  HttpHeaders? _origin;
+  final HttpHeaders? _origin;
 
   @override
   List<String>? operator[](String name) => origin[name];
