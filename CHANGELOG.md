@@ -1,5 +1,11 @@
 # Rikulo Commons Changes
 
+### 5.1.0
+
+* `getMimeType` added
+* `getContentType` supports `headerBytes` and path
+    * Also detect more mime types
+
 ### 5.0.6
 
 * The constructors of HttpRequestWrapper, HttpResponseWrapper, HttpHeadersWrapper... accept `null` as `origin`.

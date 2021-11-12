@@ -50,6 +50,16 @@ main() {
       expect(identical(ctype, ContentType.parse(ctype.toString())), isFalse);
 
       expect(getContentType("jpg")!.charset, isNull);
+
+      expect(getMimeType('new.xml'), 'application/xml; charset=utf-8');
+      expect(getMimeType('new.xml', autoUtf8: false), 'application/xml');
+      expect(getMimeType('xml'), 'application/xml; charset=utf-8');
+
+      expect(getMimeType('block/new.xml?ab.def'), 'application/xml; charset=utf-8');
     });
+
+    final redundancy = validateContentTypes(); //validate if any redundancy
+    if (redundancy.isNotEmpty)
+      print("Redundancy: ${redundancy.join(', ')}");
  });
 }
