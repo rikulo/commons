@@ -7,7 +7,9 @@ library rikulo_util;
 import "dart:async";
 import "dart:math" show max, min;
 import "dart:collection";
+
 import "package:charcode/ascii.dart";
+import "package:mime/mime.dart";
 
 part "src/util/strings.dart";
 part "src/util/xmls.dart";
@@ -16,6 +18,7 @@ part "src/util/maps.dart";
 part "src/util/color.dart";
 part "src/util/pair.dart";
 part "src/util/invokes.dart";
+part "src/util/mime_type.dart";
 
 /** A function that returns an integer.
  */

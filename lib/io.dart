@@ -10,14 +10,13 @@ import "dart:collection" show HashMap;
 import "dart:convert";
 import 'dart:typed_data';
 
-import "package:mime/mime.dart";
 import "package:charcode/ascii.dart";
 
 import "async.dart";
 import "convert.dart";
 import "util.dart";
 
-export "util.dart" show isHttpStatusOK;
+export "util.dart" show isHttpStatusOK, getMimeType;
 
 part "src/io/http_wrapper.dart";
 part "src/io/iosink_wrapper.dart";

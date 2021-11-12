@@ -8,8 +8,9 @@ import "dart:convert";
 import "dart:io" show ContentType;
 import 'package:test/test.dart';
 import "package:rikulo_commons/io.dart";
+import "package:rikulo_commons/util.dart";
 
-main() {
+void main() {
   group("http tests", () {
     test("query string 1", () {
       final params = {
@@ -58,7 +59,7 @@ main() {
       expect(getMimeType('block/new.xml?ab.def'), 'application/xml; charset=utf-8');
     });
 
-    final redundancy = validateContentTypes(); //validate if any redundancy
+    final redundancy = validateMimeTypes(); //validate if any redundancy
     if (redundancy.isNotEmpty)
       print("Redundancy: ${redundancy.join(', ')}");
  });
