@@ -17,7 +17,7 @@ class Pair<F, S> {
   List toJson() => [first, second];
 
   @override
-  int get hashCode => first.hashCode ^ (second.hashCode << 1);
+  int get hashCode => Object.hash(first, second);
   @override
   bool operator==(o) => o is Pair && first == o.first && second == o.second;
   @override
@@ -39,8 +39,7 @@ class Trio<F, S, T> {
   List toJson() => [first, second, third];
 
   @override
-  int get hashCode
-  => first.hashCode ^ (second.hashCode<<1) ^ (third.hashCode<<2);
+  int get hashCode => Object.hash(first, second, third);
   @override
   bool operator==(o) => o is Trio && first == o.first
       && second == o.second && third == o.third;

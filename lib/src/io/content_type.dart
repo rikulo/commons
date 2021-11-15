@@ -29,10 +29,8 @@ ContentType? getContentType(String? path,
 /**
  * Adds additional content type for the given extension.
  * Note: it overrides the system default if any.
- *
- * @deprecated Use [getMimeType] instead.
  */
-@deprecated
+@Deprecated('Use getMimeType instead')
 void addContentType(String extension, String mimeType)
 => addMimeType(extension, mimeType);
 

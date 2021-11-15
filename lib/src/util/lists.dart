@@ -49,14 +49,7 @@ class ListUtil {
 
   /** Returns the hash code of the given list
    */
-  static int getHashCode(Iterable? iterable) {
-    final int prime = 31;
-    int code = 0;
-    if (iterable != null) {
-      code = 1 + iterable.length;
-      for (final v in iterable)
-        code = code * prime + (v != null ? v.hashCode: 0);
-    }
-    return code;
-  }
+  @Deprecated('Use Object.hashAll instead')
+  static int getHashCode(Iterable? iterable)
+  => iterable == null ? 0: Object.hashAll(iterable);
 }

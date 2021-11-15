@@ -191,7 +191,7 @@ class _DeferKey<T> {
   _DeferKey(this.key, this.category);
 
   @override
-  int get hashCode => key.hashCode ^ category.hashCode; //key can be null...
+  int get hashCode => Object.hash(key, category); //key can be null...
   @override
   bool operator==(o)
   => o is _DeferKey && o.key == key && o.category == category;

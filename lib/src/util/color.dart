@@ -122,7 +122,7 @@ class Color {
   }
 
   @override
-  int get hashCode => red.hashCode ^ green.hashCode ^ blue.hashCode ^ alpha.hashCode;
+  int get hashCode => Object.hash(red, green, blue, alpha);
   @override
   bool operator==(o)
   => o is Color && o.red == red && o.green == green && o.blue == blue && o.alpha == alpha;
@@ -194,7 +194,7 @@ class HslColor implements Color {
   }
 
   @override
-  int get hashCode => hue.hashCode ^ saturation.hashCode ^ lightness.hashCode ^ alpha.hashCode;
+  int get hashCode => Object.hash(hue, saturation, lightness, alpha);
   @override
   bool operator==(o)
   => o is HslColor && o.hue == hue && o.saturation == saturation && o.lightness == lightness && o.alpha == alpha;
@@ -277,7 +277,7 @@ class HsvColor implements Color {
   }
 
   @override
-  int get hashCode => hue.hashCode ^ saturation.hashCode ^ value.hashCode ^ alpha.hashCode;
+  int get hashCode => Object.hash(hue, saturation, value, alpha);
   @override
   bool operator==(o)
   => o is HsvColor && o.hue == hue && o.saturation == saturation && o.value == value && o.alpha == alpha;
