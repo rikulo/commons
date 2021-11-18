@@ -171,8 +171,9 @@ class MapWrapper<K, V> implements Map<K,V> {
   @override
   String toString() => origin.toString();
   @override
-  bool operator==(o)
-  => this == o || origin == o || (o is MapWrapper && o.origin == origin);
+  bool operator==(o) => o is MapWrapper && o.origin == origin;
+  @override
+  int get hashCode => origin.hashCode;
 }
 
 class _OnDemandMap<K, V> implements Map<K,V> {
