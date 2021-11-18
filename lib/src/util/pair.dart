@@ -19,7 +19,7 @@ class Pair<F, S> {
   @override
   int get hashCode => Object.hash(first, second);
   @override
-  bool operator==(o) => o is Pair && first == o.first && second == o.second;
+  bool operator==(Object o) => o is Pair && first == o.first && second == o.second;
   @override
   String toString() => toJson().toString();
 }
@@ -41,7 +41,7 @@ class Trio<F, S, T> {
   @override
   int get hashCode => Object.hash(first, second, third);
   @override
-  bool operator==(o) => o is Trio && first == o.first
+  bool operator==(Object o) => o is Trio && first == o.first
       && second == o.second && third == o.third;
   @override
   String toString() => toJson().toString();

@@ -193,7 +193,7 @@ class _DeferKey<T> {
   @override
   int get hashCode => Object.hash(key, category); //key can be null...
   @override
-  bool operator==(o)
+  bool operator==(Object o)
   => o is _DeferKey && o.key == key && o.category == category;
   @override
   String toString() => "[$key, $category]";

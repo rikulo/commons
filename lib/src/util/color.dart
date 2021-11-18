@@ -124,7 +124,7 @@ class Color {
   @override
   int get hashCode => Object.hash(red, green, blue, alpha);
   @override
-  bool operator==(o)
+  bool operator==(Object o)
   => o is Color && o.red == red && o.green == green && o.blue == blue && o.alpha == alpha;
   @override
   String toString() =>
@@ -196,7 +196,7 @@ class HslColor implements Color {
   @override
   int get hashCode => Object.hash(hue, saturation, lightness, alpha);
   @override
-  bool operator==(o)
+  bool operator==(Object o)
   => o is HslColor && o.hue == hue && o.saturation == saturation && o.lightness == lightness && o.alpha == alpha;
   @override
   String toString() => "hsl($hue, $saturation, $lightness, $alpha)";
@@ -279,7 +279,7 @@ class HsvColor implements Color {
   @override
   int get hashCode => Object.hash(hue, saturation, value, alpha);
   @override
-  bool operator==(o)
+  bool operator==(Object o)
   => o is HsvColor && o.hue == hue && o.saturation == saturation && o.value == value && o.alpha == alpha;
   @override
   String toString() => "hsv($hue, $saturation, $value, $alpha)";
