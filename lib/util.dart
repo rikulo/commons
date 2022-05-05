@@ -41,7 +41,7 @@ typedef Map<K, V> AsMap<K, V>();
 typedef List<T> AsList<T>();
 
 /// Tests whether the status code is a successfully response.
-bool isHttpStatusOK(int status) => status >= 200 && status < 300;
+bool isHttpStatusOK(int? status) => status != null && status >= 200 && status < 300;
 
 /// Extension for [DateTime] supporting `<`, `>` ...
 ///

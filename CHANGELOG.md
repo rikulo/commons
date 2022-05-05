@@ -1,5 +1,9 @@
 # Rikulo Commons Changes
 
+### 5.1.0+1
+
+* `isHttpStatusOK` accepts null.
+
 ### 5.1.0
 
 * `getMimeType` added
