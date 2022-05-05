@@ -1,6 +1,6 @@
 # Rikulo Commons Changes
 
-### 5.1.0+1
+### 5.2.0+2
 
 * `isHttpStatusOK` accepts null.
 
