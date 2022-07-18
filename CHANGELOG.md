@@ -1,6 +1,10 @@
 # Rikulo Commons Changes
 
-### 5.2.0+2
+### 5.2.1
+
+* `convertList` and `convertListNS` added.
+
+### 5.2.0
 
 * `isHttpStatusOK` accepts null.
 

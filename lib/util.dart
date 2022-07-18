@@ -43,6 +43,17 @@ typedef List<T> AsList<T>();
 /// Tests whether the status code is a successfully response.
 bool isHttpStatusOK(int? status) => status != null && status >= 200 && status < 300;
 
+///Parses the given list into a list of PODOs (plain-old-dart-object).
+List<T>? convertList<T, S>(Iterable? json, T parse(S element))
+=> json != null ? convertListNS(json, parse): null;
+
+List<T> convertListNS<T, S>(Iterable json, T parse(S element)) {
+  final result = <T>[];
+  for (final each in json)
+    result.add(parse(each as S));
+  return result;
+}
+
 /// Extension for [DateTime] supporting `<`, `>` ...
 ///
 /// If you don't like it, you can hide it from importing:
