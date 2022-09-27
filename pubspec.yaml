@@ -1,6 +1,6 @@
 name: rikulo_commons
 version: 5.2.1
-description: Common reusable Dart classes and utilities.
+description: Collections of common reusable classes and utilities for Dart language.
 homepage: https://github.com/rikulo/commons
 repository: https://github.com/rikulo/commons
 issue_tracker: https://github.com/rikulo/commons/issues
