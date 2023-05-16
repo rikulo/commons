@@ -21,7 +21,7 @@ part of rikulo_util;
 /// - [autoUtf8] whether to append "; charset=utf-8" when detecing
 /// a text mime type.
 String? getMimeType(String? path,
-    {List<int>? headerBytes, bool? isExtension, bool autoUtf8: true}) {
+    {List<int>? headerBytes, bool? isExtension, bool autoUtf8 = true}) {
   if (path != null) {
     final i = path.lastIndexOf('?');
     if (i >= 0) path = path.substring(0, i);

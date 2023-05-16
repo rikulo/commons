@@ -22,15 +22,15 @@ class XmlUtil {
    * Default: false.
    */
   static String? encode(String? value,
-      {bool multiLine: false, bool pre: false,
-       bool space: false, bool entity: false})
+      {bool multiLine = false, bool pre = false,
+       bool space = false, bool entity = false})
   => value == null ? value:
     encodeNS(value, multiLine: multiLine, pre: pre, space: space, entity: entity);
 
   /// A null-safety version of [encode].
   static String encodeNS(String value,
-      {bool multiLine: false, bool pre: false,
-       bool space: false, bool entity: false}) {
+      {bool multiLine = false, bool pre = false,
+       bool space = false, bool entity = false}) {
     final len = value.length;
     if (len == 0) return value; //as it is
 

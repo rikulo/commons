@@ -14,7 +14,7 @@ import "dart:io";
 /// If specified and the input is more than allowed, [PayloadException]
 /// will be thrown.
 Future<String> readAsString(Stream<List<int>> stream, 
-    {Encoding encoding: utf8, int? maxLength}) async {
+    {Encoding encoding = utf8, int? maxLength}) async {
   final result = <int>[];
   await for (final data in stream) {
     if (maxLength != null && (data.length + result.length) > maxLength)
@@ -32,7 +32,7 @@ Future<String> readAsString(Stream<List<int>> stream,
 /// If specified and the input is more than allowed, [PayloadException]
 /// will be thrown.
 Future<dynamic> readAsJson(Stream<List<int>> stream,
-    {Encoding encoding: utf8, int? maxLength}) async
+    {Encoding encoding = utf8, int? maxLength}) async
 => json.decode(await readAsString(stream,
       encoding: encoding, maxLength: maxLength));
 

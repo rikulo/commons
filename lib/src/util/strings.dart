@@ -29,8 +29,8 @@ class StringUtil {
    * + [whitespace] specifies if it matches whitespace.
    * + [match] specifies a string of characters that are matched (aka., allowed).
    */
-  static bool isChar(String cc, {bool digit: false, bool upper: false,
-        bool lower: false, bool whitespace: false, String? match})
+  static bool isChar(String cc, {bool digit = false, bool upper = false,
+        bool lower = false, bool whitespace = false, String? match})
   => isCharCode(cc.codeUnitAt(0), digit: digit, upper: upper,
         lower: lower, whitespace: whitespace)
       || (match != null && match.contains(cc));
@@ -45,8 +45,8 @@ class StringUtil {
    * + [whitespace] specifies if it matches whitespace.
    * + [match] specifies a string of characters that are matched (aka., allowed).
    */
-  static bool isCharCode(int cc, {bool digit: false, bool upper: false,
-      bool lower: false, bool whitespace: false})
+  static bool isCharCode(int cc, {bool digit = false, bool upper = false,
+      bool lower = false, bool whitespace = false})
   =>   (digit && cc >= $0 && cc <= $9)
     || (upper && cc >= $A && cc <= $Z)
     || (lower && cc >= $a && cc <= $z)

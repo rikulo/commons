@@ -23,12 +23,12 @@ abstract class CapturableStreamTarget<T> {
    *
    * * [useCapture] is applicable only if the event is caused by a DOM event. Otherwise, it is ignored.
    */
-  void addEventListener(String type, void listener(T event), {bool useCapture: false});
+  void addEventListener(String type, void listener(T event), {bool useCapture = false});
   /** Removes an event listener.
    *
    * * [useCapture] is applicable only if the event is caused by a DOM event. Otherwise, it is ignored.
    */
-  void removeEventListener(String type, void listener(T event), {bool useCapture: false});
+  void removeEventListener(String type, void listener(T event), {bool useCapture = false});
 }
 
 /**
@@ -60,7 +60,7 @@ class CapturableStreamProvider<T> {
    *
    * * [useCapture] is applicable only if the view event is caused by a DOM event.
    */
-  Stream<T> forTarget(CapturableStreamTarget<T> target, {bool useCapture: false}) {
+  Stream<T> forTarget(CapturableStreamTarget<T> target, {bool useCapture = false}) {
     return _CapturableStream(target, _type, useCapture);
   }
 }

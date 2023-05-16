@@ -56,7 +56,7 @@ class NullNodeValidatorBuilder extends NullNodeValidator
 
 /// Set inner html with an empty tree sanitizer
 void setUncheckedInnerHtml(Element element, String html, 
-  {bool encode: false}) {
+  {bool encode = false}) {
   
   if (encode) html = XmlUtil.encodeNS(html);
   
@@ -64,7 +64,7 @@ void setUncheckedInnerHtml(Element element, String html,
 }
 
 /// Creates an element with an empty tree sanitizer.
-Element createUncheckedHtml(String html, {bool encode: false}) {
+Element createUncheckedHtml(String html, {bool encode = false}) {
   
   if (encode) html = XmlUtil.encodeNS(html);
   

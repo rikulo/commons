@@ -36,7 +36,7 @@ import "dart:collection";
  * If not specified, it will keep waiting.
  */
 void defer<T>(T key, FutureOr task(T key),
-    {Duration min: const Duration(seconds: 1), Duration? max,
+    {Duration min = const Duration(seconds: 1), Duration? max,
      String? category}) {
   final dfkey = _DeferKey(key, category),
     di = _defers.remove(dfkey) as _DeferInfo<T>?;

@@ -5,7 +5,7 @@ part of rikulo_io;
 
 /** Deflates a list of bytes with GZIP.
  */
-List<int> gzip(List<int> bytes, {int level: 6}) {
+List<int> gzip(List<int> bytes, {int level = 6}) {
   final output = <int>[];
   Object? error;
   final controller = StreamController<List<int>>(sync: true);
@@ -21,7 +21,7 @@ List<int> gzip(List<int> bytes, {int level: 6}) {
 
 /** Deflates a String into a list of bytes with GZIP.
  */
-List<int> gzipString(String string, {Encoding encoding: utf8, int level: 6})
+List<int> gzipString(String string, {Encoding encoding = utf8, int level = 6})
 => gzip(encoding.encode(string), level: level);
 
 /** Inflates a GZIP-ed list of bytes back to the original list of bytes.
@@ -42,5 +42,5 @@ List<int> ungzip(List<int> bytes) {
 
 /** Inflates a GIZP-ed string back to the original string.
  */
-String ungzipString(List<int> bytes, {Encoding encoding: utf8})
+String ungzipString(List<int> bytes, {Encoding encoding = utf8})
 => encoding.decode(ungzip(bytes));

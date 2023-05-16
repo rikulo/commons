@@ -43,7 +43,7 @@ class MapUtil {
    * (i.e., no equal sign).
    */
   static Map<String, String> parse(String data,
-      {bool backslash:true, String defaultValue: ""}) {
+      {bool backslash = true, String defaultValue = ""}) {
     final map = LinkedHashMap<String, String>();
     for (int i = 0, len = data.length; i < len;) {
       i = StringUtil.skipWhitespaces(data, i);

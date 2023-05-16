@@ -261,11 +261,11 @@ class HttpResponseWrapper extends IOSinkWrapper implements HttpResponse {
   List<Cookie> get cookies => origin.cookies;
 
   @override
-  Future redirect(Uri location, {int status: HttpStatus.movedTemporarily})
+  Future redirect(Uri location, {int status = HttpStatus.movedTemporarily})
   => origin.redirect(location, status: status);
 
   @override
-  Future<Socket> detachSocket({bool writeHeaders: true})
+  Future<Socket> detachSocket({bool writeHeaders = true})
   => origin.detachSocket(writeHeaders: writeHeaders);
   @override
   HttpConnectionInfo? get connectionInfo => origin.connectionInfo;

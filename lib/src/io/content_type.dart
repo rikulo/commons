@@ -20,7 +20,7 @@ part of rikulo_io;
 /// - [autoUtf8] whether to append "; charset=utf-8" when detecing
 /// a text mime type.
 ContentType? getContentType(String? path,
-    {List<int>? headerBytes, bool? isExtension, bool autoUtf8: true}) {
+    {List<int>? headerBytes, bool? isExtension, bool autoUtf8 = true}) {
   var mime = getMimeType(path, headerBytes: headerBytes,
       isExtension: isExtension, autoUtf8: autoUtf8);
   if (mime != null) return parseContentType(mime);

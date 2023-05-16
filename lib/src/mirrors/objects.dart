@@ -34,7 +34,7 @@ class ObjectUtil {
       void onCoerceError(o, String field, value, ClassMirror targetClass, error)?,
       void onSetterError(o, String field, value, error)?,
       void validate(o, String field, value)?,
-      bool silent: false}) {
+      bool silent = false}) {
     l_keys:
     for (var key in values.keys) {
       final fields = key.split('.');

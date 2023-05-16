@@ -1,5 +1,9 @@
 # Rikulo Commons Changes
 
+### 5.2.2
+
+* `convertListNS` accepts a null list.
+
 ### 5.2.1
 
 * `convertList` and `convertListNS` added.

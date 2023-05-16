@@ -26,7 +26,7 @@ const String dartSessionId = "DARTSESSID";
 /// the body, and returns null.
 /// If [onResponse] returns null, it is handled as default (as described
 /// above).
-Future<List<int>?> ajax(Uri url, {String method: "GET",
+Future<List<int>?> ajax(Uri url, {String method = "GET",
     List<int>? data, String? body, Map<String, String>? headers,
     bool? onResponse(HttpClientResponse response)?}) async {
   final client = new HttpClient();
