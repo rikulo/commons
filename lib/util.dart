@@ -44,13 +44,17 @@ typedef List<T> AsList<T>();
 bool isHttpStatusOK(int? status) => status != null && status >= 200 && status < 300;
 
 ///Parses the given list into a list of PODOs (plain-old-dart-object).
+/// It returns null if [json] is null.
 List<T>? convertList<T, S>(Iterable? json, T parse(S element))
 => json != null ? convertListNS(json, parse): null;
 
-List<T> convertListNS<T, S>(Iterable json, T parse(S element)) {
+/// Parses the given list into a list of PODOs.
+/// Unlike [convertList], it returns an empty list if [json] is null
+List<T> convertListNS<T, S>(Iterable? json, T parse(S element)) {
   final result = <T>[];
-  for (final each in json)
-    result.add(parse(each as S));
+  if (json != null)
+    for (final each in json)
+      result.add(parse(each as S));
   return result;
 }
 
