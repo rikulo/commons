@@ -93,7 +93,7 @@ class _CapturableStream<T> extends Stream<T> {
 
 typedef void _OnData<T>(T event);
 
-abstract class _StreamSubscriptionBase<T> extends StreamSubscription<T> {
+abstract class _StreamSubscriptionBase<T> implements StreamSubscription<T> {
   int _pauseCount = 0;
   final String _type;
   _OnData<T>? _onData;
