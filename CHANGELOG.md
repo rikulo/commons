@@ -1,6 +1,6 @@
 # Rikulo Commons Changes
 
-### 5.2.3
+### 6.0.1
 
 * `Pair.from()` and `Trio.from()` added
 
