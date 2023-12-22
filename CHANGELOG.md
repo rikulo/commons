@@ -1,5 +1,9 @@
 # Rikulo Commons Changes
 
+### 5.2.3
+
+* `Pair.from()` and `Trio.from()` added
+
 ### 5.2.2
 
 * `convertListNS` accepts a null list.

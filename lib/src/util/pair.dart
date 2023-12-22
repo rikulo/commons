@@ -10,6 +10,7 @@ class Pair<F, S> {
   final S second;
 
   const Pair(this.first, this.second);
+  Pair.from((F, S) value): this(value.$1, value.$2);
   Pair.fromJson(List json): this(json[0] as F, json[1] as S);
 
   S get last => second;
@@ -32,6 +33,7 @@ class Trio<F, S, T> {
   final T third;
 
   const Trio(this.first, this.second, this.third);
+  Pair.from((F, S, T) value): this(value.$1, value.$2, value.$3);
   Trio.fromJson(List json): this(json[0] as F, json[1] as S, json[2] as T);
 
   T get last => third;
