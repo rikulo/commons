@@ -1,5 +1,9 @@
 # Rikulo Commons Changes
 
+### 6.1.0
+
+* `ReplaceAll` added
+
 ### 6.0.1
 
 * `Pair.from()` and `Trio.from()` added

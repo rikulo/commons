@@ -19,6 +19,7 @@ part "src/util/color.dart";
 part "src/util/pair.dart";
 part "src/util/invokes.dart";
 part "src/util/mime_type.dart";
+part "src/util/regex.dart";
 
 /** A function that returns an integer.
  */
