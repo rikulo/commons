@@ -46,10 +46,4 @@ class ListUtil {
     }
     return true;
   }
-
-  /** Returns the hash code of the given list
-   */
-  @Deprecated('Use Object.hashAll instead')
-  static int getHashCode(Iterable? iterable)
-  => iterable == null ? 0: Object.hashAll(iterable);
 }

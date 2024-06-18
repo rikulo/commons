@@ -26,14 +26,6 @@ ContentType? getContentType(String? path,
   if (mime != null) return parseContentType(mime);
 }
 
-/**
- * Adds additional content type for the given extension.
- * Note: it overrides the system default if any.
- */
-@Deprecated('Use getMimeType instead')
-void addContentType(String extension, String mimeType)
-=> addMimeType(extension, mimeType);
-
 /** Returns an instance of [ContentType] of the given mime type,
  * such as `text/html; charset=utf-8`.
  *
