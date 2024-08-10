@@ -47,9 +47,9 @@ class StringUtil {
    */
   static bool isCharCode(int cc, {bool digit = false, bool upper = false,
       bool lower = false, bool whitespace = false})
-  =>   (digit && cc >= $0 && cc <= $9)
+  =>   (lower && cc >= $a && cc <= $z)
     || (upper && cc >= $A && cc <= $Z)
-    || (lower && cc >= $a && cc <= $z)
+    || (digit && cc >= $0 && cc <= $9)
     || (whitespace && $whitespaces.contains(cc));
 
   /** Returns the index of the first non-whitespace character starting at [from],
