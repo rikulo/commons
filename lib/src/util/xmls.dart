@@ -34,7 +34,7 @@ class XmlUtil {
     final len = value.length;
     if (len == 0) return value; //as it is
 
-    final buf = new StringBuffer();
+    final buf = StringBuffer();
     int i = 0, j = 0;
     void flush(String text, [int? end]) {
       buf..write(value.substring(j, end ?? i))

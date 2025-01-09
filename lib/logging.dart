@@ -10,7 +10,7 @@ import "package:logging/logging.dart";
 /// You can use it to configure your root logger,
 /// such as
 ///
-///     new Logger("myorg").onRecord.listen(simpleLoggerHandler);
+///     Logger("myorg").onRecord.listen(simpleLoggerHandler);
 void simpleLoggerHandler(LogRecord record) {
   //for better response time, do it async (since the onRecord stream is sync)
   Future(() {

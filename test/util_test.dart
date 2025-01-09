@@ -66,7 +66,7 @@ void main() {
   });
 
   test("DateTimeComparator", () {
-    final d1 = new DateTime(2020, 5, 1),
+    final d1 = DateTime(2020, 5, 1),
       d2 = DateTime(2020, 5, 2);
     expect(d1 < d2, true);
     expect(d1 <= d2, true);

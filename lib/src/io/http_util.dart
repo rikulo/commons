@@ -29,7 +29,7 @@ const String dartSessionId = "DARTSESSID";
 Future<List<int>?> ajax(Uri url, {String method = "GET",
     List<int>? data, String? body, Map<String, String>? headers,
     bool? onResponse(HttpClientResponse response)?}) async {
-  final client = new HttpClient();
+  final client = HttpClient();
   try {
     final xhr = await client.openUrl(method, url);
     if (headers != null) {
@@ -103,7 +103,7 @@ class HttpUtil {
   /// To merge the parameters found in the query string, you can do:
   ///
   ///     final params = HttpUtil.decodePostedParameters(
-  ///       request, new Map.from(request.queryParameters));
+  ///       request, Map.from(request.queryParameters));
   /// + [maxLength] the maximal allowed length.
   /// If omitted, no limitation at all.
   /// If specified and the input is more than allowed, [PayloadException]
