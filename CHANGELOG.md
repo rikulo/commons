@@ -186,7 +186,7 @@
 ### 2.0.0
 
 * StringUtil's toHexString, addCharCodes, encodeId, filterIn and filterOut have been removed.
-* MapUtil.onDeman has been renamed to MapUtil.auto
+* MapUtil.onDemand has been renamed to MapUtil.auto
 * The html library has been removed.
 
 ### 1.1.5

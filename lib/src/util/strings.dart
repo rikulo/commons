@@ -9,12 +9,12 @@ const _whitespacesA = const <int>[
     0x2007, 0x2008, 0x2009, 0x200A, 0x2028, 0x2029, 0x202F, 0x205F,
     0x3000, 0xFEFF];
 /// A set of whitespaces in code units.
-final $whitespaces = {..._whitespacesA,
+const $whitespaces = {..._whitespacesA,
     0x09, 0x0A, 0x0B, 0x0C, 0x0D}; //ref: Dart SDK: _isWhitespace
 
 /// A regular expression to match a whitespace.
-final regexWhitespaces = new RegExp(
-    r'[\t\n\v\r\f' + new String.fromCharCodes(_whitespacesA) +']');
+final regexWhitespaces = RegExp(
+    r'[\t\n\v\r\f' + String.fromCharCodes(_whitespacesA) + ']');
 
 /** String utilities.
  */
