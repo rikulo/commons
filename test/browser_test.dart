@@ -7,6 +7,11 @@ import 'package:test/test.dart';
 import "package:rikulo_commons/browser.dart";
 
 main() {
+  test('parseVersion', () {
+    expect(Browser.parseVersion('10.7'), 10.7);
+    expect(Browser.parseVersion('10.7', twoDigits: true), 10.07);
+  });
+
   void isChrome(Browser browser, num version) {
     expect(browser.chrome, isTrue);
     expect(browser.webkit, isTrue);

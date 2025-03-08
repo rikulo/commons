@@ -135,9 +135,11 @@ abstract class Browser {
   }
 
   /// Parses the given [version] into a double.
+  ///
+  /// - [twoDigits] whether to interpret "16.3" as 16.03.
+  /// If false (default), it is interpreted as 16.3.
   static double parseVersion(String version,
-      {String separator='.'/*, bool twoDigits = false*/}) {
-      // - [twoDigits] whether to interpret "16.3" as 16.03.
+      {String separator='.', bool twoDigits = false}) {
       //=> not necessary until we'd like parse MacOS's version
 
     try {
@@ -146,8 +148,8 @@ abstract class Browser {
         final k = version.indexOf(separator, ++j);
         if (k >= 0)
           version = version.substring(0, k);
-        //if (twoDigits && version.length == j + 1) //only one decimal, e.g., 12.3
-        //  version = version.substring(0, j) + "0" + version.substring(j);
+        if (twoDigits && version.length == j + 1) //only one decimal, e.g., 12.3
+          version = version.substring(0, j) + "0" + version.substring(j);
         if (separator != '.')
           version = version.replaceAll(separator, '.');
       }

@@ -3,6 +3,7 @@
 ### 6.2.0
 
 * `Browser.version` interpret "version/16.3" as `16.3` instead of `16.03`
+* `Browser.parseVersion` supports the twoDigits version.
 
 ### 6.1.0
 
