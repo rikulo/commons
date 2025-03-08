@@ -20,11 +20,7 @@ abstract class Browser {
 
   /// The browser's version.
   /// 
-  /// Note: if the subversion is a single digit, it will be considered
-  /// as one hundredth (not tenth).
-  /// For example, version *12.1* will be parsed to a value as `12.01`
-  /// (not `12.1`). Thus, [version] of *12.10* is larger than that of *12.2*
-  /// as expected.
+  /// Note: "16.3" is interpreted as 16.3.
   late double version;
 
   /// Whether it is Safari.
@@ -106,7 +102,7 @@ abstract class Browser {
       androidVersion = parseVersion(m2!.group(1)!);
     } else if ((m2 = _riOS.firstMatch(ua)) != null) {
       mobile = iOS = true;
-      iOSVersion = parseVersion(m2!.group(1)!, '_');
+      iOSVersion = parseVersion(m2!.group(1)!, separator: '_');
     } else {
       mobile = ua.contains("mobile");
       macOS = ua.contains("mac os");
@@ -138,17 +134,20 @@ abstract class Browser {
     }
   }
 
-  /** Parses the given [version] into a double.
-   */
-  static double parseVersion(String version, [String separator='.']) {
+  /// Parses the given [version] into a double.
+  static double parseVersion(String version,
+      {String separator='.'/*, bool twoDigits = false*/}) {
+      // - [twoDigits] whether to interpret "16.3" as 16.03.
+      //=> not necessary until we'd like parse MacOS's version
+
     try {
       int j = version.indexOf(separator);
       if (j >= 0) {
         final k = version.indexOf(separator, ++j);
         if (k >= 0)
           version = version.substring(0, k);
-        if (version.length == j + 1) //only one decimal, e.g., 12.3
-          version = version.substring(0, j) + "0" + version.substring(j);
+        //if (twoDigits && version.length == j + 1) //only one decimal, e.g., 12.3
+        //  version = version.substring(0, j) + "0" + version.substring(j);
         if (separator != '.')
           version = version.replaceAll(separator, '.');
       }

@@ -1,5 +1,9 @@
 # Rikulo Commons Changes
 
+### 6.2.0
+
+* `Browser.version` interpret "version/16.3" as `16.3` instead of `16.03`
+
 ### 6.1.0
 
 * `ReplaceAll` added
