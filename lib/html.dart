@@ -3,56 +3,11 @@
 // Author: tomyeh
 library rikulo_html;
 
-import "dart:html";
+import 'dart:js_interop';
+
+import 'package:web/web.dart';
 
 import "util.dart" show XmlUtil;
-
-///An allow-everyting [NodeValidator].
-class NullNodeValidator implements NodeValidator {
-  const NullNodeValidator();
-
-  @override
-  bool allowsElement(Element element) => true;
-  @override
-  bool allowsAttribute(Element element, String attributeName, String value) => true;
-}
-
-///An allow-everyting [NodeValidatorBuilder].
-class NullNodeValidatorBuilder extends NullNodeValidator
-    implements NodeValidatorBuilder {
-  const NullNodeValidatorBuilder();
-
-  @override
-  void allowNavigation([UriPolicy? uriPolicy]) {}
-  @override
-  void allowImages([UriPolicy? uriPolicy]) {}
-  @override
-  void allowTextElements() {}
-  @override
-  void allowInlineStyles({String? tagName}) {}
-  @override
-  void allowHtml5({UriPolicy? uriPolicy}) {}
-  @override
-  void allowSvg() {}
-  @override
-  void allowCustomElement(String tagName,
-      {UriPolicy? uriPolicy,
-      Iterable<String>? attributes,
-      Iterable<String>? uriAttributes}) {}
-  @override
-  void allowTagExtension(String tagName, String baseName,
-      {UriPolicy? uriPolicy,
-      Iterable<String>? attributes,
-      Iterable<String>? uriAttributes}) {}
-  @override
-  void allowElement(String tagName, {UriPolicy? uriPolicy,
-    Iterable<String>? attributes,
-    Iterable<String>? uriAttributes}) {}
-  @override
-  void allowTemplating() {}
-  @override
-  void add(NodeValidator validator) {}
-}
 
 /// Set inner html with an empty tree sanitizer
 void setUncheckedInnerHtml(Element element, String html, 
@@ -60,13 +15,20 @@ void setUncheckedInnerHtml(Element element, String html,
   
   if (encode) html = XmlUtil.encodeNS(html);
   
-  element.setInnerHtml(html, treeSanitizer: NodeTreeSanitizer.trusted);
+  element.setHTMLUnsafe(html.toJS);
 }
 
 /// Creates an element with an empty tree sanitizer.
 Element createUncheckedHtml(String html, {bool encode = false}) {
+  final template = HTMLTemplateElement();
   
   if (encode) html = XmlUtil.encodeNS(html);
   
-  return Element.html(html, treeSanitizer: NodeTreeSanitizer.trusted);
+  template.setHTMLUnsafe(html.toJS);
+  final elem = template.content.firstElementChild;
+
+  if (elem == null)
+    throw 'Unsupported html: $html';
+
+  return elem;
 }

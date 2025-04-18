@@ -1,5 +1,8 @@
 # Rikulo Commons Changes
 
+### 7.0.0
+* Migrate to Dart 3.7
+
 ### 6.2.0
 
 * `Browser.version` interpret "version/16.3" as `16.3` instead of `16.03`
