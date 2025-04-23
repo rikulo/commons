@@ -32,10 +32,3 @@ Element createUncheckedHtml(String html, {bool encode = false}) {
 
   return elem;
 }
-
-void appendHtml(Element element, String html, 
-  {bool encode = false}) {
-  if (encode) html = XmlUtil.encodeNS(html);
-
-  element.insertAdjacentHTML('beforeend', html.toJS);
-}
