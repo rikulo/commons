@@ -9,6 +9,7 @@ dependencies:
   logging: any
   mime: any
   charcode: any
+  web: any
 
 dev_dependencies:
   test: any
