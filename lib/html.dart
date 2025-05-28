@@ -19,7 +19,7 @@ void setUncheckedInnerHtml(Element element, String html,
 }
 
 /// Creates an element with an empty tree sanitizer.
-Element createUncheckedHtml(String html, {bool encode = false}) {
+T createUncheckedHtml<T extends Element>(String html, {bool encode = false}) {
   final template = HTMLTemplateElement();
   
   if (encode) html = XmlUtil.encodeNS(html);
@@ -30,5 +30,5 @@ Element createUncheckedHtml(String html, {bool encode = false}) {
   if (elem == null)
     throw 'Unsupported html: $html';
 
-  return elem;
+  return elem as T;
 }

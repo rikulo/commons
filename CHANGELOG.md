@@ -2,6 +2,7 @@
 
 ### 7.0.0
 * Migrate to Dart 3.7
+* `NullNodeValidator` and `NullNodeValidatorBuilder` removed
 
 ### 6.2.0
 
