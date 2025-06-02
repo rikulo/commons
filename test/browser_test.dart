@@ -99,10 +99,6 @@ main() {
 
 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246":
   [isLegacyEdge, 12.246],
-"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.74 Safari/537.36 Edg/79.0.309.43":
-  [isNewEdge, 79.0],
-"Mozilla/5.0 (Linux; Android 10; HD1913) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.7103.127 Mobile Safari/537.36 EdgA/136.0.3240.91":
-  [isNewEdge, 136.0],
 
 "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1":
   [isFirefox, 40.1],
@@ -121,7 +117,11 @@ main() {
 
 //New Edge
 newEdge:
-  [isChrome, 83.0],
+  [isNewEdge, 83.0],
+"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.74 Safari/537.36 Edg/79.0.309.43":
+  [isNewEdge, 79.0],
+newEdgeAndroid:
+  [isNewEdge, 136.0],
       };
 
       for (final ua in uas.keys) {
@@ -134,6 +134,15 @@ newEdge:
       var browser = _Browser(newEdge);
       expect(browser.legacyEdge, isFalse);
       expect(browser.webkit, isTrue);
+
+      browser = _Browser(newEdgeAndroid);
+      expect(browser.mobile, isTrue);
+
+      browser = _Browser(edgeIOS);
+      expect(browser.mobile, isTrue);
+      expect(browser.chrome, isFalse);
+      expect(browser.iOS, isTrue);
+      expect(browser.newEdge, isFalse); //newEdge limited to Chrome based only (for JS compatibility)
     });
 
     test("OS test", () {
@@ -167,7 +176,11 @@ newEdge:
 
 const newEdge =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-  "Chrome/83.0.4103.116 Safari/537.36 Edg/83.0.478.45";
+  "Chrome/83.0.4103.116 Safari/537.36 Edg/83.0.478.45",
+  newEdgeAndroid =
+  "Mozilla/5.0 (Linux; Android 10; HD1913) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.7103.127 Mobile Safari/537.36 EdgA/136.0.3240.91",
+  edgeIOS =
+  "Mozilla/5.0 (iPhone; CPU iPhone OS 17_7_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 EdgiOS/136.3240.91 Mobile/15E148 Safari/605.1.15";
 
 class _Browser extends Browser {
   @override
