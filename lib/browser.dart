@@ -16,7 +16,7 @@ abstract class Browser {
     _riOS = RegExp(r"os[ /]([\w_]+) like mac os"),
     _randroid = RegExp(r"android[ /]([\w.]+)"),
     _rlegEdge = RegExp(r"Edge/[1-9]"),
-    _rnewEdge = RegExp(r"Edg/[1-9]");
+    _rnewEdge = RegExp(r"EdgA?/[1-9]");
 
   /// The browser's version.
   /// 
