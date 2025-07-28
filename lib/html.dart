@@ -15,7 +15,7 @@ void setUncheckedInnerHtml(Element element, String html,
   
   if (encode) html = XmlUtil.encodeNS(html);
   
-  element.setHTMLUnsafe(html.toJS);
+  setHTMLUnsafe(element, html);
 }
 
 /// Creates an element with an empty tree sanitizer.
@@ -24,11 +24,21 @@ T createUncheckedHtml<T extends Element>(String html, {bool encode = false}) {
   
   if (encode) html = XmlUtil.encodeNS(html);
   
-  template.setHTMLUnsafe(html.toJS);
+  setHTMLUnsafe(template, html);
+
   final elem = template.content.firstElementChild;
 
   if (elem == null)
     throw 'Unsupported html: $html';
 
   return elem as T;
+}
+
+void setHTMLUnsafe(Element element, String html) {
+  try {
+    element.setHTMLUnsafe(html.toJS);
+  } catch (e) {
+    // Fallback for browsers that do not support setHTMLUnsafe
+    element.innerHTML = html.toJS;
+  }
 }
