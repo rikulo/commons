@@ -1,7 +1,7 @@
 # Rikulo Commons Changes
 
 ### 7.0.1
-* Fixed setHTMLUnsafe errors
+* Set unchecked HTML by innerHTML
 
 ### 7.0.0
 * Migrate to Dart 3.7
