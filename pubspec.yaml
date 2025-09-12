@@ -1,5 +1,5 @@
 name: rikulo_commons
-version: 7.0.0
+version: 7.0.0+2
 description: Collections of common reusable classes and utilities for Dart language.
 homepage: https://github.com/rikulo/commons
 repository: https://github.com/rikulo/commons

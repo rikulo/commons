@@ -5,6 +5,7 @@
 * `defer()` won't exceed the minimal maxed allowed time in a sequence of invocation.
 
 ### 7.0.0
+
 * Migrate to Dart 3.7
 * `NullNodeValidator` and `NullNodeValidatorBuilder` removed
 
