@@ -2,7 +2,7 @@
 
 ### 7.0.1
 
-* `defer()` won't exceed the minimal maxed allowed time in a sequence of invocation.
+* `defer()` won't exceed the minimal maximal allowed time in a sequence of invocation.
 
 ### 7.0.0
 
