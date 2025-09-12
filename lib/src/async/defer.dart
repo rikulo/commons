@@ -41,7 +41,7 @@ void defer<T>(T key, FutureOr task(T key),
   final dfkey = _DeferKey(key, category),
     di = _defers.remove(dfkey) as _DeferInfo<T>?;
   if (di == null) {
-    _defers[dfkey] = _DeferInfo<T>(_startTimer(dfkey, min), task);
+    _defers[dfkey] = _DeferInfo<T>(_startTimer(dfkey, min), task, max);
   } else {
     _defers[dfkey] = di; //put back; remove-and-add, so dfkey is the last one
     di..timer.cancel()
@@ -170,17 +170,25 @@ typedef FutureOr _Executor(key, Function task, String? category,
 class _DeferInfo<T> {
   Timer timer;
   final DateTime startAt;
+  ///The maximal allowed time to execute
+  DateTime? _maxAt;
   Function/*_Task<T>*/ task; //due to Dart's limitation, use Function here
 
-  _DeferInfo(this.timer, this.task): startAt = DateTime.now();
+  _DeferInfo(this.timer, this.task, Duration? max): startAt = DateTime.now() {
+    if (max != null) _maxAt = startAt.add(max);
+  }
 
-  Duration getDelay(Duration min, Duration? max) {
-    if (max != null) {
-      final remaining = max - DateTime.now().difference(startAt);
-      if (remaining < min)
-        return remaining > Duration.zero ? remaining: Duration.zero;
+  Duration getDelay(final Duration min, final Duration? max) {
+    final now = DateTime.now();
+    var remaining = _maxAt?.difference(now);
+    if (max != null && (remaining == null || remaining > Duration.zero)) {
+      final r2 = max - now.difference(startAt);
+      if (remaining == null || r2 < remaining)
+        _maxAt = now.add(remaining = r2);
     }
-    return min;
+
+    return remaining == null || remaining >= min ? min:
+        remaining > Duration.zero ? remaining: Duration.zero;
   }
 }
 
