@@ -78,7 +78,7 @@ bool cancelDeferred(key, {String? category}) {
  */
 FutureOr flushDefers({void onActionStart(key, String? category)?,
     void onActionDone(key, String? category)?,
-    void onError(ex, StackTrace st)?, Duration? repeatLater}) {
+    void onError(Object ex, StackTrace st)?, Duration? repeatLater}) {
   if (_defers.isEmpty && _runnings.isEmpty) return null;
 
   final ops = <Future>[],
@@ -156,7 +156,7 @@ FutureOr flushDefers({void onActionStart(key, String? category)?,
  */
 void configureDefers(
     {FutureOr executor(key, Function task, String? category,
-        {void onActionDone()?, void onError(ex, StackTrace st)?})?,
+        {void onActionDone()?, void onError(Object ex, StackTrace st)?})?,
      Duration? executable(int runningCount)?, Duration? maxBusy}) {
   _executor = executor;
   _executable = executable;
@@ -165,7 +165,7 @@ void configureDefers(
 
 //typedef FutureOr _Task<T>(T key);
 typedef FutureOr _Executor(key, Function task, String? category,
-    {void onActionDone()?, void onError(ex, StackTrace st)?});
+    {void onActionDone()?, void onError(Object ex, StackTrace st)?});
 
 class _DeferInfo<T> {
   Timer timer;

@@ -34,7 +34,7 @@ class IOSinkWrapper extends StreamConsumerWrapper<List<int>> implements IOSink {
     origin.add(data);
   }
   @override
-  void addError(error, [StackTrace? stackTrace]) {
+  void addError(Object error, [StackTrace? stackTrace]) {
     origin.addError(error, stackTrace);
   }
 
