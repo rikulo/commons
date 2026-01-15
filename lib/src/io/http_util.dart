@@ -32,10 +32,7 @@ Future<List<int>?> ajax(Uri url, {String method = "GET",
   final client = HttpClient();
   try {
     final xhr = await client.openUrl(method, url);
-    if (headers != null) {
-      final xhrheaders = xhr.headers;
-      headers.forEach(xhrheaders.add);
-    }
+    headers?.forEach(xhr.headers.add);
 
     if (data != null) xhr.add(data);
     if (body != null) xhr.write(body);
@@ -44,20 +41,22 @@ Future<List<int>?> ajax(Uri url, {String method = "GET",
       statusCode = resp.statusCode;
 
     if (!(onResponse?.call(resp) ?? isHttpStatusOK(statusCode))) {
-      resp.listen(_ignore).asFuture().catchError(_voidCatch);
-        //need to pull out response.body. Or, it will never ends (memory leak)
+      // Always discard the body so the connection can finish cleanly.
+      await resp.drain();
       return null;
     }
 
-    final result = <int>[];
-    await resp.listen(result.addAll).asFuture();
-    return result;
+    // Read the whole body.
+    final result = BytesBuilder(copy: false);
+    await for (final chunk in resp) {
+      result.add(chunk);
+    }
+    return result.takeBytes();
+
   } finally {
     InvokeUtil.invokeSafely(client.close);
   }
 }
-void _ignore(List<int> data) {}
-void _voidCatch(ex) {}
 
 /// Sends an Ajax request to the given [url] using the POST method.
 Future<List<int>?> postAjax(Uri url, {

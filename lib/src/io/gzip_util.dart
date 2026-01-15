@@ -5,6 +5,7 @@ part of rikulo_io;
 
 /** Deflates a list of bytes with GZIP.
  */
+@deprecated
 List<int> gzip(List<int> bytes, {int level = 6}) {
   final output = <int>[];
   Object? error;
@@ -21,11 +22,13 @@ List<int> gzip(List<int> bytes, {int level = 6}) {
 
 /** Deflates a String into a list of bytes with GZIP.
  */
+@deprecated
 List<int> gzipString(String string, {Encoding encoding = utf8, int level = 6})
 => gzip(encoding.encode(string), level: level);
 
 /** Inflates a GZIP-ed list of bytes back to the original list of bytes.
  */
+@deprecated
 List<int> ungzip(List<int> bytes) {
   final output = <int>[];
   Object? error;
@@ -42,5 +45,6 @@ List<int> ungzip(List<int> bytes) {
 
 /** Inflates a GIZP-ed string back to the original string.
  */
+@deprecated
 String ungzipString(List<int> bytes, {Encoding encoding = utf8})
 => encoding.decode(ungzip(bytes));

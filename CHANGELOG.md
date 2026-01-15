@@ -1,5 +1,9 @@
 # Rikulo Commons Changes
 
+### 7.1.0
+
+* Deprecated: `gzip`, `ungzip`, `StreamTarget`, and `StreamProvider`
+
 ### 7.0.1
 
 * `defer()` won't exceed the minimal maximal allowed time in a sequence of invocation.

@@ -8,14 +8,26 @@ class StreamUtil {
   /// Returns the first element, or null if not element at all.
   /// Unlike [Stream.first], it won't throw [StateError].
   static Future<T?> first<T>(Stream<T> stream) {
-    final c = Completer<T?>(),
-      subscription = stream.listen(null,
-          onError: c.completeError,
-          onDone: c.complete, cancelOnError: true);
-    subscription.onData((data) {
-      c.complete(data);
-      InvokeUtil.invokeSafely(subscription.cancel);
-    });
+    final c = Completer<T?>();
+    late final StreamSubscription<T> sub;
+
+    sub = stream.listen(
+      (data) async {
+        if (c.isCompleted) return;
+        c.complete(data);
+        InvokeUtil.invokeSafely(sub.cancel);
+      },
+      onError: (e, st) async {
+        if (!c.isCompleted) c.completeError(e, st);
+        InvokeUtil.invokeSafely(sub.cancel);
+      },
+      onDone: () {
+        if (!c.isCompleted) c.complete(null);
+        // no cancel needed here; onDone means it’s already finished
+      },
+      cancelOnError: true,
+    );
+
     return c.future;
   }
 }

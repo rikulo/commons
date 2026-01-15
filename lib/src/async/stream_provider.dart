@@ -6,6 +6,7 @@ part of rikulo_async;
 /**
  * An object that can be used as the target of the stream provided by [StreamProvider].
  */
+@deprecated
 abstract class StreamTarget<T> {
   /** Adds an event listener.
    */
@@ -18,6 +19,7 @@ abstract class StreamTarget<T> {
 /**
  * An object that can be used as the target of the stream provided by [CapturableStreamProvider].
  */
+@deprecated
 abstract class CapturableStreamTarget<T> {
   /** Adds an event listener.
    *
@@ -34,6 +36,7 @@ abstract class CapturableStreamTarget<T> {
 /**
  * A factory to expose [StreamTarget]'s events as Streams.
  */
+@deprecated
 class StreamProvider<T> {
   final String _type;
 
@@ -42,6 +45,7 @@ class StreamProvider<T> {
   /**
    * Gets a [Stream] for this event type, on the specified target.
    */
+  @deprecated
   Stream<T> forTarget(StreamTarget<T> target) {
     return _Stream(target, _type);
   }
@@ -50,6 +54,7 @@ class StreamProvider<T> {
 /**
  * A factory to expose [CapturableStreamTarget]'s events as Streams.
  */
+@deprecated
 class CapturableStreamProvider<T> {
   final String _type;
 
@@ -65,6 +70,7 @@ class CapturableStreamProvider<T> {
   }
 }
 
+@deprecated
 class _Stream<T> extends Stream<T> {
   final String _type;
   final StreamTarget<T> _target;
@@ -77,6 +83,7 @@ class _Stream<T> extends Stream<T> {
     => _StreamSubscription<T>(this._target, this._type, onData);
 }
 
+@deprecated
 class _CapturableStream<T> extends Stream<T> {
   final String _type;
   final CapturableStreamTarget<T> _target;
@@ -175,6 +182,7 @@ abstract class _StreamSubscriptionBase<T> implements StreamSubscription<T> {
   void _remove();
 }
 
+@deprecated
 class _StreamSubscription<T> extends _StreamSubscriptionBase<T> {
   final StreamTarget<T> _target;
 
@@ -201,6 +209,7 @@ class _StreamSubscription<T> extends _StreamSubscriptionBase<T> {
   }
 }
 
+@deprecated
 class _CapturableStreamSubscription<T> extends _StreamSubscriptionBase<T> {
   final CapturableStreamTarget<T> _target;
   final bool _useCapture;
