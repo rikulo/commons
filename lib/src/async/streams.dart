@@ -13,8 +13,7 @@ class StreamUtil {
 
     sub = stream.listen(
       (data) async {
-        if (c.isCompleted) return;
-        c.complete(data);
+        if (!c.isCompleted) c.complete(data);
         InvokeUtil.invokeSafely(sub.cancel);
       },
       onError: (e, st) async {
