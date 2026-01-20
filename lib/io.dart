@@ -21,5 +21,4 @@ export "util.dart" show isHttpStatusOK, getMimeType;
 part "src/io/http_wrapper.dart";
 part "src/io/iosink_wrapper.dart";
 part "src/io/http_util.dart";
-part "src/io/gzip_util.dart";
 part "src/io/content_type.dart";

@@ -14,6 +14,5 @@ export "src/async/defer.dart";
 
 import "util.dart" show InvokeUtil;
 
-part "src/async/stream_provider.dart";
 part "src/async/stream_wrapper.dart";
 part "src/async/streams.dart";
