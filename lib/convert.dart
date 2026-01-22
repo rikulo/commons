@@ -6,6 +6,7 @@ library rikulo_convert;
 import "dart:async";
 import "dart:convert";
 import "dart:io";
+import 'dart:typed_data';
 
 /// Reads the entire stream as a string using the given [Encoding].
 ///
@@ -15,13 +16,15 @@ import "dart:io";
 /// will be thrown.
 Future<String> readAsString(Stream<List<int>> stream, 
     {Encoding encoding = utf8, int? maxLength}) async {
-  final result = <int>[];
-  await for (final data in stream) {
-    if (maxLength != null && (data.length + result.length) > maxLength)
-      throw PayloadException("Over $maxLength (${data.length} + ${result.length})");
-    result.addAll(data);
+  final result = BytesBuilder(copy: false);
+  await for (final chunk in stream) {
+    int newlen;
+    if (maxLength != null
+    && (newlen = chunk.length + result.length) > maxLength)
+      throw PayloadException("Over $maxLength ($newlen)");
+    result.add(chunk);
   }
-  return encoding.decode(result);
+  return encoding.decode(result.takeBytes());
 }
 
 /// Reads the entire stream as a JSON string using the given [Encoding],
