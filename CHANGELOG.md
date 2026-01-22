@@ -1,6 +1,6 @@
 # Rikulo Commons Changes
 
-### 7.5.0
+### 7.2.0
 
 * Removed: `gzip`, `ungzip`, `StreamTarget`, and `StreamProvider`
 
