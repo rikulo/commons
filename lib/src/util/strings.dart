@@ -13,87 +13,90 @@ const $whitespaces = {..._whitespacesA,
     0x09, 0x0A, 0x0B, 0x0C, 0x0D}; //ref: Dart SDK: _isWhitespace
 
 /// A regular expression to match a whitespace.
-final regexWhitespaces = RegExp(
-    r'[\t\n\v\r\f' + String.fromCharCodes(_whitespacesA) + ']');
+final regexWhitespaces = RegExp(r'[\s\u0085]');
 
-/** String utilities.
- */
-class StringUtil {
-  /**
-   * Returns whether the character matches the specified conditions.
-   *
-   * + [cc] is the character to test.
-   * + [digit] specifies if it matches digit.
-   * + [upper] specifies if it matches upper case.
-   * + [lower] specifies if it matches lower case.
-   * + [whitespace] specifies if it matches whitespace.
-   * + [match] specifies a string of characters that are matched (aka., allowed).
-   */
-  static bool isChar(String cc, {bool digit = false, bool upper = false,
-        bool lower = false, bool whitespace = false, String? match})
-  => isCharCode(cc.codeUnitAt(0), digit: digit, upper: upper,
-        lower: lower, whitespace: whitespace)
-      || (match != null && match.contains(cc));
+/// Tests if the given code point ([cc]) is a white space.
+///
+/// Note: the definition of whitespaces is the same as [String.trim],
+/// but a bit different than `RegExp(r'\s')`:
+/// it includes *next line* (i.e., NEL, 0x85).
+bool isWhitespace(int cc) => $whitespaces.contains(cc);
 
-  /**
-   * Returns whether the character code matches the specified conditions.
-   *
-   * + [cc] is the character to test.
-   * + [digit] specifies if it matches digit.
-   * + [upper] specifies if it matches upper case.
-   * + [lower] specifies if it matches lower case.
-   * + [whitespace] specifies if it matches whitespace.
-   * + [match] specifies a string of characters that are matched (aka., allowed).
-   */
-  static bool isCharCode(int cc, {bool digit = false, bool upper = false,
-      bool lower = false, bool whitespace = false})
-  =>   (lower && cc >= $a && cc <= $z)
-    || (upper && cc >= $A && cc <= $Z)
-    || (digit && cc >= $0 && cc <= $9)
-    || (whitespace && $whitespaces.contains(cc));
-
-  /** Returns the index of the first non-whitespace character starting at [from],
-   * `min(from, str.length)` if not found.
-   */
-  static int skipWhitespaces(String str, int from) {
-    for (int len = str.length; from < len; ++from)
-      if (!$whitespaces.contains(str.codeUnitAt(from)))
-        break;
-    return from;
-  }
-
-  /** Camelizes the given string.
-   * For example, `background-color' => `backgroundColor`.
-   *
-   * Note: for better performance, it assumes there must be a character following a dash.
-   */
-  static String camelize(String name) {
-    StringBuffer? sb;
-    int k = 0;
-    for (int i = 0, len = name.length; i < len; ++i) {
-      if (name.codeUnitAt(i) == $dash) {
-        if (sb == null) sb = StringBuffer();
-        sb..write(name.substring(k, i))
-          ..write(name[++i].toUpperCase());
-        k = i + 1;
-      }
-    }
-    return sb != null ? (sb..write(name.substring(k))).toString(): name;
-  }
-  /** Uncamelizes the give string.
-   * For example, `backgroundColor' => `background-color`.
-   */
-  static String uncamelize(String name) {
-    StringBuffer? sb;
-    int k = 0;
-    for (int i = 0, len = name.length; i < len; ++i) {
-      final cc = name.codeUnitAt(i);
-      if (cc >= $A && cc <= $Z) {
-        if (sb == null) sb = StringBuffer();
-        sb..write(name.substring(k, i))..write('-')..write(name[i].toLowerCase());
-        k = i + 1;
-      }
-    }
-    return sb != null ? (sb..write(name.substring(k))).toString(): name;
-  }
+/// Returns the index of the first non-whitespace character starting at [from],
+/// `min(from, str.length)` if not found.
+int skipWhitespaces(String str, int from) {
+  for (int len = str.length; from < len; ++from)
+    if (!$whitespaces.contains(str.codeUnitAt(from)))
+      break;
+  return from;
 }
+
+/**
+ * Returns whether the character matches the specified conditions.
+ *
+ * + [cc] is the character to test.
+ * + [digit] specifies if it matches digit.
+ * + [upper] specifies if it matches upper case.
+ * + [lower] specifies if it matches lower case.
+ * + [whitespace] specifies if it matches whitespace.
+ * + [match] specifies a string of characters that are matched (aka., allowed).
+ */
+bool isChar(String cc, {bool digit = false, bool upper = false,
+      bool lower = false, bool whitespace = false, String? match})
+=> cc.isNotEmpty
+  && isCharCode(cc.codeUnitAt(0), digit: digit, upper: upper,
+        lower: lower, whitespace: whitespace)
+      || (match?.contains(cc) ?? false);
+
+/**
+ * Returns whether the character code matches the specified conditions.
+ *
+ * + [cc] is the character to test.
+ * + [digit] specifies if it matches digit.
+ * + [upper] specifies if it matches upper case.
+ * + [lower] specifies if it matches lower case.
+ * + [whitespace] specifies if it matches whitespace.
+ * + [match] specifies a string of characters that are matched (aka., allowed).
+ */
+bool isCharCode(int cc, {bool digit = false, bool upper = false,
+    bool lower = false, bool whitespace = false})
+=>   (lower && cc >= $a && cc <= $z)
+  || (upper && cc >= $A && cc <= $Z)
+  || (digit && cc >= $0 && cc <= $9)
+  || (whitespace && $whitespaces.contains(cc));
+
+/// Camelizes the given string.
+/// For example, `background-color' => `backgroundColor`.
+///
+/// Note: for better performance, it assumes there must be a character
+/// following a dash.
+String camelize(String name) {
+  StringBuffer? sb;
+  int k = 0;
+  for (int i = 0, len = name.length; i < len; ++i) {
+    if (name.codeUnitAt(i) == $dash) {
+      if (sb == null) sb = StringBuffer();
+      sb..write(name.substring(k, i))
+        ..write(name[++i].toUpperCase());
+      k = i + 1;
+    }
+  }
+  return sb != null ? (sb..write(name.substring(k))).toString(): name;
+}
+
+/// Uncamelizes the give string.
+/// For example, `backgroundColor' => `background-color`.
+String uncamelize(String name) {
+  StringBuffer? sb;
+  int k = 0;
+  for (int i = 0, len = name.length; i < len; ++i) {
+    final cc = name.codeUnitAt(i);
+    if (cc >= $A && cc <= $Z) {
+      if (sb == null) sb = StringBuffer();
+      sb..write(name.substring(k, i))..write('-')..write(name[i].toLowerCase());
+      k = i + 1;
+    }
+  }
+  return sb != null ? (sb..write(name.substring(k))).toString(): name;
+}
+

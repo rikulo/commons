@@ -11,6 +11,8 @@ import "dart:collection";
 import "package:charcode/ascii.dart";
 import "package:mime/mime.dart";
 
+export "src/util/string_util.dart";
+
 part "src/util/strings.dart";
 part "src/util/xmls.dart";
 part "src/util/lists.dart";

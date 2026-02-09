@@ -1,5 +1,10 @@
 # Rikulo Commons Changes
 
+### 7.3.0
+
+* `isWhitespace()` added.
+* `StringUtil` deprecated. String utilites no longer grouped under `StringUtil`.
+
 ### 7.2.0
 
 * Removed: `gzip`, `ungzip`, `StreamTarget`, and `StreamProvider`

@@ -46,7 +46,7 @@ class MapUtil {
       {bool backslash = true, String defaultValue = ""}) {
     final map = LinkedHashMap<String, String>();
     for (int i = 0, len = data.length; i < len;) {
-      i = StringUtil.skipWhitespaces(data, i);
+      i = skipWhitespaces(data, i);
       if (i >= len)
         break; //no more
 
@@ -63,7 +63,7 @@ class MapUtil {
       if (key.isEmpty)
         throw FormatException("Key required, $data");
 
-      i = StringUtil.skipWhitespaces(data, i);
+      i = skipWhitespaces(data, i);
       if (i >= len || data.codeUnitAt(i) != $equal) {
         map[key] = defaultValue;
         if (i >= len)
@@ -72,7 +72,7 @@ class MapUtil {
       }
 
       final val = StringBuffer();
-      i = StringUtil.skipWhitespaces(data, i + 1);
+      i = skipWhitespaces(data, i + 1);
       if (i < len) {
         final sep = data.codeUnitAt(i);
         if (sep != $double_quote &&  sep != $single_quote)
