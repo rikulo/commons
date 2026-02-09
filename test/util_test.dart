@@ -54,14 +54,13 @@ void main() {
     expect(XmlUtil.decode('&#39;&#34;&#x3C;'), '\'"<');
   });
 
-  test("StringUtl", () {
+  test("String", () {
     expect($whitespaces.length, 26);
 
     final segs = "1\n2\t3 4\v5".split(regexWhitespaces);
     expect(segs.length, 5);
     expect(segs[0], '1');
     expect(segs[4], '5');
-
     expect("ab\nde f".indexOf(regexWhitespaces), 2);
   });
 
