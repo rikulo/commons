@@ -1,5 +1,9 @@
 # Rikulo Commons Changes
 
+### 7.3.1`
+
+* `XmlUtil.encode` encodes `'` and `XmlUtil.decode` decodes `&apos;`
+
 ### 7.3.0
 
 * `isWhitespace()` added.

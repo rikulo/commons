@@ -27,7 +27,7 @@ void main() {
 
   test("XmlUtil", () {
     expect(XmlUtil.encode("<abc>"), "&lt;abc&gt;");
-    expect(XmlUtil.encode('<abc>&\'"'), "&lt;abc&gt;&amp;'&quot;");
+    expect(XmlUtil.encode('<abc>&\'"'), "&lt;abc&gt;&amp;&apos;&quot;");
     expect(XmlUtil.encode("<abc\nanother line", multiLine: true),
       "&lt;abc<br/>\nanother line");
     expect(XmlUtil.encode("<abc> </abc>\ta", pre: true),
@@ -41,7 +41,8 @@ void main() {
     expect(XmlUtil.encode(r"\\&amp;&#X123A;\&#123;", entity: true), r"\&amp;&#X123A;&amp;#123;");
     expect(XmlUtil.encode(r"&amp;\a", entity: true), r"&amp;\a");
 
-    expect(XmlUtil.decode("&lt;abc&GT; and &amp;"), '<abc> and &');
+    expect(XmlUtil.decode("&lt;abc&GT; and &amp;&quot;&apos;"),
+        '<abc> and &"\'');
 
     expect(XmlUtil.encode("<abc de  f   \ng", space: true),
       "&lt;abc de&nbsp; f&nbsp;&nbsp; \ng");

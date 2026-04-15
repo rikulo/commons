@@ -110,7 +110,7 @@ class XmlUtil {
   }
 
   static const _encBasic = const <int, String> {
-    $lt: '&lt;', $gt: '&gt;', $amp: '&amp;', $quot: "&quot;",
+    $lt: '&lt;', $gt: '&gt;', $amp: '&amp;', $quot: "&quot;", $apos: "&apos;",
   };
   static const _encLine = const <int, String> {
     $lf: '<br/>\n', $cr: '',
@@ -122,7 +122,7 @@ class XmlUtil {
   static final _reXmlEntity =
       RegExp(r"&([a-z0-9]+|#[0-9]+|#[x][a-f0-9]+);", caseSensitive: false);
   static const _decs = <String, String> {
-      'lt': '<', 'gt': '>', 'amp': '&', 'quot': '"', 'nbsp': ' '
+      'lt': '<', 'gt': '>', 'amp': '&', 'quot': '"', 'apos': "'", 'nbsp': ' '
   };
 
   static String _decMapper(Match m) {
