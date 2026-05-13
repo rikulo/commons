@@ -9,7 +9,7 @@ const String dartSessionId = "DARTSESSID";
 /// Sends an Ajax request to the given [url].
 /// Returns the data received, or `null` on error.
 ///
-/// To send data in `List<int>, pass it via [data].
+/// To send data in `List<int>`, pass it via [data].
 /// To send in String, pass it via [body].
 ///
 /// * [onResponse] used to retrieve the status code,
@@ -33,8 +33,10 @@ const String dartSessionId = "DARTSESSID";
 /// If null (default), there is no timeout.
 Future<List<int>?> ajax(Uri url, {String method = "GET",
     List<int>? data, String? body, Map<String, String>? headers,
-    bool? onResponse(HttpClientResponse response)?,
+    bool? Function(HttpClientResponse response)? onResponse,
     Duration? timeout}) {
+  assert(data == null || body == null,
+      'pass either `data` or `body`, not both');
   final client = HttpClient();
 
   Future<List<int>?> doIt() async {
@@ -82,7 +84,7 @@ Future<List<int>?> ajax(Uri url, {String method = "GET",
 /// Sends an Ajax request to the given [url] using the POST method.
 Future<List<int>?> postAjax(Uri url, {
     List<int>? data, String? body, Map<String, String>? headers,
-    bool? onResponse(HttpClientResponse response)?,
+    bool? Function(HttpClientResponse response)? onResponse,
     Duration? timeout})
 => ajax(url, method: "POST", data: data, body: body,
     headers: headers, onResponse: onResponse, timeout: timeout);
@@ -90,7 +92,7 @@ Future<List<int>?> postAjax(Uri url, {
 /// Sends an Ajax request to the given [url] using the PUT method.
 Future<List<int>?> putAjax(Uri url, {
     List<int>? data, String? body, Map<String, String>? headers,
-    bool? onResponse(HttpClientResponse response)?,
+    bool? Function(HttpClientResponse response)? onResponse,
     Duration? timeout})
 => ajax(url, method: "PUT", data: data, body: body,
     headers: headers, onResponse: onResponse, timeout: timeout);
@@ -98,7 +100,7 @@ Future<List<int>?> putAjax(Uri url, {
 /// Sends an Ajax request to the given [url] using the DELETE method.
 Future<List<int>?> deleteAjax(Uri url, {
     List<int>? data, String? body, Map<String, String>? headers,
-    bool? onResponse(HttpClientResponse response)?,
+    bool? Function(HttpClientResponse response)? onResponse,
     Duration? timeout})
 => ajax(url, method: "DELETE", data: data, body: body,
     headers: headers, onResponse: onResponse, timeout: timeout);
@@ -106,7 +108,7 @@ Future<List<int>?> deleteAjax(Uri url, {
 /// Sends an Ajax request to the given [url] using the HEAD method.
 Future<List<int>?> headAjax(Uri url, {
     Map<String, String>? headers,
-    bool? onResponse(HttpClientResponse response)?,
+    bool? Function(HttpClientResponse response)? onResponse,
     Duration? timeout})
 => ajax(url, method: "HEAD",
     headers: headers, onResponse: onResponse, timeout: timeout);
@@ -114,7 +116,7 @@ Future<List<int>?> headAjax(Uri url, {
 /// Sends an Ajax request to the given [url] using the PATCH method.
 Future<List<int>?> patchAjax(Uri url, {
     List<int>? data, String? body, Map<String, String>? headers,
-    bool? onResponse(HttpClientResponse response)?,
+    bool? Function(HttpClientResponse response)? onResponse,
     Duration? timeout})
 => ajax(url, method: "PATCH", data: data, body: body,
     headers: headers, onResponse: onResponse, timeout: timeout);
@@ -147,8 +149,7 @@ class HttpUtil {
    */
   static Map<String, String> decodeQuery(
       String queryString, {Map<String, String>? parameters}) {
-    if (parameters == null)
-      parameters = <String, String>{};
+    parameters ??= <String, String>{};
 
     int i = 0, len = queryString.length;
     while (i < len) {
@@ -157,7 +158,7 @@ class HttpUtil {
       for (; j < len; ++j) {
         final cc = queryString.codeUnitAt(j);
         if (cc == $equal)
-          iEquals = j;
+          iEquals ??= j;
         else if (cc == $amp || cc == $semicolon)
           break;
       }
@@ -179,18 +180,18 @@ class HttpUtil {
    * Notice the returned string won't start with `'?'`.
    *
    * The value of a parameter will be converted to a string first.
-   * If it is null, an empty string is generated.
+   * If it is null or its string form is empty, only `name=` is
+   * emitted (no value).
    */
   static String encodeQuery(Map<String, dynamic> parameters) {
     final buf = StringBuffer();
-    for (final name in parameters.keys) {
-      if (!buf.isEmpty)
+    for (final entry in parameters.entries) {
+      if (buf.isNotEmpty)
         buf.write('&');
-      buf..write(Uri.encodeQueryComponent(name))..write('=');
-      final value = parameters[name],
-        sval = value != null ? value.toString(): null;
-      if (sval?.isNotEmpty ?? false)
-        buf.write(Uri.encodeQueryComponent(sval!));
+      buf..write(Uri.encodeQueryComponent(entry.key))..write('=');
+      final sval = entry.value?.toString();
+      if (sval != null && sval.isNotEmpty)
+        buf.write(Uri.encodeQueryComponent(sval));
     }
     return buf.toString();
   }

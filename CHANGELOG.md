@@ -3,6 +3,8 @@
 ### 8.0.0
 
 * **Breaking**: `headAjax()` no longer accepts `data` or `body`. HEAD requests should not have a body (#12).
+* `HttpUtil.decodeQuery()` now splits each parameter on the first `=` (previously the last), matching `Uri.splitQueryString` (#13).
+* `ajax()` asserts that callers pass either `data` or `body`, not both (#13).
 
 ### 7.4.0
 

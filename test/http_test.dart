@@ -43,6 +43,40 @@ void main() {
       });
     });
 
+    test("decodeQuery splits on first '='", () {
+      expect(HttpUtil.decodeQuery("foo=bar=baz"), {"foo": "bar=baz"});
+      expect(HttpUtil.decodeQuery("token=abc=="), {"token": "abc=="});
+      expect(HttpUtil.decodeQuery("a=1=2&b=x"), {"a": "1=2", "b": "x"});
+    });
+
+    test("decodeQuery edge cases", () {
+      expect(HttpUtil.decodeQuery(""), <String, String>{});
+      expect(HttpUtil.decodeQuery("foo"), {"foo": ""});
+      expect(HttpUtil.decodeQuery("foo="), {"foo": ""});
+      expect(HttpUtil.decodeQuery("=bar"), {"": "bar"});
+      expect(HttpUtil.decodeQuery("a=1&b=2"), {"a": "1", "b": "2"});
+      expect(HttpUtil.decodeQuery("a=1;b=2"), {"a": "1", "b": "2"});
+      expect(HttpUtil.decodeQuery("name=value&"), {"name": "value"});
+      expect(HttpUtil.decodeQuery("hello+world=x+y"), {"hello world": "x y"});
+      expect(HttpUtil.decodeQuery("%26amp=%3D"), {"&amp": "="});
+    });
+
+    test("decodeQuery merges into existing map", () {
+      final existing = {"old": "value"};
+      final result = HttpUtil.decodeQuery("new=item", parameters: existing);
+      expect(identical(result, existing), isTrue);
+      expect(existing, {"old": "value", "new": "item"});
+    });
+
+    test("encodeQuery edge cases", () {
+      expect(HttpUtil.encodeQuery({}), "");
+      expect(HttpUtil.encodeQuery({"a": null}), "a=");
+      expect(HttpUtil.encodeQuery({"a": ""}), "a=");
+      expect(HttpUtil.encodeQuery({"flag": true, "off": false}),
+          "flag=true&off=false");
+      expect(HttpUtil.encodeQuery({"a&b": "c=d"}), "a%26b=c%3Dd");
+    });
+
     test("contentType", () {
       var ctype = getContentType("html")!;
       expect(ctype, isNotNull);
