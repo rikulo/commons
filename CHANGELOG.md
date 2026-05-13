@@ -8,6 +8,7 @@
 * `ajax()` asserts that callers pass either `data` or `body`, not both (#13).
 * Deprecated: `parseContentType` — use `ContentType.parse` directly.
 * Deprecated: the entire `rikulo_mirrors` library (`Mirror`, `ClassUtil`, `ObjectUtil`, `NoSuchClassError`, `CoercionError`). Uses `dart:mirrors`, which is unsupported on AOT (Flutter) and web (dart2js). Consider `package:reflectable` or code generation.
+* Deprecated `Browser.ie`, `Browser.legacyEdge`, and `Browser.opera` — these detect retired browsers (Internet Explorer 2022, EdgeHTML Edge 2021, Presto Opera 2013).
 * `getMimeType()` recognizes `yaml`/`yml` (`application/yaml`, with UTF-8 charset), `opus` (`audio/opus`), `mpd` (`application/dash+xml`), and `zst` (`application/zstd`). Fixed: `jfif` now resolves to `image/jpeg` (was `image/pipeg`), `pko` to `application/vnd.ms-pkipko` (typo fix). Query-string stripping uses the first `?` (was last), matching RFC 3986.
 
 ### 7.3.1`

@@ -5,7 +5,8 @@ library rikulo_browser;
 
 /// The browser.
 abstract class Browser {
-  // all RegExp shall be lower case here
+  // Matched against ua.toLowerCase() in _initBrowserInfo (hence lowercase).
+  // _rlegEdge and _rnewEdge are matched against the original-case userAgent.
   static final _rwebkit = RegExp(r"(webkit)[ /]?([0-9]+[0-9.]*)"),
     _rsafari = RegExp(r"(version)/([\w.]+).*safari"),
     _rchrome = RegExp(r"(chrome|crios)[ /]([\w.]+)"),
@@ -19,31 +20,32 @@ abstract class Browser {
     _rnewEdge = RegExp(r"EdgA?/[1-9]");
 
   /// The browser's version.
-  /// 
-  /// Note: "16.3" is interpreted as 16.3.
   late double version;
 
   /// Whether it is Safari.
   bool safari = false;
   /// Whether it is Chrome.
   bool chrome = false;
-  /// Whether it is legacy Edge.
   /// Whether it is Internet Explorer.
+  @Deprecated('Microsoft retired Internet Explorer in 2022.')
   bool ie = false;
   /// Whether it is Firefox.
   bool firefox = false;
   /// Whether it is WebKit-based.
   bool webkit = false;
-  /// Whether it is Opera.
+  /// Whether it is Presto-era Opera or Opera Mini.
+  /// Modern Blink-based Opera (OPR/) is detected as [chrome].
+  @Deprecated('Detects Presto-era Opera and Opera Mini only. Modern Blink-based Opera is detected as [chrome].')
   bool opera = false;
 
   /// Whether it is legacy Edge.
   /// Note: if it is legacy Edge, we consider it as a variant
   /// of Chrome, so [chrome] is also true but [version] is not correct.
+  @Deprecated('Legacy (EdgeHTML) Edge was retired in 2021; use [newEdge] for current Edge.')
   bool get legacyEdge => _rlegEdge.hasMatch(userAgent);
   /// Whether it is new Edge.
   /// Note: if it is new Edge, we consider it as a variant
-  /// of Chrome, so [chrome] is also true,
+  /// of Chrome, so [chrome] is also true.
   bool get newEdge => _rnewEdge.hasMatch(userAgent);
 
   /// Whether it is running on iOS.
@@ -52,9 +54,9 @@ abstract class Browser {
   bool android = false;
   /// Whether it is running on MacOS.
   bool macOS = false;
-  /// Whether it is running on Linux
+  /// Whether it is running on Linux.
   bool linux = false;
-  /// Whether it is running on Windows
+  /// Whether it is running on Windows.
   bool windows = false;
 
   /** Whether it is running on a mobile device.
@@ -124,8 +126,10 @@ abstract class Browser {
       //opera, firefox for iOS all based on AppleWebKit, but
       //we consider them as webkit (than firefox or opera)
     } else if (bm(_rie) || bm(_rie2)) {
+      // ignore: deprecated_member_use_from_same_package
       ie = true;
     } else if (bm(_ropera)) {
+      // ignore: deprecated_member_use_from_same_package
       opera = true;
     } else if (bm(_rfirefox)) { //after opera
       firefox = true;

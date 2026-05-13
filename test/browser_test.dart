@@ -1,6 +1,7 @@
 //Copyright (C) 2013 Potix Corporation. All Rights Reserved.
 //History: Fri, May 24, 2013  2:19:40 PM
 // Author: tomyeh
+// ignore_for_file: deprecated_member_use_from_same_package
 library test_browser;
 
 import 'package:test/test.dart';
