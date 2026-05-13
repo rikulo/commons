@@ -26,12 +26,12 @@ import "dart:collection";
  * * [task] - the task. It can return `void`, `null` or an instance of [Future]
  * * [min] - specifies the minimal duration that the
  * given task will be executed. You can't specify null here. Default: 1 second.
- * That is, the task will be invoked [min] milliseconds later
+ * That is, the task will be invoked [min] later
  * if no following invocation with the same key.
  * * [max] - specifies the maximal duration that
  * the given task will be executed. Default: null.
  * If specified, [task]
- * will be execute at least [max] milliseconds later even if there are
+ * will be executed at least [max] later even if there are
  * following invocations with the same key.
  * If not specified, it will keep waiting.
  */
@@ -63,7 +63,10 @@ bool cancelDeferred(key, {String? category}) {
 /** Force all deferred task (queued by [defer]) to execute.
  * If the task given in [defer] returns an instance of Future, this method
  * will wait until it completes.
- * 
+ *
+ * Do not call this from inside a deferred task — `Future.wait` will
+ * await the calling task's own future, causing a deadlock.
+ *
  * * [onActionStart] - (optional) If specified, it is called when
  * an action starts.
  * * [onActionDone] - (optional) If specified, it is called when
@@ -251,6 +254,8 @@ Timer _startTimer(_DeferKey dfkey, Duration min) => Timer(min,
     }
   });
 
+//Process-wide deferred-task registry. Mutated by [defer], [flushDefers],
+//[cancelDeferred], and [configureDefers].
 var _defers = HashMap<_DeferKey, _DeferInfo>();
 _Executor? _executor;
 Duration? Function(int runningCount)? _executable;

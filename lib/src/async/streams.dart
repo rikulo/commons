@@ -12,17 +12,15 @@ class StreamUtil {
     late final StreamSubscription<T> sub;
 
     sub = stream.listen(
-      (data) async {
+      (data) {
         if (!c.isCompleted) c.complete(data);
         InvokeUtil.invokeSafely(sub.cancel);
       },
-      onError: (e, st) async {
+      onError: (e, st) {
         if (!c.isCompleted) c.completeError(e, st);
-        InvokeUtil.invokeSafely(sub.cancel);
       },
       onDone: () {
         if (!c.isCompleted) c.complete(null);
-        // no cancel needed here; onDone means it’s already finished
       },
       cancelOnError: true,
     );
