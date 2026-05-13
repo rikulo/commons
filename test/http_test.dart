@@ -5,7 +5,6 @@ library test_http;
 
 import "dart:async";
 import "dart:convert";
-import "dart:io" show ContentType;
 import 'package:test/test.dart';
 import "package:rikulo_commons/io.dart";
 import "package:rikulo_commons/util.dart";
@@ -78,11 +77,8 @@ void main() {
     });
 
     test("contentType", () {
-      var ctype = getContentType("html")!;
-      expect(ctype, isNotNull);
+      final ctype = getContentType("html")!;
       expect(ctype.charset, "utf-8");
-      expect(identical(ctype, parseContentType(ctype.toString())), isTrue);
-      expect(identical(ctype, ContentType.parse(ctype.toString())), isFalse);
 
       expect(getContentType("jpg")!.charset, isNull);
 

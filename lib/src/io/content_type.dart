@@ -12,7 +12,7 @@ part of rikulo_io;
 ///     getContentType("alpha/home.js");
 ///     getContentType("js");
 ///     getContentType("alpha/home.js?foo");
-///       //returns parseContentType("text/javascript; charset=utf-8")''
+///       //returns ContentType.parse("text/javascript; charset=utf-8")
 ///
 /// - [isExtension] whether [path] is an extension, e.g., "js".
 /// If not specified (i.e., null), extension is assumed if
@@ -21,24 +21,15 @@ part of rikulo_io;
 /// a text mime type.
 ContentType? getContentType(String? path,
     {List<int>? headerBytes, bool? isExtension, bool autoUtf8 = true}) {
-  var mime = getMimeType(path, headerBytes: headerBytes,
+  final mime = getMimeType(path, headerBytes: headerBytes,
       isExtension: isExtension, autoUtf8: autoUtf8);
-  if (mime != null) return parseContentType(mime);
+  if (mime != null) return ContentType.parse(mime);
 }
 
 /** Returns an instance of [ContentType] of the given mime type,
  * such as `text/html; charset=utf-8`.
  *
- * For example,
- *
- *     response.headers.contentType =
- *       parseContentType('text/html; charset=utf-8');
- *
- * It is the same as [ContentType.parse], except it caches the result
- * to speed up the parsing.
+ * Deprecated: use [ContentType.parse] directly.
  */
-ContentType parseContentType(String value)
-=> _rawCtypes[value] ?? (_rawCtypes[value] = ContentType.parse(value));
-
-///value => ContentType
-final _rawCtypes = HashMap<String, ContentType>();
+@Deprecated('Use ContentType.parse instead')
+ContentType parseContentType(String value) => ContentType.parse(value);
