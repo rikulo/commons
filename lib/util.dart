@@ -11,8 +11,6 @@ import "dart:collection";
 import "package:charcode/ascii.dart";
 import "package:mime/mime.dart";
 
-export "src/util/string_util.dart";
-
 part "src/util/strings.dart";
 part "src/util/xmls.dart";
 part "src/util/lists.dart";
@@ -23,25 +21,19 @@ part "src/util/invokes.dart";
 part "src/util/mime_type.dart";
 part "src/util/regex.dart";
 
-/** A function that returns an integer.
- */
-typedef int AsInt();
-/** A function that returns a double.
- */
-typedef double AsDouble();
-/** A function that returns a string.
- */
-typedef String AsString();
-/** A function that returns a bool.
- */
-typedef bool AsBool();
+/// A function that returns an integer.
+typedef AsInt = int Function();
+/// A function that returns a double.
+typedef AsDouble = double Function();
+/// A function that returns a string.
+typedef AsString = String Function();
+/// A function that returns a bool.
+typedef AsBool = bool Function();
 
-/** A function that returns a map.
- */
-typedef Map<K, V> AsMap<K, V>();
-/** A function that returns a list.
- */
-typedef List<T> AsList<T>();
+/// A function that returns a map.
+typedef AsMap<K, V> = Map<K, V> Function();
+/// A function that returns a list.
+typedef AsList<T> = List<T> Function();
 
 /// Tests whether the status code is a successfully response.
 bool isHttpStatusOK(int? status) => status != null && status >= 200 && status < 300;
@@ -67,13 +59,13 @@ List<T> convertListNS<T, S>(Iterable? json, T parse(S element)) {
 /// 
 ///     import "package:rikulo_commons/util.dart" hide DateTimeComparator
 extension DateTimeComparator on DateTime {
-  bool operator<(DateTime o) => this.isBefore(o);
-  bool operator<=(DateTime o) => !this.isAfter(o);
-  bool operator>(DateTime o) => this.isAfter(o);
-  bool operator>=(DateTime o) => !this.isBefore(o);
+  bool operator<(DateTime o) => isBefore(o);
+  bool operator<=(DateTime o) => !isAfter(o);
+  bool operator>(DateTime o) => isAfter(o);
+  bool operator>=(DateTime o) => !isBefore(o);
 
-  DateTime operator-(Duration diff) => this.subtract(diff);
-  DateTime operator+(Duration diff) => this.add(diff);
+  DateTime operator-(Duration diff) => subtract(diff);
+  DateTime operator+(Duration diff) => add(diff);
 
-  Duration operator | (DateTime o) => this.difference(o);
+  Duration operator | (DateTime o) => difference(o);
 }

@@ -7,7 +7,7 @@ part of rikulo_util;
 class InvokeUtil {
   /// Invokes the given function safely.
   /// By safely, we mean it will catch all exceptions and ignore them.
-  static Future<T?> invokeSafely<T>(FutureOr<T> action()) async {
+  static Future<T?> invokeSafely<T>(FutureOr<T> Function() action) async {
     try {
       return await action();
     } catch (_) {
@@ -16,7 +16,8 @@ class InvokeUtil {
 
   /// Invokes the given function safely.
   /// By safely, we mean it will catch all exceptions and ignore them.
-  static Future<T?> invokeSafelyWith<T, A>(FutureOr<T> action(A arg), A arg) async {
+  static Future<T?> invokeSafelyWith<T, A>(
+      FutureOr<T> Function(A arg) action, A arg) async {
     try {
       return await action(arg);
     } catch (_) {

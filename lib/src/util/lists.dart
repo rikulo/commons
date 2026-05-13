@@ -3,8 +3,7 @@
 // Author: tomyeh
 part of rikulo_util;
 
-/** List utilities.
- */
+/// List utilities.
 class ListUtil {
   ///Copy a list ([src]) to another ([dst])
   static List copy(List src, int srcStart,
@@ -22,11 +21,10 @@ class ListUtil {
     return dst;
   }
 
-  /** Tests if a list equals another by comparing one-by-one
-   *
-	 * * [equal] - the closure to compare elements in the given lists.
-   * If omitted, it compares each item in the list with `identical()`.
-   */
+  /// Tests if a list equals another by comparing one-by-one.
+  ///
+  /// * [equal] - the closure to compare elements in the given lists.
+  /// If omitted, it compares each item in the list with `identical()`.
   static bool equalsEach(List al, bl, [bool equal(a, b)?]) {
     if (identical(al, bl))
       return true;

@@ -9,6 +9,7 @@
 * Deprecated `parseContentType` — use `ContentType.parse`.
 * Deprecated `rikulo_mirrors` (uses `dart:mirrors`, unsupported on AOT/web).
 * Deprecated `Browser.ie`, `Browser.legacyEdge`, `Browser.opera` (retired browsers).
+* **Removed**: `StringUtil` (deprecated since 7.3). Use the top-level `isChar`, `isCharCode`, `skipWhitespaces`, `camelize`, `uncamelize` in `util.dart` directly.
 * Added `setRawInnerHtml(element, html, {textContent})` and `createRawHtml<T>(html, {textContent})`; deprecated `setUncheckedInnerHtml` and `createUncheckedHtml`.
 * `getMimeType()`: added `yaml`/`yml`, `opus`, `mpd`, `zst`; fixed `jfif` → `image/jpeg` and `pko` → `vnd.ms-pkipko`; query strip uses first `?` (RFC 3986).
 

@@ -3,45 +3,43 @@
 // Author: tomyeh
 part of rikulo_util;
 
-/**
- * A collection of Map related utilities.
- */
+/// A collection of Map related utilities.
 class MapUtil {
-  /** Returns a map that will be created only when necessary, such as
-   * [Map.putIfAbsent] is called.
-   *
-   * It assumes the map was empty, and creates by invoking [creator]
-   * when necessary. Don't use this method if the map already exists.
-   *
-   * It is useful to save the memory, if you have a map that won't contain
-   * anything in most case.
-   *
-   * Notice you don't have to keep the object being returned by this method,
-   * since it is just a proxy to the real map.
-   * Refer to Rikulo UI's `View.dataset` for a sample implementation.
-   */
+  /// Returns a map that will be created only when necessary, such as
+  /// when [Map.putIfAbsent] is called.
+  ///
+  /// It assumes the map was empty, and creates by invoking [creator]
+  /// when necessary. Don't use this method if the map already exists.
+  ///
+  /// It is useful to save the memory, if you have a map that won't contain
+  /// anything in most case.
+  ///
+  /// Notice you don't have to keep the object being returned by this method,
+  /// since it is just a proxy to the real map.
+  /// Refer to Rikulo UI's `View.dataset` for a sample implementation.
   static Map<K, V> auto<K, V>(Map<K, V> creator()) => _OnDemandMap(creator);
 
-  /** Copies the given map ([source]) to the destination ([dest]).
-   */
+  /// Copies entries from [source] to [dest] and returns [dest].
+  ///
+  /// If [filter] is null (default), all entries are copied. Otherwise
+  /// only entries for which `filter(key, value)` returns true are copied.
   static Map<K, V?> copy<K, V>(Map<K, V?> source, Map<K, V?> dest,
       [bool filter(K key, V? value)?]) {
     for (final key in source.keys) {
       final value = source[key];
-      if (filter != null && filter(key, value))
+      if (filter == null || filter(key, value))
         dest[key] = value;
     }
     return dest;
   }
 
-  /** Parses the given string into a map.
-   * The format of data is the same as HTML: `=` is optional, and
-   * the value must be enclosed with `'` or `"`.
-   *
-   * * [backslash] specifies whether to handle backslash, such \n and \\.
-   * * [defaultValue] specifies the value to use if it is not specified
-   * (i.e., no equal sign).
-   */
+  /// Parses the given string into a map.
+  /// The format of data is the same as HTML: `=` is optional, and
+  /// the value must be enclosed with `'` or `"`.
+  ///
+  /// * [backslash] specifies whether to handle backslash, such \n and \\.
+  /// * [defaultValue] specifies the value to use if it is not specified
+  /// (i.e., no equal sign).
   static Map<String, String> parse(String data,
       {bool backslash = true, String defaultValue = ""}) {
     final map = LinkedHashMap<String, String>();
@@ -76,7 +74,7 @@ class MapUtil {
       if (i < len) {
         final sep = data.codeUnitAt(i);
         if (sep != $double_quote &&  sep != $single_quote)
-          throw FormatException("Quatation marks required for a value, $data");
+          throw FormatException("Quotation marks required for a value, $data");
 
         for (;;) {
           if (++i >= len)
@@ -107,8 +105,7 @@ class MapUtil {
   }
 }
 
-/** A map wrapper for proxying another map.
- */
+/// A map wrapper for proxying another map.
 class MapWrapper<K, V> implements Map<K,V> {
   final Map<K, V> origin;
 

@@ -9,21 +9,19 @@ part of rikulo_util;
 ///     final _escape = ReplaceAll(const {"\\": r"\\", "\n": r"\n"});
 ///     _escape.apply(text);
 class ReplaceAll {
-  RegExp _pattern;
+  final RegExp _pattern;
   final Map<String, String> _replaces;
 
   ReplaceAll(Map<String, String> replaces)
   : _pattern = _toPattern(replaces.keys), _replaces = replaces;
 
-  /** Applies the replacement to the given [text].
-   */
+  /// Applies the replacement to the given [text].
   String apply(String text)
   => text.replaceAllMapped(_pattern, _map);
 
-  /** Maps the given match ([m]) to a replacement.
-   * 
-   * Default: it uses the replaces map given in the constructor.
-   */
+  /// Maps the given match ([m]) to a replacement.
+  ///
+  /// Default: it uses the replaces map given in the constructor.
   String _map(Match m) => _replaces[m.group(0)]!;
 
   static RegExp _toPattern(Iterable<String> keys) {

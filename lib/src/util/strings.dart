@@ -31,16 +31,14 @@ int skipWhitespaces(String str, int from) {
   return from;
 }
 
-/**
- * Returns whether the character matches the specified conditions.
- *
- * + [cc] is the character to test.
- * + [digit] specifies if it matches digit.
- * + [upper] specifies if it matches upper case.
- * + [lower] specifies if it matches lower case.
- * + [whitespace] specifies if it matches whitespace.
- * + [match] specifies a string of characters that are matched (aka., allowed).
- */
+/// Returns whether the character matches the specified conditions.
+///
+/// + [cc] is the character to test.
+/// + [digit] specifies if it matches digit.
+/// + [upper] specifies if it matches upper case.
+/// + [lower] specifies if it matches lower case.
+/// + [whitespace] specifies if it matches whitespace.
+/// + [match] specifies a string of characters that are matched (aka., allowed).
 bool isChar(String cc, {bool digit = false, bool upper = false,
       bool lower = false, bool whitespace = false, String? match})
 => cc.isNotEmpty
@@ -48,16 +46,14 @@ bool isChar(String cc, {bool digit = false, bool upper = false,
         lower: lower, whitespace: whitespace)
       || (match?.contains(cc) ?? false);
 
-/**
- * Returns whether the character code matches the specified conditions.
- *
- * + [cc] is the character to test.
- * + [digit] specifies if it matches digit.
- * + [upper] specifies if it matches upper case.
- * + [lower] specifies if it matches lower case.
- * + [whitespace] specifies if it matches whitespace.
- * + [match] specifies a string of characters that are matched (aka., allowed).
- */
+/// Returns whether the character code matches the specified conditions.
+///
+/// + [cc] is the character to test.
+/// + [digit] specifies if it matches digit.
+/// + [upper] specifies if it matches upper case.
+/// + [lower] specifies if it matches lower case.
+/// + [whitespace] specifies if it matches whitespace.
+/// + [match] specifies a string of characters that are matched (aka., allowed).
 bool isCharCode(int cc, {bool digit = false, bool upper = false,
     bool lower = false, bool whitespace = false})
 =>   (lower && cc >= $a && cc <= $z)
@@ -66,7 +62,7 @@ bool isCharCode(int cc, {bool digit = false, bool upper = false,
   || (whitespace && $whitespaces.contains(cc));
 
 /// Camelizes the given string.
-/// For example, `background-color' => `backgroundColor`.
+/// For example, `background-color` -> `backgroundColor`.
 ///
 /// Note: for better performance, it assumes there must be a character
 /// following a dash.
@@ -85,7 +81,7 @@ String camelize(String name) {
 }
 
 /// Uncamelizes the given string.
-/// For example, `backgroundColor' => `background-color`.
+/// For example, `backgroundColor` -> `background-color`.
 String uncamelize(String name) {
   StringBuffer? sb;
   int k = 0;

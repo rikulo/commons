@@ -13,6 +13,22 @@ void main() {
     expect(map["xyz"], "second item");
   });
 
+  test("MapUtil.copy", () {
+    // No filter -> copies everything.
+    expect(MapUtil.copy({"a": 1, "b": 2}, <String, int>{}),
+        {"a": 1, "b": 2});
+
+    // With filter -> only matching entries.
+    expect(MapUtil.copy({"a": 1, "b": 2, "c": 3}, <String, int>{},
+        (k, v) => v! > 1),
+        {"b": 2, "c": 3});
+
+    // Filter rejecting all -> empty dest.
+    expect(MapUtil.copy({"a": 1, "b": 2}, <String, int>{},
+        (k, v) => false),
+        isEmpty);
+  });
+
   test("Color.parse", () {
     expect(Color.parse("#ffffff"), equals(white));
     expect(Color.parse("#fff"), white);
@@ -23,6 +39,43 @@ void main() {
     expect(Color.parse("hsla(128, 50%, 25%, 20%)"), HslColor(128, 0.5, 0.25, 0.2));
     expect(Color.parse("hsv(128, 50%, 25%)"), HsvColor(128, 0.5, 0.25));
     expect(Color.parse("hsva(128, 50%, 25%, 20%)"), HsvColor(128, 0.5, 0.25, 0.2));
+  });
+
+  test("Color.toString pads hex to two digits", () {
+    expect(Color(0, 0, 0).toString(), "#000000");
+    expect(Color(1, 2, 3).toString(), "#010203");
+    expect(Color(255, 255, 255).toString(), "#ffffff");
+    expect(Color(16, 17, 18).toString(), "#101112");
+  });
+
+  test("Color <-> HslColor primary conversions", () {
+    expect(Color(255, 0, 0).hsl(), HslColor(0, 1, 0.5));
+    expect(Color(0, 255, 0).hsl(), HslColor(120, 1, 0.5));
+    expect(Color(0, 0, 255).hsl(), HslColor(240, 1, 0.5));
+    expect(Color(0, 0, 0).hsl(), HslColor(0, 0, 0));
+    expect(Color(255, 255, 255).hsl(), HslColor(0, 0, 1));
+  });
+
+  test("Color <-> HslColor round-trip", () {
+    void check(int r, int g, int b) {
+      final back = Color(r, g, b).hsl().rgb();
+      expect(back.red.round(), r);
+      expect(back.green.round(), g);
+      expect(back.blue.round(), b);
+    }
+    check(128, 64, 200);
+    check(50, 150, 250);
+    check(0, 128, 64);
+    check(200, 200, 0);
+  });
+
+  test("HslColor.hsv and HsvColor.hsl preserve color", () {
+    // RGB -> HSV -> HSL -> RGB should preserve the color.
+    final orig = Color(128, 64, 200);
+    final back = orig.hsv().hsl().rgb();
+    expect(back.red.round(), 128);
+    expect(back.green.round(), 64);
+    expect(back.blue.round(), 200);
   });
 
   test("XmlUtil", () {

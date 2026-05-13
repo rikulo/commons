@@ -3,16 +3,14 @@
 //Author: simonpai
 part of rikulo_util;
 
-/** An RGB based color object. The toString method returns a CSS-compatible color value.
- */
+/// An RGB based color object. The toString method returns a CSS-compatible color value.
 class Color {
-  /** Construct a Color object with given RGB and alpha (i.e., opacity) values.
-   * 
-   * + [red], [green], [blue] should be numbers between 0 (inclusive) and 255 
-   * (inclusive);
-   * + [alpha] should be a number between 0 (inclusive) and 1 (inclusive).
-   * Default: 1
-   */
+  /// Construct a Color object with given RGB and alpha (i.e., opacity) values.
+  ///
+  /// + [red], [green], [blue] should be numbers between 0 (inclusive) and 255
+  /// (inclusive);
+  /// + [alpha] should be a number between 0 (inclusive) and 1 (inclusive).
+  /// Default: 1
   const Color(num red, num green, num blue, [num alpha = 1]) : 
   this.red = red, this.green = green, this.blue = blue, this.alpha = alpha;
   
@@ -41,26 +39,35 @@ class Color {
     final num sat = mx == 0 ? 0 : ch / mx;
     return HsvColor(hue, sat, val, alpha);
   }
-  ///Convert to [HslColor]
+  ///Convert to [HslColor].
   HslColor hsl() {
-    throw UnsupportedError("TODO");
+    final num mx = max(max(red, green), blue),
+        mn = min(min(red, green), blue), ch = mx - mn;
+    final num light = (mx + mn) / (2 * 255);
+    final num sat = ch == 0 ? 0 :
+        ch / (light < 0.5 ? mx + mn : 2 * 255 - mx - mn);
+    final int lead = red > green ?
+        (red > blue ? 0 : 2) : (green > blue ? 1 : 2);
+    final num hue = 60 * (ch == 0 ? 0 :
+      lead == 0 ? ((green - blue) / ch) % 6 :
+      lead == 1 ? (blue - red) / ch + 2 : (red - green) / ch + 4);
+    return HslColor(hue, sat, light, alpha);
   }
-  
-  /** Parses the color code as a Color literal and returns its value. Example,
-   *
-   *     Color.parse("#ffe");
-   *     Color.parse("#73b5a9");
-   *     Color.parse("white");
-   *     Color.parse("rgba(100, 80, 100%, 0.5)");
-   *     Color.parse("hsl(100, 65%, 100%, 0.5)");
-   *
-   * Notice: it recognized 17 standard colors:
-   * aqua, black, blue, fuchsia, gray, grey, green, lime, maroon, navy, olive, purple, red, silver, teal, white, and yellow.
-   */
+
+  /// Parses the color code as a Color literal and returns its value. Example,
+  ///
+  ///     Color.parse("#ffe");
+  ///     Color.parse("#73b5a9");
+  ///     Color.parse("white");
+  ///     Color.parse("rgba(100, 80, 100%, 0.5)");
+  ///     Color.parse("hsl(100, 65%, 100%, 0.5)");
+  ///
+  /// Notice: it recognized 17 standard colors:
+  /// aqua, black, blue, fuchsia, gray, grey, green, lime, maroon, navy, olive, purple, red, silver, teal, white, and yellow.
   static Color parse(String colorCode) {
     final len = (colorCode = colorCode.trim()).length;
     try {
-      if (colorCode.codeUnitAt(0) == 35) { //#
+      if (colorCode.codeUnitAt(0) == $hash) { //#
         final step = len <= 4 ? 1: 2;
         List<int> rgb = [0, 0, 0];
         for (int i = 1, j = 0; i < len && j < 3; i += step, ++j) {
@@ -133,25 +140,23 @@ class Color {
   
 }
 // helper //
-String _hex(num n) => n.toInt().toRadixString(16);
+String _hex(num n) => n.toInt().toRadixString(16).padLeft(2, '0');
 
-/** An HSL based color object.
- *
- * Notice, although [HslColor] also implements [Color], [red], [green] and [blue] are calculated
- * when called. For better performance, you shall use [rgb] to convert it to [Color] and
- * access the converted [Color] if you have to access [red], [green] and/or [blue] multiple
- * times.
- */
+/// An HSL based color object.
+///
+/// Notice, although [HslColor] also implements [Color], [red], [green] and [blue] are calculated
+/// when called. For better performance, you shall use [rgb] to convert it to [Color] and
+/// access the converted [Color] if you have to access [red], [green] and/or [blue] multiple
+/// times.
 class HslColor implements Color {
-  
-  /** Construct a Color object with given HSV and alpha (i.e., opacity) values.
-   * 
-   * + [hue] should be a number between 0 (inclusive) and 360 (exclusive).
-   * + [saturation] and [lightness] should be numbers between 0 (inclusive) and 
-   * 1 (inclusive).
-   * + [alpha] should be a number between 0 (inclusive) and 1 (inclusive).
-   * Default: 1
-   */
+
+  /// Construct a Color object with given HSV and alpha (i.e., opacity) values.
+  ///
+  /// + [hue] should be a number between 0 (inclusive) and 360 (exclusive).
+  /// + [saturation] and [lightness] should be numbers between 0 (inclusive) and
+  /// 1 (inclusive).
+  /// + [alpha] should be a number between 0 (inclusive) and 1 (inclusive).
+  /// Default: 1
   const HslColor(num hue, num saturation, num lightness, [num alpha = 1]) : 
   this.hue = hue, this.saturation = saturation, this.lightness = lightness, this.alpha = alpha;
   
@@ -185,13 +190,22 @@ class HslColor implements Color {
 
   /// Convert to RGB based [Color].
   Color rgb() {
-    throw UnsupportedError("TODO");
+    final num c = (1 - (2 * lightness - 1).abs()) * saturation,
+        h2 = hue / 60,
+        x = c * (1 - (h2 % 2 - 1).abs()),
+        m = lightness - c / 2;
+    num r = 0, g = 0, b = 0;
+    if (h2 < 1) { r = c; g = x; }
+    else if (h2 < 2) { r = x; g = c; }
+    else if (h2 < 3) { g = c; b = x; }
+    else if (h2 < 4) { g = x; b = c; }
+    else if (h2 < 5) { r = x; b = c; }
+    else { r = c; b = x; }
+    return Color((r + m) * 255, (g + m) * 255, (b + m) * 255, alpha);
   }
   ///Convert to [HsvColor]
   @override
-  HsvColor hsv() {
-    throw UnsupportedError("TODO");
-  }
+  HsvColor hsv() => rgb().hsv();
 
   @override
   int get hashCode => Object.hash(hue, saturation, lightness, alpha);
@@ -202,23 +216,21 @@ class HslColor implements Color {
   String toString() => "hsl($hue, $saturation, $lightness, $alpha)";
 }
 
-/** An HSV based color object.
- *
- * Notice, although [HsvColor] also implements [Color], [red], [green] and [blue] are calculated
- * when called. For better performance, you shall use [rgb] to convert it to [Color] and
- * access the converted [Color] if you have to access [red], [green] and/or [blue] multiple
- * times.
- */
+/// An HSV based color object.
+///
+/// Notice, although [HsvColor] also implements [Color], [red], [green] and [blue] are calculated
+/// when called. For better performance, you shall use [rgb] to convert it to [Color] and
+/// access the converted [Color] if you have to access [red], [green] and/or [blue] multiple
+/// times.
 class HsvColor implements Color {
-  
-  /** Construct a Color object with given HSV and alpha (i.e., opacity) values.
-   * 
-   * + [hue] should be a number between 0 (inclusive) and 360 (exclusive).
-   * + [saturation] and [value] should be numbers between 0 (inclusive) and 
-   * 1 (inclusive).
-   * + [alpha] should be a number between 0 (inclusive) and 1 (inclusive).
-   * Default: 1
-   */
+
+  /// Construct a Color object with given HSV and alpha (i.e., opacity) values.
+  ///
+  /// + [hue] should be a number between 0 (inclusive) and 360 (exclusive).
+  /// + [saturation] and [value] should be numbers between 0 (inclusive) and
+  /// 1 (inclusive).
+  /// + [alpha] should be a number between 0 (inclusive) and 1 (inclusive).
+  /// Default: 1
   const HsvColor(num hue, num saturation, num value, [num alpha = 1]) : 
   this.hue = hue, this.saturation = saturation, this.value = value, this.alpha = alpha;
   
@@ -272,9 +284,7 @@ class HsvColor implements Color {
   }
   ///Convert to [HslColor]
   @override
-  HslColor hsl() {
-    throw UnsupportedError("TODO");
-  }
+  HslColor hsl() => rgb().hsl();
 
   @override
   int get hashCode => Object.hash(hue, saturation, value, alpha);

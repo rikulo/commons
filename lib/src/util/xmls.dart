@@ -3,24 +3,21 @@
 // Author: tomyeh
 part of rikulo_util;
 
-/**
- * XML Utilities.
- */
+/// XML Utilities.
 class XmlUtil {
-  /** Encodes the string to a valid XML string.
-   *
-   * + [value] is the text to encode.
-   * + [pre] - whether to replace whitespace with &nbsp;
-   * + [space] - whether to keep the space but still able to break
-   * lines. If [pre] is true, [space] is ignored.
-   * + [multiLine] - whether to replace linefeed with <br/>
-   * + [entity] - whether [value] might contain XML entities, such as `&#8214;`
-   * and `&quot;`. If true, it won't encode it if an entity is found.
-   * If true, you can escape with a backslash, such as `\&amp;`. So, it won't
-   * be treated as a XML entity.
-   * Note: backslash won't be handled specially if false.
-   * Default: false.
-   */
+  /// Encodes the string to a valid XML string.
+  ///
+  /// + [value] is the text to encode.
+  /// + [pre] - whether to replace whitespace with &nbsp;
+  /// + [space] - whether to keep the space but still able to break
+  /// lines. If [pre] is true, [space] is ignored.
+  /// + [multiLine] - whether to replace linefeed with <br/>
+  /// + [entity] - whether [value] might contain XML entities, such as `&#8214;`
+  /// and `&quot;`. If true, it won't encode it if an entity is found.
+  /// If true, you can escape with a backslash, such as `\&amp;`. So, it won't
+  /// be treated as a XML entity.
+  /// Note: backslash won't be handled specially if false.
+  /// Default: false.
   static String? encode(String? value,
       {bool multiLine = false, bool pre = false,
        bool space = false, bool entity = false})
@@ -141,11 +138,10 @@ class XmlUtil {
     return m.group(0)!;
   }
 
-  /** Decodes the XML string into a normal string.
-   * For example, `&lt;` is convert to `<`.
-   *
-   * + [txt] is the text to decode.
-   */
+  /// Decodes the XML string into a normal string.
+  /// For example, `&lt;` is converted to `<`.
+  ///
+  /// + [txt] is the text to decode.
   static String? decode(String? value)
   => value == null ? null: decodeNS(value);
 
