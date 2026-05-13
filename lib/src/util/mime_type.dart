@@ -3,7 +3,7 @@
 // Author: tomyeh
 part of rikulo_util;
 
-/// Retrieves the mime type from the given [path] and, optional,
+/// Retrieves the mime type from the given [path] and, optionally,
 /// header bytes ([headerBytes]).
 /// It returns `null` if not found.
 ///
@@ -23,7 +23,7 @@ part of rikulo_util;
 String? getMimeType(String? path,
     {List<int>? headerBytes, bool? isExtension, bool autoUtf8 = true}) {
   if (path != null) {
-    final i = path.lastIndexOf('?');
+    final i = path.indexOf('?');
     if (i >= 0) path = path.substring(0, i);
 
     if (isExtension == null) isExtension = !_rePath.hasMatch(path);
@@ -43,7 +43,7 @@ bool _isTextType(String mime)
 
 const String _appPrefix = "application/";
 const _textSubtypes = <String> {
-  "json", "javascript", "dart", "xml",
+  "json", "javascript", "dart", "xml", "yaml",
 };
 
 /**
@@ -67,17 +67,11 @@ final MimeTypeResolver _mimeResolver = (() {
 }) ();
 
 const _mimeMap = {
-  "heic": "image/heic",
-  "heif": "image/heif",
-
   //https://gist.github.com/hugoware/957656
   "323": "text/h323",
-  "acx": "application/internet-property-stream",
   "asr": "video/x-ms-asf",
-  "axs": "application/olescript",
   "bas": "text/plain",
   "fif": "application/fractals",
-  "flr": "x-world/x-vrml",
   "gz": "application/x-gzip",
   "hta": "application/hta",
   "htc": "text/x-component",
@@ -85,7 +79,7 @@ const _mimeMap = {
   "iii": "application/x-iphone",
   "ins": "application/x-internet-signup",
   "isp": "application/x-internet-signup",
-  "jfif": "image/pipeg",
+  "jfif": "image/jpeg",
   "lsf": "video/x-la-asf",
   "lsx": "video/x-la-asf",
   "mht": "message/rfc822",
@@ -93,23 +87,16 @@ const _mimeMap = {
   "mpa": "video/mpeg",
   "mpv2": "video/mpeg",
   "nws": "message/rfc822",
-  "pko": "application/ynd.ms-pkipko",
+  "pko": "application/vnd.ms-pkipko",
   "pma": "application/x-perfmon",
   "pmc": "application/x-perfmon",
   "pmr": "application/x-perfmon",
   "pmw": "application/x-perfmon",
-  "po": ",  application/vnd.ms-powerpoint",
   "sct": "text/scriptlet",
   "sst": "application/vnd.ms-pkicertstore",
   "stm": "text/html",
   "tgz": "application/x-compressed",
   "uls": "text/iuls",
-  "webmanifest": "application/manifest+json",
-  //"woff": "font/woff", //redundant
-  "woff2": "font/woff2",
-  "wrz": "x-world/x-vrml",
-  "xaf": "x-world/x-vrml",
-  "xof": "x-world/x-vrml",
   "z": "application/x-compress",
 
   //http://help.dottoro.com/lapuadlp.php
@@ -130,7 +117,6 @@ const _mimeMap = {
   "llb": "application/x-labview",
   "lvx": "application/x-labview-exec",
   "m": "text/x-objcsrc",
-  "m4a": "audio/m4a",
   "mail": "message/rfc822",
   "mfp": "application/x-shockwave-flash",
   "mqv": "video/quicktime",
@@ -158,14 +144,22 @@ const _mimeMap = {
   "twbx": "application/twb",
   "war": "application/x-webarchive",
   "xll": "application/vnd.ms-excel",
+
+  //modern formats not (yet) in package:mime defaults
+  "yaml": "application/yaml",
+  "yml": "application/yaml",
+  "opus": "audio/opus",
+  "mpd": "application/dash+xml",
+  "zst": "application/zstd",
 };
 
-/// Validates and returns redundant entries in the additional mime type map.
-/// It is used only for debugging purpose.
+/// Returns extensions whose value here equals `package:mime`'s default —
+/// pure duplicates, safe to delete. Intentional overrides (where our
+/// value differs from the SDK) are excluded. For debugging only.
 List<String> validateMimeTypes() {
-  final redundancy = <String>[];
-  for (final ext in _mimeMap.keys)
-    if (lookupMimeType(".$ext") != null)
-      redundancy.add(ext);
-  return redundancy;
+  final duplicates = <String>[];
+  for (final entry in _mimeMap.entries)
+    if (lookupMimeType(".${entry.key}") == entry.value)
+      duplicates.add(entry.key);
+  return duplicates;
 }

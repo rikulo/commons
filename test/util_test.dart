@@ -77,4 +77,35 @@ void main() {
     expect(d2 - Duration(hours: 24), d1);
     expect(d2 | d1, Duration(hours: 24));
   });
+
+  test("getMimeType", () {
+    expect(getMimeType('new.xml'), 'application/xml; charset=utf-8');
+    expect(getMimeType('new.xml', autoUtf8: false), 'application/xml');
+    expect(getMimeType('xml'), 'application/xml; charset=utf-8');
+    expect(getMimeType('block/new.xml?ab.def'), 'application/xml; charset=utf-8');
+  });
+
+  test("getMimeType strips query at first '?'", () {
+    expect(getMimeType("foo.js?return=https://x.com?p=1"),
+        "text/javascript; charset=utf-8");
+  });
+
+  test("getMimeType uses corrected mappings for jfif and pko", () {
+    expect(getMimeType("jfif"), "image/jpeg");
+    expect(getMimeType("pko"), "application/vnd.ms-pkipko");
+  });
+
+  test("getMimeType resolves modern formats", () {
+    expect(getMimeType("config.yaml"), "application/yaml; charset=utf-8");
+    expect(getMimeType("docker-compose.yml"), "application/yaml; charset=utf-8");
+    expect(getMimeType("song.opus"), "audio/opus");
+    expect(getMimeType("manifest.mpd"), "application/dash+xml; charset=utf-8");
+    expect(getMimeType("archive.tar.zst"), "application/zstd");
+  });
+
+  test("addMimeType registers custom extension", () {
+    addMimeType("xyzabc", "application/x-test-xyzabc");
+    expect(getMimeType("xyzabc"), "application/x-test-xyzabc");
+    expect(getMimeType("file.xyzabc"), "application/x-test-xyzabc");
+  });
 }

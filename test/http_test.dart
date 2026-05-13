@@ -7,7 +7,6 @@ import "dart:async";
 import "dart:convert";
 import 'package:test/test.dart';
 import "package:rikulo_commons/io.dart";
-import "package:rikulo_commons/util.dart";
 
 void main() {
   group("http tests", () {
@@ -81,16 +80,6 @@ void main() {
       expect(ctype.charset, "utf-8");
 
       expect(getContentType("jpg")!.charset, isNull);
-
-      expect(getMimeType('new.xml'), 'application/xml; charset=utf-8');
-      expect(getMimeType('new.xml', autoUtf8: false), 'application/xml');
-      expect(getMimeType('xml'), 'application/xml; charset=utf-8');
-
-      expect(getMimeType('block/new.xml?ab.def'), 'application/xml; charset=utf-8');
     });
-
-    final redundancy = validateMimeTypes(); //validate if any redundancy
-    if (redundancy.isNotEmpty)
-      print("Redundancy: ${redundancy.join(', ')}");
- });
+  });
 }

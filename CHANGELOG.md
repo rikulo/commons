@@ -7,6 +7,7 @@
 * `HttpUtil.decodeQuery()` now splits each parameter on the first `=` (previously the last), matching `Uri.splitQueryString` (#13).
 * `ajax()` asserts that callers pass either `data` or `body`, not both (#13).
 * Deprecated: `parseContentType` — use `ContentType.parse` directly.
+* `getMimeType()` recognizes `yaml`/`yml` (`application/yaml`, with UTF-8 charset), `opus` (`audio/opus`), `mpd` (`application/dash+xml`), and `zst` (`application/zstd`). Fixed: `jfif` now resolves to `image/jpeg` (was `image/pipeg`), `pko` to `application/vnd.ms-pkipko` (typo fix). Query-string stripping uses the first `?` (was last), matching RFC 3986.
 
 ### 7.3.1`
 
