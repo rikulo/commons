@@ -2,14 +2,15 @@
 
 ### 8.0.0
 
-* **Breaking**: `headAjax()` no longer accepts `data` or `body`. HEAD requests should not have a body (#12).
-* `ajax()` (and the `postAjax` / `putAjax` / `deleteAjax` / `headAjax` / `patchAjax` wrappers) accept an optional `timeout`. When exceeded, the underlying `HttpClient` is force-closed and `TimeoutException` is thrown, releasing the socket immediately (#11).
-* `HttpUtil.decodeQuery()` now splits each parameter on the first `=` (previously the last), matching `Uri.splitQueryString` (#13).
-* `ajax()` asserts that callers pass either `data` or `body`, not both (#13).
-* Deprecated: `parseContentType` — use `ContentType.parse` directly.
-* Deprecated: the entire `rikulo_mirrors` library (`Mirror`, `ClassUtil`, `ObjectUtil`, `NoSuchClassError`, `CoercionError`). Uses `dart:mirrors`, which is unsupported on AOT (Flutter) and web (dart2js). Consider `package:reflectable` or code generation.
-* Deprecated `Browser.ie`, `Browser.legacyEdge`, and `Browser.opera` — these detect retired browsers (Internet Explorer 2022, EdgeHTML Edge 2021, Presto Opera 2013).
-* `getMimeType()` recognizes `yaml`/`yml` (`application/yaml`, with UTF-8 charset), `opus` (`audio/opus`), `mpd` (`application/dash+xml`), and `zst` (`application/zstd`). Fixed: `jfif` now resolves to `image/jpeg` (was `image/pipeg`), `pko` to `application/vnd.ms-pkipko` (typo fix). Query-string stripping uses the first `?` (was last), matching RFC 3986.
+* **Breaking**: `headAjax()` no longer accepts `data` or `body` (#12).
+* `ajax()` and the method wrappers accept an optional `timeout`; on expiry the `HttpClient` is force-closed and `TimeoutException` is thrown (#11).
+* `HttpUtil.decodeQuery()` splits on the first `=` (was last) (#13).
+* `ajax()` asserts `data` and `body` are mutually exclusive (#13).
+* Deprecated `parseContentType` — use `ContentType.parse`.
+* Deprecated `rikulo_mirrors` (uses `dart:mirrors`, unsupported on AOT/web).
+* Deprecated `Browser.ie`, `Browser.legacyEdge`, `Browser.opera` (retired browsers).
+* Added `setRawInnerHtml(element, html, {textContent})` and `createRawHtml<T>(html, {textContent})`; deprecated `setUncheckedInnerHtml` and `createUncheckedHtml`.
+* `getMimeType()`: added `yaml`/`yml`, `opus`, `mpd`, `zst`; fixed `jfif` → `image/jpeg` and `pko` → `vnd.ms-pkipko`; query strip uses first `?` (RFC 3986).
 
 ### 7.3.1`
 
