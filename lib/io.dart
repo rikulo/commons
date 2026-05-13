@@ -7,7 +7,7 @@ library rikulo_io;
 import "dart:io";
 import "dart:async";
 import "dart:convert";
-import 'dart:typed_data';
+import "dart:typed_data";
 
 import "package:charcode/ascii.dart";
 

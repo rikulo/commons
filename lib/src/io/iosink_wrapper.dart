@@ -3,12 +3,11 @@
 // Author: tomyeh
 part of rikulo_io;
 
-/** The IOSink wrapper.
- *
- * Notice: it proxies every invocation to [origin]. Thus, if you'd like to
- * override [write] to write some other place, you have to override all
- * `add` and `write` methods (such as [writeln] and so on)
- */
+/// The IOSink wrapper.
+///
+/// Notice: it proxies every invocation to [origin]. Thus, if you'd like to
+/// override [write] to write some other place, you have to override all
+/// `add` and `write` methods (such as [writeln] and so on)
 class IOSinkWrapper extends StreamConsumerWrapper<List<int>> implements IOSink {
   /// Constructor.
   /// 
@@ -42,7 +41,7 @@ class IOSinkWrapper extends StreamConsumerWrapper<List<int>> implements IOSink {
   Future addStream(Stream<List<int>> stream) => origin.addStream(stream);
 
   @override
-  Future flush() => origin.close();
+  Future flush() => origin.flush();
   @override
   Future close() => origin.close();
   @override

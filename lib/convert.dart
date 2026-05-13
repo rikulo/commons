@@ -6,14 +6,13 @@ library rikulo_convert;
 import "dart:async";
 import "dart:convert";
 import "dart:io";
-import 'dart:typed_data';
+import "dart:typed_data";
 
 /// Reads the entire stream as a string using the given [Encoding].
 ///
-/// + [maxLength] the maximal allowed length.
-/// If omitted, no limitation at all.
-/// If specified and the input is more than allowed, [PayloadException]
-/// will be thrown.
+/// + [maxLength] — maximum allowed length.
+/// If null (default), no limit.
+/// If the input exceeds it, [PayloadException] is thrown.
 Future<String> readAsString(Stream<List<int>> stream, 
     {Encoding encoding = utf8, int? maxLength}) async {
   final result = BytesBuilder(copy: false);
@@ -28,19 +27,18 @@ Future<String> readAsString(Stream<List<int>> stream,
 }
 
 /// Reads the entire stream as a JSON string using the given [Encoding],
-/// and then convert to an object.
+/// and then converts to an object.
 ///
-/// + [maxLength] the maximal allowed length.
-/// If omitted, no limitation at all.
-/// If specified and the input is more than allowed, [PayloadException]
-/// will be thrown.
+/// + [maxLength] — maximum allowed length.
+/// If null (default), no limit.
+/// If the input exceeds it, [PayloadException] is thrown.
 Future<dynamic> readAsJson(Stream<List<int>> stream,
     {Encoding encoding = utf8, int? maxLength}) async
 => json.decode(await readAsString(stream,
       encoding: encoding, maxLength: maxLength));
 
-/// Exceptions thrown by [encodeAsString] and [encodeAsJson]
-/// to indicate if the input stream is larger than allowed.
+/// Exception thrown by [readAsString] and [readAsJson] when the input
+/// stream exceeds the allowed length.
 class PayloadException extends IOException {
   final String message;
 

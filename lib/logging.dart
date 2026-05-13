@@ -6,19 +6,22 @@ library rikulo_logging;
 import "dart:async" show Future;
 import "package:logging/logging.dart";
 
-/// A simple implementation of [Logger] handler.
-/// You can use it to configure your root logger,
-/// such as
+/// A simple handler for [Logger.onRecord], printing each record to stdout.
+///
+/// Use it to configure your root logger:
 ///
 ///     Logger("myorg").onRecord.listen(simpleLoggerHandler);
+///
+/// Note: printing is deferred via `Future(...)`, so records may be lost
+/// if the process crashes before the event loop drains.
 void simpleLoggerHandler(LogRecord record) {
   //for better response time, do it async (since the onRecord stream is sync)
   Future(() {
-    print("${record.time}:${record.loggerName}:${record.sequenceNumber}\n"
-      "${record.level}: ${record.message}");
-    if (record.error != null)
-      print("Cause: ${record.error}");
-    if (record.stackTrace != null)
-      print("${record.stackTrace}");
+    print([
+      "${record.time}:${record.loggerName}:${record.sequenceNumber}",
+      "${record.level}: ${record.message}",
+      if (record.error != null) "Cause: ${record.error}",
+      if (record.stackTrace != null) "${record.stackTrace}",
+    ].join("\n"));
   });
 }

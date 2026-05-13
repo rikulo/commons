@@ -271,12 +271,11 @@ class HttpResponseWrapper extends IOSinkWrapper implements HttpResponse {
   HttpConnectionInfo? get connectionInfo => origin.connectionInfo;
 }
 
-/** A skeletal implementation for buffered HTTP response,
- * that is, the output will be buffered.
- *
- * Notice that, unlike [HttpResponseWrapper], to override the output
- * target, you need to override only [add] and [write].
- */
+/// A skeletal implementation for buffered HTTP response,
+/// that is, the output will be buffered.
+///
+/// Notice that, unlike [HttpResponseWrapper], to override the output
+/// target, you need to override only [add] and [write].
 abstract class AbstractBufferedResponse extends HttpResponseWrapper {
   AbstractBufferedResponse(HttpResponse? origin): super(origin);
 
@@ -330,9 +329,8 @@ abstract class AbstractBufferedResponse extends HttpResponseWrapper {
   }
 }
 
-/** A buffered HTTP response that stores the output in the given string buffer
- * rather than the original `HttpResponse` instance.
- */
+/// A buffered HTTP response that stores the output in the given string buffer
+/// rather than the original `HttpResponse` instance.
 class StringBufferedResponse extends AbstractBufferedResponse {
   ///The buffer for holding the output (instead of [origin])
   final StringBuffer buffer;
@@ -348,9 +346,8 @@ class StringBufferedResponse extends AbstractBufferedResponse {
   }
 }
 
-/** A buffered HTTP response that stores the output in the given list of bytes
- * buffer rather than the original `HttpResponse` instance.
- */
+/// A buffered HTTP response that stores the output in the given list of bytes
+/// buffer rather than the original `HttpResponse` instance.
 class BufferedResponse extends AbstractBufferedResponse {
   ///The buffer for holding the output (instead of [origin]).
   ///It is a list of bytes.
@@ -363,19 +360,13 @@ class BufferedResponse extends AbstractBufferedResponse {
   }
   @override
   void write(Object? obj) {
-    if (obj is num) {
-      buffer.add(obj.toInt());
-    } else {
-      final String str = obj is String ? obj: obj.toString();
-      if (str.isNotEmpty)
-        buffer.addAll(encoding.encode(str));
-    }
+    String string = '$obj';
+    if (string.isEmpty) return;
+    add(encoding.encode(string));
   }
 }
 
-/**
- * The HTTP headers wrapper.
- */
+/// The HTTP headers wrapper.
 class HttpHeadersWrapper implements HttpHeaders {
   /// Constructor.
   /// 
