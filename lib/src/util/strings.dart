@@ -84,7 +84,7 @@ String camelize(String name) {
   return sb != null ? (sb..write(name.substring(k))).toString(): name;
 }
 
-/// Uncamelizes the give string.
+/// Uncamelizes the given string.
 /// For example, `backgroundColor' => `background-color`.
 String uncamelize(String name) {
   StringBuffer? sb;

@@ -3,8 +3,8 @@
 // Author: tomyeh
 part of rikulo_io;
 
-/// Returns [ContentType] of the specified [path], or null
-/// if not fund.
+/// Returns [ContentType] of the specified [path], or `null`
+/// if not found.
 ///
 /// For example,
 ///
@@ -16,8 +16,8 @@ part of rikulo_io;
 ///
 /// - [isExtension] whether [path] is an extension, e.g., "js".
 /// If not specified (i.e., null), extension is assumed if
-/// it doesn't contain '.' nor '/'/
-/// - [autoUtf8] whether to append "; charset=utf-8" when detecing
+/// it doesn't contain '.' nor '/'.
+/// - [autoUtf8] whether to append "; charset=utf-8" when detecting
 /// a text mime type.
 ContentType? getContentType(String? path,
     {List<int>? headerBytes, bool? isExtension, bool autoUtf8 = true}) {

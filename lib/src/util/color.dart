@@ -285,9 +285,9 @@ class HsvColor implements Color {
   String toString() => "hsv($hue, $saturation, $value, $alpha)";
 }
 
-///The white color
+/// The black color
 const black = Color(0, 0, 0);
-///The black color
+/// The white color
 const white = Color(0xff, 0xff, 0xff);
 const Map<String, Color>_stdcolors = {
   "aqua": Color(0, 0xff, 0xff),

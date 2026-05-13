@@ -5,7 +5,7 @@ part of rikulo_util;
 
 /// Retrieves the mime type from the given [path] and, optional,
 /// header bytes ([headerBytes]).
-/// It returns null if not fund.
+/// It returns `null` if not found.
 ///
 /// For example,
 ///
@@ -17,8 +17,8 @@ part of rikulo_util;
 ///
 /// - [isExtension] whether [path] is an extension, e.g., "js".
 /// If not specified (i.e., null), extension is assumed if
-/// it doesn't contain '.' nor '/'/
-/// - [autoUtf8] whether to append "; charset=utf-8" when detecing
+/// it doesn't contain '.' nor '/'.
+/// - [autoUtf8] whether to append "; charset=utf-8" when detecting
 /// a text mime type.
 String? getMimeType(String? path,
     {List<int>? headerBytes, bool? isExtension, bool autoUtf8 = true}) {
@@ -47,7 +47,7 @@ const _textSubtypes = <String> {
 };
 
 /**
- * Adds additonal mime type for the given extension.
+ * Adds additional mime type for the given extension.
  * Note: it overrides the system default if any.
  * 
  * Example:
@@ -160,7 +160,7 @@ const _mimeMap = {
   "xll": "application/vnd.ms-excel",
 };
 
-/// Validates and returns redundancy in mime additional map.
+/// Validates and returns redundant entries in the additional mime type map.
 /// It is used only for debugging purpose.
 List<String> validateMimeTypes() {
   final redundancy = <String>[];

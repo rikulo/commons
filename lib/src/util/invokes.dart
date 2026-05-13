@@ -3,7 +3,7 @@
 // Author: tomyeh
 part of rikulo_util;
 
-/// Utilities related to invoations.
+/// Utilities related to invocations.
 class InvokeUtil {
   /// Invokes the given function safely.
   /// By safely, we mean it will catch all exceptions and ignore them.

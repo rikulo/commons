@@ -22,7 +22,7 @@ class ObjectUtil {
    * If not specified, the exception won't be caught.
    * * [onSetterError] - used to handle the error thrown by a setter.
    * If not specified, the exception won't be caught.
-   ** [validate] - used to validate if the coerced value can be assigned.
+   * * [validate] - used to validate if the coerced value can be assigned.
    * * [silent] - whether to ignore if no field matches the keys of the given
    * values.
    * If false (default), an exception will be thrown.

@@ -14,7 +14,7 @@ Rikulo Commons is distributed under an Apache 2.0 License.
 Add this to your `pubspec.yaml` (or create it):
 
     dependencies:
-      rikulo_commmons:
+      rikulo_commons:
 
 ## Run on Client and/or Server
 
@@ -62,12 +62,12 @@ Add this to your `pubspec.yaml` (or create it):
 
 If you'd like to contribute back to the core, you can [fork this repository](https://help.github.com/articles/fork-a-repo) and send us a pull request, when it is ready.
 
-Please be aware that one of Rikulo's design goals is to keep the sphere of API as neat and consistency as possible. Strong enhancement always demands greater consensus.
+Please be aware that one of Rikulo's design goals is to keep the API surface as neat and consistent as possible. Major enhancements always demand greater consensus.
 
 If you are new to Git or GitHub, please read [this guide](https://help.github.com/) first.
 
 ## Who Uses
 
 * [Quire](https://quire.io) - a simple, collaborative, multi-level task management tool.
-* [Keikai](https://keikai.io) - a sophisticated spreadsheet for big data
-* [Ottava](https://ottava.io) - a no-code data analysis tool
+* [Keikai](https://keikai.io) - a sophisticated spreadsheet for big data.
+* [Ottava](https://ottava.io) - a no-code data analysis tool.

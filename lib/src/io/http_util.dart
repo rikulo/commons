@@ -7,7 +7,7 @@ part of rikulo_io;
 const String dartSessionId = "DARTSESSID";
 
 /// Sends an Ajax request to the given [url].
-/// It returns the data received, or null if error.
+/// Returns the data received, or `null` on error.
 ///
 /// To send data in `List<int>, pass it via [data].
 /// To send in String, pass it via [body].
@@ -175,7 +175,7 @@ class HttpUtil {
     }
     return parameters;
   }
-  /** Encodes the given paramters into a query string.
+  /** Encodes the given parameters into a query string.
    * Notice the returned string won't start with `'?'`.
    *
    * The value of a parameter will be converted to a string first.

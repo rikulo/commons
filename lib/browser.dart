@@ -52,12 +52,12 @@ abstract class Browser {
   bool android = false;
   /// Whether it is running on MacOS.
   bool macOS = false;
-  /// Whether it is runnon on Linux
+  /// Whether it is running on Linux
   bool linux = false;
-  /// Whether it is runnon on Windows
+  /// Whether it is running on Windows
   bool windows = false;
 
-  /** Whehter it is running on a mobile device.
+  /** Whether it is running on a mobile device.
    * By mobile we mean the browser takes the full screen and non-sizable.
    * If false, the browser is assumed to run on a desktop and
    * it can be resized by the user.
@@ -121,7 +121,7 @@ abstract class Browser {
       } else if (bm(_rsafari)) { //after chrome
         safari = true;
       }
-      //opera, firefox for iOS all based on ApplieWebKit, but
+      //opera, firefox for iOS all based on AppleWebKit, but
       //we consider them as webkit (than firefox or opera)
     } else if (bm(_rie) || bm(_rie2)) {
       ie = true;

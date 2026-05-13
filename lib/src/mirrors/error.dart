@@ -13,7 +13,7 @@ class NoSuchClassError implements Exception {
   String toString() => (message == null) ? "No such class" : "No such class: $message";
 }
 
-/// Exception thrown because of failed to coerce an object to the target type.
+/// Exception thrown when an object cannot be coerced to the target type.
 class CoercionError implements Exception {
   final message;
   final targetType;
