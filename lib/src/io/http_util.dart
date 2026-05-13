@@ -105,10 +105,10 @@ Future<List<int>?> deleteAjax(Uri url, {
 
 /// Sends an Ajax request to the given [url] using the HEAD method.
 Future<List<int>?> headAjax(Uri url, {
-    List<int>? data, String? body, Map<String, String>? headers,
+    Map<String, String>? headers,
     bool? onResponse(HttpClientResponse response)?,
     Duration? timeout})
-=> ajax(url, method: "HEAD", data: data, body: body,
+=> ajax(url, method: "HEAD",
     headers: headers, onResponse: onResponse, timeout: timeout);
 
 /// Sends an Ajax request to the given [url] using the PATCH method.

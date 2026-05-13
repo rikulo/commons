@@ -1,5 +1,9 @@
 # Rikulo Commons Changes
 
+### 8.0.0
+
+* **Breaking**: `headAjax()` no longer accepts `data` or `body`. HEAD requests should not have a body (#12).
+
 ### 7.4.0
 
 * `ajax()` (and the `postAjax` / `putAjax` / `deleteAjax` / `headAjax` / `patchAjax` wrappers) accept an optional `timeout`. When exceeded, the underlying `HttpClient` is force-closed and `TimeoutException` is thrown, releasing the socket immediately (#11).
