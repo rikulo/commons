@@ -2,6 +2,7 @@
 //History: Tue, Oct 01, 2012 09:43:17 AM
 // Author: henrichen
 
+@Deprecated('rikulo_mirrors uses dart:mirrors and is unsupported on AOT/web. Consider package:reflectable or code generation.')
 library rikulo_mirrors;
 
 import "dart:mirrors";

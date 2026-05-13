@@ -1,9 +1,11 @@
 //Copyright (C) 2012 Potix Corporation. All Rights Reserved.
 //History: Mon, Sep 03, 2012  02:51:12 PM
 // Author: hernichen
+// ignore_for_file: deprecated_member_use_from_same_package
 
 part of rikulo_mirrors;
 
+@Deprecated('rikulo_mirrors uses dart:mirrors and is unsupported on AOT/web. Consider package:reflectable or code generation.')
 class Mirror {
   static final ClassMirror
     List = ClassUtil.forName("dart.core.List"),
@@ -22,6 +24,7 @@ class Mirror {
 }
 
 /// Utility class used with Mirror.
+@Deprecated('rikulo_mirrors uses dart:mirrors and is unsupported on AOT/web. Consider package:reflectable or code generation.')
 class ClassUtil {
   /**
    * Return the ClassMirror of the qualified class name

@@ -1,10 +1,12 @@
 //Copyright (C) 2013 Potix Corporation. All Rights Reserved.
 //History: Tue, Feb 19, 2013 12:33:05 PM
 // Author: tomyeh
+// ignore_for_file: deprecated_member_use_from_same_package
 
 part of rikulo_mirrors;
 
 /// Object utilities used with mirrors.
+@Deprecated('rikulo_mirrors uses dart:mirrors and is unsupported on AOT/web. Consider package:reflectable or code generation.')
 class ObjectUtil {
   /** Injects the given values into the given object.
    *

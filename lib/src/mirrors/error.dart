@@ -4,7 +4,8 @@
 
 part of rikulo_mirrors;
 
-/// Exception thrown because of non-existing class
+/// Exception thrown because of non-existing class.
+@Deprecated('rikulo_mirrors uses dart:mirrors and is unsupported on AOT/web. Consider package:reflectable or code generation.')
 class NoSuchClassError implements Exception {
   final message;
   const NoSuchClassError([this.message]);
@@ -14,6 +15,7 @@ class NoSuchClassError implements Exception {
 }
 
 /// Exception thrown when an object cannot be coerced to the target type.
+@Deprecated('rikulo_mirrors uses dart:mirrors and is unsupported on AOT/web. Consider package:reflectable or code generation.')
 class CoercionError implements Exception {
   final message;
   final targetType;
