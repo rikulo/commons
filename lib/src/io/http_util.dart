@@ -36,7 +36,6 @@ Future<List<int>?> ajax(Uri url, {String method = "GET",
     bool? onResponse(HttpClientResponse response)?,
     Duration? timeout}) {
   final client = HttpClient();
-  if (timeout != null) client.connectionTimeout = timeout;
 
   Future<List<int>?> doIt() async {
     try {
