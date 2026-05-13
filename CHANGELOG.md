@@ -1,5 +1,9 @@
 # Rikulo Commons Changes
 
+### 7.4.0
+
+* `ajax()` (and the `postAjax` / `putAjax` / `deleteAjax` / `headAjax` / `patchAjax` wrappers) accept an optional `timeout`. When exceeded, the underlying `HttpClient` is force-closed and `TimeoutException` is thrown, releasing the socket immediately (#11).
+
 ### 7.3.1`
 
 * `XmlUtil.encode` encodes `'` and `XmlUtil.decode` decodes `&apos;`

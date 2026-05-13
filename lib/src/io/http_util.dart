@@ -8,90 +8,117 @@ const String dartSessionId = "DARTSESSID";
 
 /// Sends an Ajax request to the given [url].
 /// It returns the data received, or null if error.
-/// 
+///
 /// To send data in `List<int>, pass it via [data].
 /// To send in String, pass it via [body].
-/// 
+///
 /// * [onResponse] used to retrieve the status code,
 /// the response's headers, or force [ajax] to return the body.
 /// Ignored if not specified.
-/// 
+///
 /// Notice that, by default, [ajax] returns null if the status code
 /// is not between 200 and 299 (see [isHttpStatusOK]). That is, by default,
 /// [ajax] ignores the body if the status code indicates an error.
-/// 
+///
 /// If the error description will be in the request's body, you have
 /// to specify [onResponse] with a callback returning true.
 /// On the other hand, if [onResponse] returns false, [ajax] will ignore
 /// the body, and returns null.
 /// If [onResponse] returns null, it is handled as default (as described
 /// above).
+///
+/// * [timeout] bounds the entire request — connect, send, response,
+/// and body read. If exceeded, the underlying [HttpClient] is force-closed
+/// (releasing the socket immediately) and [TimeoutException] is thrown.
+/// If null (default), there is no timeout.
 Future<List<int>?> ajax(Uri url, {String method = "GET",
     List<int>? data, String? body, Map<String, String>? headers,
-    bool? onResponse(HttpClientResponse response)?}) async {
+    bool? onResponse(HttpClientResponse response)?,
+    Duration? timeout}) {
   final client = HttpClient();
-  try {
-    final xhr = await client.openUrl(method, url);
-    headers?.forEach(xhr.headers.add);
+  if (timeout != null) client.connectionTimeout = timeout;
 
-    if (data != null) xhr.add(data);
-    if (body != null) xhr.write(body);
+  Future<List<int>?> doIt() async {
+    try {
+      final xhr = await client.openUrl(method, url);
+      headers?.forEach(xhr.headers.add);
 
-    final resp = await xhr.close(),
-      statusCode = resp.statusCode;
+      if (data != null) xhr.add(data);
+      if (body != null) xhr.write(body);
 
-    if (!(onResponse?.call(resp) ?? isHttpStatusOK(statusCode))) {
-      // Always discard the body so the connection can finish cleanly.
-      await resp.drain();
-      return null;
+      final resp = await xhr.close(),
+        statusCode = resp.statusCode;
+
+      if (!(onResponse?.call(resp) ?? isHttpStatusOK(statusCode))) {
+        // Always discard the body so the connection can finish cleanly.
+        await resp.drain();
+        return null;
+      }
+
+      // Read the whole body.
+      final result = BytesBuilder(copy: false);
+      await for (final chunk in resp) {
+        result.add(chunk);
+      }
+      return result.takeBytes();
+
+    } finally {
+      InvokeUtil.invokeSafely(client.close);
     }
-
-    // Read the whole body.
-    final result = BytesBuilder(copy: false);
-    await for (final chunk in resp) {
-      result.add(chunk);
-    }
-    return result.takeBytes();
-
-  } finally {
-    InvokeUtil.invokeSafely(client.close);
   }
+
+  final inner = doIt();
+  if (timeout == null) return inner;
+
+  return inner.timeout(timeout, onTimeout: () {
+    //force-close so the in-flight socket is released immediately
+    //(otherwise the connection would linger until the OS-level TCP timeout).
+    client.close(force: true);
+    //after force-close, `inner` will error out late — suppress it
+    inner.ignore();
+    throw TimeoutException('ajax($method $url)', timeout);
+  });
 }
 
 /// Sends an Ajax request to the given [url] using the POST method.
 Future<List<int>?> postAjax(Uri url, {
     List<int>? data, String? body, Map<String, String>? headers,
-    bool? onResponse(HttpClientResponse response)?})
+    bool? onResponse(HttpClientResponse response)?,
+    Duration? timeout})
 => ajax(url, method: "POST", data: data, body: body,
-    headers: headers, onResponse: onResponse);
+    headers: headers, onResponse: onResponse, timeout: timeout);
 
 /// Sends an Ajax request to the given [url] using the PUT method.
 Future<List<int>?> putAjax(Uri url, {
     List<int>? data, String? body, Map<String, String>? headers,
-    bool? onResponse(HttpClientResponse response)?})
+    bool? onResponse(HttpClientResponse response)?,
+    Duration? timeout})
 => ajax(url, method: "PUT", data: data, body: body,
-    headers: headers, onResponse: onResponse);
+    headers: headers, onResponse: onResponse, timeout: timeout);
 
 /// Sends an Ajax request to the given [url] using the DELETE method.
 Future<List<int>?> deleteAjax(Uri url, {
     List<int>? data, String? body, Map<String, String>? headers,
-    bool? onResponse(HttpClientResponse response)?})
+    bool? onResponse(HttpClientResponse response)?,
+    Duration? timeout})
 => ajax(url, method: "DELETE", data: data, body: body,
-    headers: headers, onResponse: onResponse);
+    headers: headers, onResponse: onResponse, timeout: timeout);
 
 /// Sends an Ajax request to the given [url] using the HEAD method.
 Future<List<int>?> headAjax(Uri url, {
     List<int>? data, String? body, Map<String, String>? headers,
-    bool? onResponse(HttpClientResponse response)?})
+    bool? onResponse(HttpClientResponse response)?,
+    Duration? timeout})
 => ajax(url, method: "HEAD", data: data, body: body,
-    headers: headers, onResponse: onResponse);
+    headers: headers, onResponse: onResponse, timeout: timeout);
 
 /// Sends an Ajax request to the given [url] using the PATCH method.
 Future<List<int>?> patchAjax(Uri url, {
     List<int>? data, String? body, Map<String, String>? headers,
-    bool? onResponse(HttpClientResponse response)?})
+    bool? onResponse(HttpClientResponse response)?,
+    Duration? timeout})
 => ajax(url, method: "PATCH", data: data, body: body,
-    headers: headers, onResponse: onResponse);
+    headers: headers, onResponse: onResponse, timeout: timeout);
 
 /// HTTP related utilities
 class HttpUtil {
