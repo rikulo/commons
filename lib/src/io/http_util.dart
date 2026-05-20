@@ -42,10 +42,17 @@ Future<List<int>?> ajax(Uri url, {String method = "GET",
   Future<List<int>?> doIt() async {
     try {
       final xhr = await client.openUrl(method, url);
-      headers?.forEach(xhr.headers.add);
+      //Use `set` (not `add`) so caller-supplied headers replace Dart's
+      //defaults, matching package:http's IOClient.send.
+      headers?.forEach(xhr.headers.set);
 
-      if (data != null) xhr.add(data);
-      if (body != null) xhr.write(body);
+      //Send fixed-length (matches package:http) instead of
+      //`Transfer-Encoding: chunked`, which some endpoints (e.g. S3 PUT
+      //under SigV2) reject. Length is always known: 0 when no body.
+      final List<int> bytes = data
+          ?? (body != null ? utf8.encode(body): const <int>[]);
+      xhr.contentLength = bytes.length;
+      if (bytes.isNotEmpty) xhr.add(bytes);
 
       final resp = await xhr.close(),
         statusCode = resp.statusCode;
