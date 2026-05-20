@@ -1,5 +1,10 @@
 # Rikulo Commons Changes
 
+### 8.0.1
+
+* `ajax()` matches `package:http`'s `IOClient.send`: fixed-length body
+  (sets `Content-Length`) and headers applied via `set` (not `add`).
+
 ### 8.0.0
 
 * **Breaking**: `headAjax()` no longer accepts `data` or `body` (#12).
