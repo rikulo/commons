@@ -6,70 +6,42 @@ part of rikulo_io;
 /// The cookie's name for holding Dart session ID.
 const String dartSessionId = "DARTSESSID";
 
-/// Sends an Ajax request to the given [url].
-/// Returns the data received, or `null` on error.
+/// Sends an Ajax request to the given [url] and returns the response.
 ///
-/// To send data in `List<int>`, pass it via [data].
-/// To send in String, pass it via [body].
+/// Same semantics as the top-level functions in `package:http`
+/// (`http.get`, `http.put`, …): the body is buffered into the returned
+/// `http.Response` (see `bodyBytes` and `body`). The caller inspects
+/// `statusCode` and decides what to do.
 ///
-/// * [onResponse] used to retrieve the status code,
-/// the response's headers, or force [ajax] to return the body.
-/// Ignored if not specified.
-///
-/// Notice that, by default, [ajax] returns null if the status code
-/// is not between 200 and 299 (see [isHttpStatusOK]). That is, by default,
-/// [ajax] ignores the body if the status code indicates an error.
-///
-/// If the error description will be in the request's body, you have
-/// to specify [onResponse] with a callback returning true.
-/// On the other hand, if [onResponse] returns false, [ajax] will ignore
-/// the body, and returns null.
-/// If [onResponse] returns null, it is handled as default (as described
-/// above).
+/// To send bytes, pass them via [data]; to send a string, pass [body].
 ///
 /// * [timeout] bounds the entire request — connect, send, response,
 /// and body read. If exceeded, the underlying [HttpClient] is force-closed
 /// (releasing the socket immediately) and [TimeoutException] is thrown.
-/// If null (default), there is no timeout.
-Future<List<int>?> ajax(Uri url, {String method = "GET",
+/// If null (default), there is no timeout. This is the one capability
+/// that `package:http`'s top-level functions cannot provide on their
+/// own — they construct an internal `Client` and give no handle to
+/// force-close.
+Future<http.Response> ajax(Uri url, {String method = "GET",
     List<int>? data, String? body, Map<String, String>? headers,
-    bool? Function(HttpClientResponse response)? onResponse,
     Duration? timeout}) {
   assert(data == null || body == null,
       'pass either `data` or `body`, not both');
-  final client = HttpClient();
 
-  Future<List<int>?> doIt() async {
+  //Own the HttpClient so we can force-close on timeout (releasing the
+  //in-flight socket immediately). IOClient.close() only does a graceful
+  //close, which is why package:http alone can't provide hard timeouts.
+  final httpClient = HttpClient();
+  final client = http_io.IOClient(httpClient);
+
+  Future<http.Response> doIt() async {
     try {
-      final xhr = await client.openUrl(method, url);
-      //Use `set` (not `add`) so caller-supplied headers replace Dart's
-      //defaults, matching package:http's IOClient.send.
-      headers?.forEach(xhr.headers.set);
+      final request = http.Request(method, url);
+      if (data != null) request.bodyBytes = data;
+      else if (body != null) request.body = body;
+      headers?.forEach((k, v) => request.headers[k] = v);
 
-      //Send fixed-length (matches package:http) instead of
-      //`Transfer-Encoding: chunked`, which some endpoints (e.g. S3 PUT
-      //under SigV2) reject. Length is always known: 0 when no body.
-      final List<int> bytes = data
-          ?? (body != null ? utf8.encode(body): const <int>[]);
-      xhr.contentLength = bytes.length;
-      if (bytes.isNotEmpty) xhr.add(bytes);
-
-      final resp = await xhr.close(),
-        statusCode = resp.statusCode;
-
-      if (!(onResponse?.call(resp) ?? isHttpStatusOK(statusCode))) {
-        // Always discard the body so the connection can finish cleanly.
-        await resp.drain();
-        return null;
-      }
-
-      // Read the whole body.
-      final result = BytesBuilder(copy: false);
-      await for (final chunk in resp) {
-        result.add(chunk);
-      }
-      return result.takeBytes();
-
+      return await http.Response.fromStream(await client.send(request));
     } finally {
       InvokeUtil.invokeSafely(client.close);
     }
@@ -79,54 +51,99 @@ Future<List<int>?> ajax(Uri url, {String method = "GET",
   if (timeout == null) return inner;
 
   return inner.timeout(timeout, onTimeout: () {
-    //force-close so the in-flight socket is released immediately
-    //(otherwise the connection would linger until the OS-level TCP timeout).
-    client.close(force: true);
-    //after force-close, `inner` will error out late — suppress it
+    httpClient.close(force: true);
     inner.ignore();
     throw TimeoutException('ajax($method $url)', timeout);
   });
 }
 
 /// Sends an Ajax request to the given [url] using the POST method.
-Future<List<int>?> postAjax(Uri url, {
+Future<http.Response> postAjax(Uri url, {
     List<int>? data, String? body, Map<String, String>? headers,
-    bool? Function(HttpClientResponse response)? onResponse,
     Duration? timeout})
 => ajax(url, method: "POST", data: data, body: body,
-    headers: headers, onResponse: onResponse, timeout: timeout);
+    headers: headers, timeout: timeout);
 
 /// Sends an Ajax request to the given [url] using the PUT method.
-Future<List<int>?> putAjax(Uri url, {
+Future<http.Response> putAjax(Uri url, {
     List<int>? data, String? body, Map<String, String>? headers,
-    bool? Function(HttpClientResponse response)? onResponse,
     Duration? timeout})
 => ajax(url, method: "PUT", data: data, body: body,
-    headers: headers, onResponse: onResponse, timeout: timeout);
+    headers: headers, timeout: timeout);
 
 /// Sends an Ajax request to the given [url] using the DELETE method.
-Future<List<int>?> deleteAjax(Uri url, {
+Future<http.Response> deleteAjax(Uri url, {
     List<int>? data, String? body, Map<String, String>? headers,
-    bool? Function(HttpClientResponse response)? onResponse,
     Duration? timeout})
 => ajax(url, method: "DELETE", data: data, body: body,
-    headers: headers, onResponse: onResponse, timeout: timeout);
+    headers: headers, timeout: timeout);
 
 /// Sends an Ajax request to the given [url] using the HEAD method.
-Future<List<int>?> headAjax(Uri url, {
+Future<http.Response> headAjax(Uri url, {
     Map<String, String>? headers,
-    bool? Function(HttpClientResponse response)? onResponse,
     Duration? timeout})
 => ajax(url, method: "HEAD",
-    headers: headers, onResponse: onResponse, timeout: timeout);
+    headers: headers, timeout: timeout);
 
 /// Sends an Ajax request to the given [url] using the PATCH method.
-Future<List<int>?> patchAjax(Uri url, {
+Future<http.Response> patchAjax(Uri url, {
     List<int>? data, String? body, Map<String, String>? headers,
-    bool? Function(HttpClientResponse response)? onResponse,
     Duration? timeout})
 => ajax(url, method: "PATCH", data: data, body: body,
-    headers: headers, onResponse: onResponse, timeout: timeout);
+    headers: headers, timeout: timeout);
+
+/// Sends a request with a streamed body and returns the response.
+///
+/// The streaming counterpart to [ajax]. Instead of buffering the body
+/// up front, the caller writes bytes into the [sink] argument passed
+/// to [send]. The sink is closed automatically when [send] returns
+/// (or throws). Mirrors `package:http`'s `StreamedRequest`.
+///
+/// * [contentLength] — when known up front, set it so the outbound
+/// request is sent fixed-length. If omitted, the request is sent
+/// `Transfer-Encoding: chunked` (some endpoints, e.g. S3 PUT under
+/// SigV2, reject chunked bodies).
+///
+/// * [timeout] — bounds the entire request. If exceeded, the underlying
+/// [HttpClient] is force-closed and [TimeoutException] is thrown.
+Future<http.Response> streamedAjax(Uri url,
+    Future Function(EventSink<List<int>> sink) send,
+    {String method = "GET", Map<String, String>? headers,
+     int? contentLength, Duration? timeout}) {
+  final httpClient = HttpClient();
+  final client = http_io.IOClient(httpClient);
+
+  Future<http.Response> doIt() async {
+    try {
+      final request = http.StreamedRequest(method, url);
+      headers?.forEach((k, v) => request.headers[k] = v);
+      if (contentLength != null) request.contentLength = contentLength;
+
+      //Start sending the request; client.send awaits the response after
+      //fully consuming the body stream we feed via `request.sink`.
+      final responseFuture = client.send(request);
+      //Silence unhandled-error report if `send` throws before we await below.
+      responseFuture.ignore();
+      try {
+        await send(request.sink);
+      } finally {
+        request.sink.close();
+      }
+      return await http.Response.fromStream(await responseFuture);
+    } finally {
+      InvokeUtil.invokeSafely(client.close);
+    }
+  }
+
+  final inner = doIt();
+  if (timeout == null) return inner;
+
+  return inner.timeout(timeout, onTimeout: () {
+    httpClient.close(force: true);
+    inner.ignore();
+    throw TimeoutException('streamedAjax($method $url)', timeout);
+  });
+}
 
 /// HTTP related utilities
 class HttpUtil {
