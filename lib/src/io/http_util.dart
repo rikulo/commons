@@ -8,23 +8,27 @@ const String dartSessionId = "DARTSESSID";
 
 /// Sends an Ajax request to the given [url] and returns the response.
 ///
-/// Same semantics as the top-level functions in `package:http`
-/// (`http.get`, `http.put`, …): the body is buffered into the returned
-/// `http.Response` (see `bodyBytes` and `body`). The caller inspects
-/// `statusCode` and decides what to do.
-///
-/// To send bytes, pass them via [data]; to send a string, pass [body].
+/// Same semantics as `package:http`'s top-level functions (`http.get`,
+/// `http.put`, …): body is buffered into the returned [http.Response].
+/// Pass bytes via [data] or a string via [body].
 ///
 /// * [timeout] bounds the entire request — connect, send, response,
-/// and body read. If exceeded, the underlying [HttpClient] is force-closed
-/// (releasing the socket immediately) and [TimeoutException] is thrown.
-/// If null (default), there is no timeout. This is the one capability
-/// that `package:http`'s top-level functions cannot provide on their
-/// own — they construct an internal `Client` and give no handle to
-/// force-close.
+/// and body read. If exceeded, the underlying [HttpClient] is
+/// force-closed (releasing the socket immediately) and
+/// [TimeoutException] is thrown. `package:http`'s top-level functions
+/// cannot do this — they construct an internal `Client` and give no
+/// handle to force-close.
 Future<http.Response> ajax(Uri url, {String method = "GET",
     List<int>? data, String? body, Map<String, String>? headers,
-    Duration? timeout}) {
+    Duration? timeout})
+=> _ajax(url, method: method, data: data, body: body, headers: headers,
+    timeout: timeout, getResponse: http.Response.fromStream);
+
+Future<http.Response> _ajax(Uri url, {String method = "GET",
+    List<int>? data, String? body, Map<String, String>? headers,
+    Duration? timeout,
+    required Future<http.Response> Function(http.StreamedResponse resp)
+        getResponse}) {
   assert(data == null || body == null,
       'pass either `data` or `body`, not both');
 
@@ -37,11 +41,13 @@ Future<http.Response> ajax(Uri url, {String method = "GET",
   Future<http.Response> doIt() async {
     try {
       final request = http.Request(method, url);
+      //Apply headers before setting body so that `request.body = ...`
+      //picks up any caller-supplied Content-Type charset for encoding.
+      headers?.forEach((k, v) => request.headers[k] = v);
       if (data != null) request.bodyBytes = data;
       else if (body != null) request.body = body;
-      headers?.forEach((k, v) => request.headers[k] = v);
 
-      return await http.Response.fromStream(await client.send(request));
+      return await getResponse(await client.send(request));
     } finally {
       InvokeUtil.invokeSafely(client.close);
     }
@@ -78,13 +84,6 @@ Future<http.Response> deleteAjax(Uri url, {
 => ajax(url, method: "DELETE", data: data, body: body,
     headers: headers, timeout: timeout);
 
-/// Sends an Ajax request to the given [url] using the HEAD method.
-Future<http.Response> headAjax(Uri url, {
-    Map<String, String>? headers,
-    Duration? timeout})
-=> ajax(url, method: "HEAD",
-    headers: headers, timeout: timeout);
-
 /// Sends an Ajax request to the given [url] using the PATCH method.
 Future<http.Response> patchAjax(Uri url, {
     List<int>? data, String? body, Map<String, String>? headers,
@@ -92,12 +91,53 @@ Future<http.Response> patchAjax(Uri url, {
 => ajax(url, method: "PATCH", data: data, body: body,
     headers: headers, timeout: timeout);
 
+/// Sends an Ajax request to the given [url] using the HEAD method.
+///
+/// Unlike [ajax], the returned [http.Response.contentLength] reflects
+/// the wire's `Content-Length` header — `http.Response.fromStream`
+/// would otherwise report `0` for HEAD (the body is empty by
+/// definition).
+Future<http.Response> headAjax(Uri url, {
+    Map<String, String>? headers,
+    Duration? timeout})
+=> _ajax(url, method: "HEAD", headers: headers, timeout: timeout,
+    getResponse: _headResponse);
+
+Future<http.Response> _headResponse(http.StreamedResponse resp) async {
+  await resp.stream.drain();
+  return _WireLengthResponse(const [], resp.statusCode,
+      wireContentLength: resp.contentLength,
+      request: resp.request,
+      headers: resp.headers,
+      isRedirect: resp.isRedirect,
+      persistentConnection: resp.persistentConnection,
+      reasonPhrase: resp.reasonPhrase);
+}
+
+class _WireLengthResponse extends http.Response {
+  final int? _wireContentLength;
+  _WireLengthResponse(super.bodyBytes, super.statusCode, {
+    required int? wireContentLength,
+    super.request, super.headers, super.isRedirect,
+    super.persistentConnection, super.reasonPhrase,
+  }) : _wireContentLength = wireContentLength,
+       super.bytes();
+  @override
+  int? get contentLength => _wireContentLength;
+}
+
 /// Sends a request with a streamed body and returns the response.
 ///
-/// The streaming counterpart to [ajax]. Instead of buffering the body
-/// up front, the caller writes bytes into the [sink] argument passed
-/// to [send]. The sink is closed automatically when [send] returns
-/// (or throws). Mirrors `package:http`'s `StreamedRequest`.
+/// The streaming counterpart to [ajax]: instead of buffering the
+/// request body up front, the caller writes bytes into the
+/// [EventSink] passed to [send] (e.g. by piping an inbound HTTP
+/// request stream via `package:stream`'s `copyToSink`). The sink is
+/// closed automatically when [send] returns or throws.
+///
+/// HEAD is not supported — use [headAjax] instead. This function
+/// materializes the response via [http.Response.fromStream], which
+/// would lose the wire's `Content-Length` for HEAD (the body is empty
+/// by definition); [headAjax] handles this case correctly.
 ///
 /// * [contentLength] — when known up front, set it so the outbound
 /// request is sent fixed-length. If omitted, the request is sent
@@ -110,19 +150,29 @@ Future<http.Response> streamedAjax(Uri url,
     Future Function(EventSink<List<int>> sink) send,
     {String method = "GET", Map<String, String>? headers,
      int? contentLength, Duration? timeout}) {
+  assert(method.toUpperCase() != "HEAD", 'use headAjax for HEAD requests');
+
   final httpClient = HttpClient();
   final client = http_io.IOClient(httpClient);
 
   Future<http.Response> doIt() async {
     try {
       final request = http.StreamedRequest(method, url);
-      headers?.forEach((k, v) => request.headers[k] = v);
+      headers?.forEach((k, v) {
+        //Promote `Content-Length` to `.contentLength`; left in the map
+        //alone the request goes out as chunked.
+        if (k.toLowerCase() == 'content-length') {
+          if (contentLength == null)
+            request.contentLength ??= int.tryParse(v);
+        } else {
+          request.headers[k] = v;
+        }
+      });
       if (contentLength != null) request.contentLength = contentLength;
 
-      //Start sending the request; client.send awaits the response after
-      //fully consuming the body stream we feed via `request.sink`.
+      //Drive the body before awaiting the response: `client.send` only
+      //resolves after the body stream emits done.
       final responseFuture = client.send(request);
-      //Silence unhandled-error report if `send` throws before we await below.
       responseFuture.ignore();
       try {
         await send(request.sink);
