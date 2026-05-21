@@ -35,7 +35,10 @@ typedef AsMap<K, V> = Map<K, V> Function();
 /// A function that returns a list.
 typedef AsList<T> = List<T> Function();
 
-/// Tests whether the status code is a successfully response.
+/// Whether the HTTP [status] code is a successful response (2xx range).
+/// Null, redirects (3xx), informational (1xx), and error codes return false.
+///
+/// For an `http.Response`, prefer `isResponseOK(resp)` (in `io.dart`).
 bool isHttpStatusOK(int? status) => status != null && status >= 200 && status < 300;
 
 ///Parses the given list into a list of PODOs (plain-old-dart-object).

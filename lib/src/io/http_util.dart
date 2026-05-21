@@ -6,6 +6,9 @@ part of rikulo_io;
 /// The cookie's name for holding Dart session ID.
 const String dartSessionId = "DARTSESSID";
 
+/// Shortcut for `isHttpStatusOK(resp.statusCode)`.
+bool isResponseOK(http.Response resp) => isHttpStatusOK(resp.statusCode);
+
 /// Sends an Ajax request to the given [url] and returns the response.
 ///
 /// Same semantics as `package:http`'s top-level functions (`http.get`,
@@ -150,7 +153,8 @@ Future<http.Response> streamedAjax(Uri url,
     Future Function(EventSink<List<int>> sink) send,
     {String method = "GET", Map<String, String>? headers,
      int? contentLength, Duration? timeout}) {
-  assert(method.toUpperCase() != "HEAD", 'use headAjax for HEAD requests');
+  if (method.toUpperCase() == "HEAD")
+    throw ArgumentError('HEAD: use headAjax');
 
   final httpClient = HttpClient();
   final client = http_io.IOClient(httpClient);
@@ -162,8 +166,8 @@ Future<http.Response> streamedAjax(Uri url,
         //Promote `Content-Length` to `.contentLength`; left in the map
         //alone the request goes out as chunked.
         if (k.toLowerCase() == 'content-length') {
-          if (contentLength == null)
-            request.contentLength ??= int.tryParse(v);
+          assert(int.tryParse(v) != null, 'Content-Length: $v');
+          request.contentLength ??= int.tryParse(v);
         } else {
           request.headers[k] = v;
         }
