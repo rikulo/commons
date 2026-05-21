@@ -1,5 +1,20 @@
 # Rikulo Commons Changes
 
+### 9.0.0
+
+* **Breaking**: `ajax()` and the `postAjax`/`putAjax`/… wrappers return
+  `Future<http.Response>` (was `Future<List<int>?>`); `onResponse`
+  callback removed (read `statusCode` / `bodyBytes` from the response).
+* Added `streamedAjax()` — streaming counterpart mirroring
+  `package:http`'s `StreamedRequest`. Caller writes bytes into an
+  `EventSink<List<int>>`; force-close timeout supported.
+* `ajax()` / `streamedAjax()` now built on `package:http`'s
+  `IOClient.send` — wire-equivalent to `http.get`/`http.put`, with the
+  added value of a real timeout that force-closes the underlying
+  `HttpClient`.
+* Added `isResponseOK(http.Response)` — shortcut for
+  `isHttpStatusOK(resp.statusCode)`.
+
 ### 8.0.1
 
 * `ajax()` matches `package:http`'s `IOClient.send`: fixed-length body

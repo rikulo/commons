@@ -1,11 +1,12 @@
 name: rikulo_commons
-version: 8.0.1
+version: 9.0.0
 description: Collections of common reusable classes and utilities for Dart language.
 homepage: https://github.com/rikulo/commons
 repository: https://github.com/rikulo/commons
 issue_tracker: https://github.com/rikulo/commons/issues
 
 dependencies:
+  http: any
   logging: any
   mime: any
   charcode: any
