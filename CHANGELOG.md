@@ -1,5 +1,11 @@
 # Rikulo Commons Changes
 
+### 9.0.1
+
+* Deprecated `HttpUtil`. Use the top-level `decodeQueryString`
+  (was `HttpUtil.decodeQuery`), `encodeQueryString`
+  (was `HttpUtil.encodeQuery`), and `decodePostedParameters` directly.
+
 ### 9.0.0
 
 * **Breaking**: `ajax()` and the `postAjax`/`putAjax`/… wrappers return

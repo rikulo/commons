@@ -199,78 +199,97 @@ Future<http.Response> streamedAjax(Uri url,
   });
 }
 
-/// HTTP related utilities
+/// Decodes the parameters of the POST request.
+///
+/// * [parameters] - the map to put the decoded parameters into.
+/// If null, this method will instantiate a new map.
+/// To merge the parameters found in the query string, you can do:
+///
+///     final params = decodePostedParameters(
+///       request, Map.from(request.queryParameters));
+/// + [maxLength] the maximal allowed length.
+/// If omitted, no limitation at all.
+/// If specified and the input is more than allowed, [PayloadException]
+/// will be thrown.
+Future<Map<String, String>> decodePostedParameters(
+    Stream<List<int>> request, {Map<String, String>? parameters,
+    int? maxLength}) async
+=> decodeQueryString(await readAsString(request, maxLength: maxLength),
+      parameters: parameters);
+
+/// Decodes the query string into a map of name-value pairs (aka., parameters).
+///
+/// * [queryString] - the query string shall not contain `'?'`.
+/// * [parameters] - the map to put the decoded parameters into.
+/// If null, this method will instantiate a new map.
+Map<String, String> decodeQueryString(
+    String queryString, {Map<String, String>? parameters}) {
+  parameters ??= <String, String>{};
+
+  int i = 0, len = queryString.length;
+  while (i < len) {
+    int j = i;
+    int? iEquals;
+    for (; j < len; ++j) {
+      final cc = queryString.codeUnitAt(j);
+      if (cc == $equal)
+        iEquals ??= j;
+      else if (cc == $amp || cc == $semicolon)
+        break;
+    }
+
+    String name, value;
+    if (iEquals != null) {
+      name = queryString.substring(i, iEquals);
+      value = queryString.substring(iEquals + 1, j);
+    } else {
+      name = queryString.substring(i, j);
+      value = "";
+    }
+    i = j + 1;
+    parameters[Uri.decodeQueryComponent(name)] = Uri.decodeQueryComponent(value);
+  }
+  return parameters;
+}
+
+/// Encodes the given parameters into a query string.
+/// Notice the returned string won't start with `'?'`.
+///
+/// The value of a parameter will be converted to a string first.
+/// If it is null or its string form is empty, only `name=` is
+/// emitted (no value).
+String encodeQueryString(Map<String, dynamic> parameters) {
+  final buf = StringBuffer();
+  for (final entry in parameters.entries) {
+    if (buf.isNotEmpty)
+      buf.write('&');
+    buf..write(Uri.encodeQueryComponent(entry.key))..write('=');
+    final sval = entry.value?.toString();
+    if (sval != null && sval.isNotEmpty)
+      buf.write(Uri.encodeQueryComponent(sval));
+  }
+  return buf.toString();
+}
+
+/// HTTP related utilities.
+@Deprecated('Use top-level decodeQueryString, encodeQueryString, decodePostedParameters.')
 class HttpUtil {
   /// Decodes the parameters of the POST request.
-  ///
-  /// * [parameters] - the map to put the decoded parameters into.
-  /// If null, this method will instantiate a new map.
-  /// To merge the parameters found in the query string, you can do:
-  ///
-  ///     final params = HttpUtil.decodePostedParameters(
-  ///       request, Map.from(request.queryParameters));
-  /// + [maxLength] the maximal allowed length.
-  /// If omitted, no limitation at all.
-  /// If specified and the input is more than allowed, [PayloadException]
-  /// will be thrown.
+  @Deprecated('Use top-level decodePostedParameters.')
   static Future<Map<String, String>> decodePostedParameters(
       Stream<List<int>> request, {Map<String, String>? parameters,
       int? maxLength}) async
-  => decodeQuery(await readAsString(request, maxLength: maxLength),
+  => decodeQueryString(await readAsString(request, maxLength: maxLength),
         parameters: parameters);
 
-  /** Decodes the query string into a map of name-value pairs (aka., parameters).
-   *
-   * * [queryString] - the query string shall not contain `'?'`.
-   * * [parameters] - the map to put the decoded parameters into.
-   * If null, this method will instantiate a new map.
-   */
+  /// Decodes the query string into a map of name-value pairs.
+  @Deprecated('Use top-level decodeQueryString.')
   static Map<String, String> decodeQuery(
-      String queryString, {Map<String, String>? parameters}) {
-    parameters ??= <String, String>{};
+      String queryString, {Map<String, String>? parameters})
+  => decodeQueryString(queryString, parameters: parameters);
 
-    int i = 0, len = queryString.length;
-    while (i < len) {
-      int j = i;
-      int? iEquals;
-      for (; j < len; ++j) {
-        final cc = queryString.codeUnitAt(j);
-        if (cc == $equal)
-          iEquals ??= j;
-        else if (cc == $amp || cc == $semicolon)
-          break;
-      }
-
-      String name, value;
-      if (iEquals != null) {
-        name = queryString.substring(i, iEquals);
-        value = queryString.substring(iEquals + 1, j);
-      } else {
-        name = queryString.substring(i, j);
-        value = "";
-      }
-      i = j + 1;
-      parameters[Uri.decodeQueryComponent(name)] = Uri.decodeQueryComponent(value);
-    }
-    return parameters;
-  }
-  /** Encodes the given parameters into a query string.
-   * Notice the returned string won't start with `'?'`.
-   *
-   * The value of a parameter will be converted to a string first.
-   * If it is null or its string form is empty, only `name=` is
-   * emitted (no value).
-   */
-  static String encodeQuery(Map<String, dynamic> parameters) {
-    final buf = StringBuffer();
-    for (final entry in parameters.entries) {
-      if (buf.isNotEmpty)
-        buf.write('&');
-      buf..write(Uri.encodeQueryComponent(entry.key))..write('=');
-      final sval = entry.value?.toString();
-      if (sval != null && sval.isNotEmpty)
-        buf.write(Uri.encodeQueryComponent(sval));
-    }
-    return buf.toString();
-  }
+  /// Encodes the given parameters into a query string.
+  @Deprecated('Use top-level encodeQueryString.')
+  static String encodeQuery(Map<String, dynamic> parameters)
+  => encodeQueryString(parameters);
 }

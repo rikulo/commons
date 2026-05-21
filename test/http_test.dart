@@ -17,11 +17,11 @@ void main() {
         "third": "",
         "fourth": "\tand\n&or=?",
       };
-      expect(HttpUtil.encodeQuery(params),
+      expect(encodeQueryString(params),
         "first=the+first+item&second=&third=&fourth=%09and%0A%26or%3D%3F");
 
       params["second"] = "=&?";
-      expect(HttpUtil.decodeQuery(HttpUtil.encodeQuery(params)), params);
+      expect(decodeQueryString(encodeQueryString(params)), params);
     });
 
     test("query string 2", () {
@@ -29,50 +29,50 @@ void main() {
         "first": 123, //test conversion
         "second": "\t"
       };
-      expect(HttpUtil.encodeQuery(params),
+      expect(encodeQueryString(params),
         "first=123&second=%09");
     });
 
     test("posted parameters", () {
       final queryString = "first=123&second=%09";
       final request = Stream.fromIterable([utf8.encode(queryString)]);
-      return HttpUtil.decodePostedParameters(request).then((params) {
-        expect(HttpUtil.encodeQuery(params), queryString);
+      return decodePostedParameters(request).then((params) {
+        expect(encodeQueryString(params), queryString);
       });
     });
 
-    test("decodeQuery splits on first '='", () {
-      expect(HttpUtil.decodeQuery("foo=bar=baz"), {"foo": "bar=baz"});
-      expect(HttpUtil.decodeQuery("token=abc=="), {"token": "abc=="});
-      expect(HttpUtil.decodeQuery("a=1=2&b=x"), {"a": "1=2", "b": "x"});
+    test("decodeQueryString splits on first '='", () {
+      expect(decodeQueryString("foo=bar=baz"), {"foo": "bar=baz"});
+      expect(decodeQueryString("token=abc=="), {"token": "abc=="});
+      expect(decodeQueryString("a=1=2&b=x"), {"a": "1=2", "b": "x"});
     });
 
-    test("decodeQuery edge cases", () {
-      expect(HttpUtil.decodeQuery(""), <String, String>{});
-      expect(HttpUtil.decodeQuery("foo"), {"foo": ""});
-      expect(HttpUtil.decodeQuery("foo="), {"foo": ""});
-      expect(HttpUtil.decodeQuery("=bar"), {"": "bar"});
-      expect(HttpUtil.decodeQuery("a=1&b=2"), {"a": "1", "b": "2"});
-      expect(HttpUtil.decodeQuery("a=1;b=2"), {"a": "1", "b": "2"});
-      expect(HttpUtil.decodeQuery("name=value&"), {"name": "value"});
-      expect(HttpUtil.decodeQuery("hello+world=x+y"), {"hello world": "x y"});
-      expect(HttpUtil.decodeQuery("%26amp=%3D"), {"&amp": "="});
+    test("decodeQueryString edge cases", () {
+      expect(decodeQueryString(""), <String, String>{});
+      expect(decodeQueryString("foo"), {"foo": ""});
+      expect(decodeQueryString("foo="), {"foo": ""});
+      expect(decodeQueryString("=bar"), {"": "bar"});
+      expect(decodeQueryString("a=1&b=2"), {"a": "1", "b": "2"});
+      expect(decodeQueryString("a=1;b=2"), {"a": "1", "b": "2"});
+      expect(decodeQueryString("name=value&"), {"name": "value"});
+      expect(decodeQueryString("hello+world=x+y"), {"hello world": "x y"});
+      expect(decodeQueryString("%26amp=%3D"), {"&amp": "="});
     });
 
-    test("decodeQuery merges into existing map", () {
+    test("decodeQueryString merges into existing map", () {
       final existing = {"old": "value"};
-      final result = HttpUtil.decodeQuery("new=item", parameters: existing);
+      final result = decodeQueryString("new=item", parameters: existing);
       expect(identical(result, existing), isTrue);
       expect(existing, {"old": "value", "new": "item"});
     });
 
-    test("encodeQuery edge cases", () {
-      expect(HttpUtil.encodeQuery({}), "");
-      expect(HttpUtil.encodeQuery({"a": null}), "a=");
-      expect(HttpUtil.encodeQuery({"a": ""}), "a=");
-      expect(HttpUtil.encodeQuery({"flag": true, "off": false}),
+    test("encodeQueryString edge cases", () {
+      expect(encodeQueryString({}), "");
+      expect(encodeQueryString({"a": null}), "a=");
+      expect(encodeQueryString({"a": ""}), "a=");
+      expect(encodeQueryString({"flag": true, "off": false}),
           "flag=true&off=false");
-      expect(HttpUtil.encodeQuery({"a&b": "c=d"}), "a%26b=c%3Dd");
+      expect(encodeQueryString({"a&b": "c=d"}), "a%26b=c%3Dd");
     });
 
     test("contentType", () {
