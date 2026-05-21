@@ -15,6 +15,9 @@ bool isResponseOK(http.Response resp) => isHttpStatusOK(resp.statusCode);
 /// `http.put`, …): body is buffered into the returned [http.Response].
 /// Pass bytes via [data] or a string via [body].
 ///
+/// Don't set `Content-Length` in [headers] — it's auto-computed from
+/// the encoded body.
+///
 /// * [timeout] bounds the entire request — connect, send, response,
 /// and body read. If exceeded, the underlying [HttpClient] is
 /// force-closed (releasing the socket immediately) and
@@ -34,6 +37,9 @@ Future<http.Response> _ajax(Uri url, {String method = "GET",
         getResponse}) {
   assert(data == null || body == null,
       'pass either `data` or `body`, not both');
+  assert(headers == null
+      || !headers.keys.any((k) => k.toLowerCase() == 'content-length'),
+      'Content-Length is auto-computed');
 
   //Own the HttpClient so we can force-close on timeout (releasing the
   //in-flight socket immediately). IOClient.close() only does a graceful
