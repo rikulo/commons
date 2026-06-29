@@ -1,5 +1,12 @@
 # Rikulo Commons Changes
 
+### 9.1.0
+
+* Added `streamedResponseAjax()` — the streaming-*response* counterpart
+  to `ajax()`: the caller reads the response body incrementally (e.g.
+  Server-Sent Events) via the `http.StreamedResponse.stream`, with the
+  same force-close timeout.
+
 ### 9.0.1
 
 * Deprecated `HttpUtil`. Use the top-level `decodeQueryString`
