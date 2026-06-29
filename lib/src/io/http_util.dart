@@ -30,10 +30,10 @@ Future<http.Response> ajax(Uri url, {String method = "GET",
 => _ajax(url, method: method, data: data, body: body, headers: headers,
     timeout: timeout, getResponse: http.Response.fromStream);
 
-Future<http.Response> _ajax(Uri url, {String method = "GET",
+Future<T> _ajax<T>(Uri url, {String method = "GET",
     List<int>? data, String? body, Map<String, String>? headers,
     Duration? timeout,
-    required Future<http.Response> Function(http.StreamedResponse resp)
+    required Future<T> Function(http.StreamedResponse resp)
         getResponse}) {
   assert(data == null || body == null,
       'pass either `data` or `body`, not both');
@@ -47,7 +47,7 @@ Future<http.Response> _ajax(Uri url, {String method = "GET",
   final httpClient = HttpClient();
   final client = http_io.IOClient(httpClient);
 
-  Future<http.Response> doIt() async {
+  Future<T> doIt() async {
     try {
       final request = http.Request(method, url);
       //Apply headers before setting body so that `request.body = ...`
@@ -71,6 +71,34 @@ Future<http.Response> _ajax(Uri url, {String method = "GET",
     throw TimeoutException('ajax($method $url)', timeout);
   });
 }
+
+/// Sends a request and lets the caller read the response body
+/// *incrementally* instead of buffering it — the streaming-response
+/// counterpart to [ajax] (e.g. for Server-Sent Events / chunked
+/// responses).
+///
+/// [onResponse] is given the [http.StreamedResponse]; consume its
+/// [http.StreamedResponse.stream] (parse SSE, forward chunks, …) and
+/// return when done. Its result becomes this call's result.
+///
+/// The connection — and the [timeout] hard force-close — stays alive
+/// until [onResponse] completes; the underlying [HttpClient] is closed
+/// afterward, so don't retain the stream past [onResponse]. As with
+/// [ajax], an exceeded [timeout] force-closes the socket and throws
+/// [TimeoutException].
+///
+/// Unlike [ajax], the status code is NOT pre-checked: an error response
+/// still invokes [onResponse] (the error body may stream in), so inspect
+/// [http.StreamedResponse.statusCode] yourself.
+///
+/// Don't set `Content-Length` in [headers] — it's auto-computed from
+/// the encoded body.
+Future<T> streamedResponseAjax<T>(Uri url,
+    Future<T> Function(http.StreamedResponse resp) onResponse, {
+    String method = "GET", List<int>? data, String? body,
+    Map<String, String>? headers, Duration? timeout})
+=> _ajax(url, method: method, data: data, body: body, headers: headers,
+    timeout: timeout, getResponse: onResponse);
 
 /// Sends an Ajax request to the given [url] using the POST method.
 Future<http.Response> postAjax(Uri url, {
