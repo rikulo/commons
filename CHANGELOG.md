@@ -1,5 +1,10 @@
 # Rikulo Commons Changes
 
+### 9.2.0
+
+* Added `clearDefers()` — clears all pending deferred tasks queued by
+  `defer()`, dropping them without running (the opposite of `flushDefers()`).
+
 ### 9.1.0
 
 * Added `streamedResponseAjax()` — the streaming-*response* counterpart

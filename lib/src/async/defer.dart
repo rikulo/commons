@@ -60,6 +60,19 @@ bool cancelDeferred(key, {String? category}) {
   return true;
 }
 
+/// Clears all pending deferred tasks queued by [defer], dropping them
+/// without running — the opposite of [flushDefers].
+///
+/// Tasks already executing are not affected.
+/// Returns the number of deferred tasks cleared.
+int clearDefers() {
+  final defers = _defers;
+  _defers = HashMap<_DeferKey, _DeferInfo>();
+  for (final di in defers.values)
+    di.timer.cancel();
+  return defers.length;
+}
+
 /** Force all deferred task (queued by [defer]) to execute.
  * If the task given in [defer] returns an instance of Future, this method
  * will wait until it completes.
