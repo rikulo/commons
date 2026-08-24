@@ -16,7 +16,7 @@ class StreamUtil {
         if (!c.isCompleted) c.complete(data);
         InvokeUtil.invokeSafely(sub.cancel);
       },
-      onError: (e, st) {
+      onError: (Object e, StackTrace st) {
         if (!c.isCompleted) c.completeError(e, st);
       },
       onDone: () {

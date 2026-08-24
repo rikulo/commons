@@ -45,11 +45,6 @@ Add this to your `pubspec.yaml` (or create it):
     <td>Yes</td>
   </tr>
   <tr>
-    <td><code>mirrors.dart</code></td>
-    <td>Yes</td>
-    <td>Yes</td>
-  </tr>
-  <tr>
     <td><code>util.dart</code></td>
     <td>Yes</td>
     <td>Yes</td>

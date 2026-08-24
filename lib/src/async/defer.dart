@@ -52,7 +52,7 @@ void defer<T>(T key, FutureOr task(T key),
 
 /// Cancels the deferred execution of the given [key].
 /// Returns true if the task is not yet executed.
-bool cancelDeferred(key, {String? category}) {
+bool cancelDeferred(Object key, {String? category}) {
   final di = _defers.remove(_DeferKey(key, category));
   if (di == null) return false;
 
@@ -92,8 +92,8 @@ int clearDefers() {
  * Before continue, it will wait the duration specified in [repeatLater].
  * Default: null (not to repeat).
  */
-FutureOr flushDefers({void onActionStart(key, String? category)?,
-    void onActionDone(key, String? category)?,
+FutureOr flushDefers({void onActionStart(Object key, String? category)?,
+    void onActionDone(Object key, String? category)?,
     void onError(Object ex, StackTrace st)?, Duration? repeatLater}) {
   if (_defers.isEmpty && _runnings.isEmpty) return null;
 
@@ -171,7 +171,7 @@ FutureOr flushDefers({void onActionStart(key, String? category)?,
  * Thus, you must pass `key` to it when calling `task(key)`.
  */
 void configureDefers(
-    {FutureOr executor(key, Function task, String? category,
+    {FutureOr executor(Object key, Function task, String? category,
         {void onActionDone()?, void onError(Object ex, StackTrace st)?})?,
      Duration? executable(int runningCount)?, Duration? maxBusy}) {
   _executor = executor;
@@ -180,7 +180,7 @@ void configureDefers(
 }
 
 //typedef FutureOr _Task<T>(T key);
-typedef FutureOr _Executor(key, Function task, String? category,
+typedef FutureOr _Executor(Object key, Function task, String? category,
     {void onActionDone()?, void onError(Object ex, StackTrace st)?});
 
 class _DeferInfo<T> {

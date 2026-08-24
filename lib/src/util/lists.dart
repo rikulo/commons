@@ -25,7 +25,7 @@ class ListUtil {
   ///
   /// * [equal] - the closure to compare elements in the given lists.
   /// If omitted, it compares each item in the list with `identical()`.
-  static bool equalsEach(List al, bl, [bool equal(a, b)?]) {
+  static bool equalsEach(List al, Object? bl, [bool equal(Object? a, Object? b)?]) {
     if (identical(al, bl))
       return true;
     if (!(bl is List))

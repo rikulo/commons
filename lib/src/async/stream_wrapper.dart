@@ -42,7 +42,7 @@ class StreamWrapper<T> implements Stream<T> {
   Stream<E> asyncExpand<E>(Stream<E>? convert(T event))
   => origin.asyncExpand(convert);
   @override
-  Stream<T> handleError(Function handle, {bool test(error)?})
+  Stream<T> handleError(Function handle, {bool test(dynamic error)?})
   => origin.handleError(handle, test: test);
   @override
   Stream<S> expand<S>(Iterable<S> convert(T value)) => origin.expand(convert);
