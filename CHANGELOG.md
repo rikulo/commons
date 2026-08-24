@@ -1,5 +1,11 @@
 # Rikulo Commons Changes
 
+### 9.3.0
+
+* Removed the deprecated `rikulo_mirrors` library (`mirrors.dart` and
+  `ClassUtil`/`ObjectUtil`) — it depended on `dart:mirrors`, which is
+  unsupported on AOT/web. Use `package:reflectable` or code generation instead.
+
 ### 9.2.0
 
 * Added `clearDefers()` — clears all pending deferred tasks queued by
