@@ -1,5 +1,11 @@
 # Rikulo Commons Changes
 
+### 9.3.1
+
+* `InvokeUtil.invokeSafely()` and `invokeSafelyWith()` accept an optional
+  `onError` callback, called with the exception caught. Without it, the
+  exception is silently ignored as before.
+
 ### 9.3.0
 
 * Removed the deprecated `rikulo_mirrors` library (`mirrors.dart` and
