@@ -24,11 +24,40 @@ bool isResponseOK(http.Response resp) => isHttpStatusOK(resp.statusCode);
 /// [TimeoutException] is thrown. `package:http`'s top-level functions
 /// cannot do this — they construct an internal `Client` and give no
 /// handle to force-close.
+///
+/// * [maxLength] caps the response body, in bytes. If exceeded, reading
+/// stops and [HttpException] is thrown — e.g., so a compromised third
+/// party can't exhaust the memory with a huge response. A larger
+/// `Content-Length` is rejected before reading the body.
 Future<http.Response> ajax(Uri url, {String method = "GET",
     List<int>? data, String? body, Map<String, String>? headers,
-    Duration? timeout})
+    Duration? timeout, int? maxLength})
 => _ajax(url, method: method, data: data, body: body, headers: headers,
-    timeout: timeout, getResponse: http.Response.fromStream);
+    timeout: timeout, getResponse: maxLength == null ?
+      http.Response.fromStream: (resp) => _responseFromStream(resp, maxLength));
+
+/// Same as [http.Response.fromStream], except it throws [HttpException]
+/// once the body exceeds [maxLength] bytes.
+Future<http.Response> _responseFromStream(
+    http.StreamedResponse resp, int maxLength) async {
+  final url = resp.request?.url;
+  if ((resp.contentLength ?? 0) > maxLength)
+    throw HttpException('Content-Length exceeds $maxLength', uri: url);
+
+  final bytes = BytesBuilder(copy: false);
+  await for (final chunk in resp.stream) {
+    bytes.add(chunk);
+    if (bytes.length > maxLength)
+      throw HttpException('Response exceeds $maxLength bytes', uri: url);
+        //cancels the subscription, which closes the connection
+  }
+
+  return http.Response.bytes(bytes.takeBytes(), resp.statusCode,
+      request: resp.request, headers: resp.headers,
+      isRedirect: resp.isRedirect,
+      persistentConnection: resp.persistentConnection,
+      reasonPhrase: resp.reasonPhrase);
+}
 
 Future<T> _ajax<T>(Uri url, {String method = "GET",
     List<int>? data, String? body, Map<String, String>? headers,

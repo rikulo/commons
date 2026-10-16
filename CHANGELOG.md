@@ -1,5 +1,11 @@
 # Rikulo Commons Changes
 
+### 9.4.0
+
+* `ajax()` accepts an optional `maxLength` that caps the response body, in
+  bytes: once exceeded (or if `Content-Length` is larger), reading stops and
+  `HttpException` is thrown.
+
 ### 9.3.1
 
 * `InvokeUtil.invokeSafely()` and `invokeSafelyWith()` accept an optional
